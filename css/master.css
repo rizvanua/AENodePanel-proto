@@ -1,0 +1,26 @@
+html{
+  height: 100%;
+}
+
+body{
+  height: 100%;
+  margin: 0;
+}
+circle{
+  fill: rgb(255, 102, 102);
+  stroke: white;
+}
+
+circle:hover{
+  fill: red;
+}
+rect:hover{
+  stroke: red;
+}
+text:hover>rect{
+  stroke: red;
+}
+
+#container{
+
+}
