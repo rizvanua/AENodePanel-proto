@@ -3,6 +3,7 @@ import arrButton from "../startArrays/arrButtonmain.js";
 import arrSecondButton from "../startArrays/arrSecondButton.js";
 import secondSideBarBlocks from "./secondSideBarBlocks.js";
 import GlobalStorage from '../storage';
+import csInterface from '../csInterface';
 
 class SideBar {
   constructor(){
@@ -50,7 +51,8 @@ class SideBar {
 
             //Hover function
             GlobalStorage.mainMenuSet[item.systName].hover(
-              function (){
+              function (){                
+                //
                 //Hover In function
                 GlobalStorage.storageOfSets[item.systName].show();
                 GlobalStorage.mainMenuSet[item.systName][1].show()

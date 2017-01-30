@@ -3,6 +3,7 @@ import arrSecondButton from "../startArrays/arrSecondButton.js";
 import mainBlock from "../mainBlock/mainBlock.js";
 import SideBar from "./sideBar.js";
 import GlobalStorage from '../storage';
+import csInterface from '../csInterface';
 
 
 class secondSideBarBlocks {
@@ -50,6 +51,12 @@ class secondSideBarBlocks {
               let cordY=x.attr("y");
 console.log(this.node.StaticGroupTipe);
           if(this.node.StaticGroupTipe=='effects'){
+            /*test call to ExtScript*/
+
+
+                        csInterface.evalScript(`$._ext.applyEffect("${item.name}")`);
+
+            /**/
             let workBlock=new mainBlock().createBlockEffects(500,cordY,item);
           }
           else if(this.node.StaticGroupTipe=='commonControls'){

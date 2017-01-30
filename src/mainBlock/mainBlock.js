@@ -5,6 +5,7 @@ import drawLineFromTo  from "../helperFunctions/drawLineFromTo.js";
 import GlobalStorage from '../storage';
 
 
+
 class mainBlock{
   constructor(){
 
@@ -41,7 +42,7 @@ class mainBlock{
 
 
 
-    /*workBlockSet.drag(this.move,this.start,this.up);*/
+
     workBlockSet.draggableSet(workBlockSet,typeNode);
     workBlockSet.mouseover(function(){
       console.log("OVER");
