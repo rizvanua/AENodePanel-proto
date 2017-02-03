@@ -36,35 +36,42 @@ class secondSideBarBlocks {
         cursor: "pointer"
       });
             title.node.StaticGroupTipe=objName;
-            //GlobalStorage.mainMenuSet[objName].push(x);
+
             let secondBlockMenuMiniSet=R.set();
             secondBlockMenuMiniSet.push(title);
             secondBlockMenuMiniSet.push(x);
 
-            GlobalStorage.storageOfSets[storageName].push(secondBlockMenuMiniSet);
-            /*GlobalStorage.storageOfSets[storageName].push(x);*/
+            GlobalStorage.storageOfSecondMenuSets[storageName].push(secondBlockMenuMiniSet);
 
-            /*let line = R.path( ["M", 75, (sidebar_inner+16), "L", 35, (CoordY+12) ] );
 
-            GlobalStorage.storageOfSets[storageName].push(line);*/
             secondBlockMenuMiniSet.mousedown(function(){
               let cordY=x.attr("y");
-console.log(this.node.StaticGroupTipe);
+
           if(this.node.StaticGroupTipe=='effects'){
             /*test call to ExtScript*/
+            if(GlobalStorage.lastEffectBlock.y==0){
+              cordY=5;
+            }
+            else{
+              cordY=GlobalStorage.lastEffectBlock.y+5;
+            }
 
 
-                        csInterface.evalScript(`$._ext.applyEffect("${item.name}")`);
+                      csInterface.evalScript(`$._ext.applyEffect("${item.name}")`,(res)=>{
+                        let workBlock=new mainBlock().createBlockEffects(800,cordY,item,res);
+
+                      });
 
             /**/
-            let workBlock=new mainBlock().createBlockEffects(500,cordY,item);
+            //--let res=item.name;//only for test in browser
+                  //--let workBlock=new mainBlock().createBlockEffects(500,cordY,item,res);//only for test in browser
           }
           else if(this.node.StaticGroupTipe=='commonControls'){
             let workBlock=new mainBlock().createBlockCommonControls(500,cordY,item);
           }
 
             });
-GlobalStorage.storageOfSets[storageName].hide();
+GlobalStorage.storageOfSecondMenuSets[storageName].hide();
     });
   }
   createStaticEffects(){

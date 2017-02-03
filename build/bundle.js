@@ -56,6 +56,40 @@
 
 	var _sideBarSecondSideBarBlocksJs2 = _interopRequireDefault(_sideBarSecondSideBarBlocksJs);
 
+	var _csInterface = __webpack_require__(7);
+
+	var _csInterface2 = _interopRequireDefault(_csInterface);
+
+	var _raphaelContainerJs = __webpack_require__(2);
+
+	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
+
+	var _helperFunctionsDeleteFunctions = __webpack_require__(13);
+
+	var _helperFunctionsDeleteFunctions2 = _interopRequireDefault(_helperFunctionsDeleteFunctions);
+
+	var _storage = __webpack_require__(10);
+
+	var _storage2 = _interopRequireDefault(_storage);
+
+	/*window.addEventListener("contextmenu",function(e){
+	   e.preventDefault();
+	  console.log(e);
+	  alert("keydown detected");
+	});*/
+	/*csInterface.prototype.registerKeyEventsInterest = function Prevent (){
+
+	};*/
+	/*let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 46,     "ctrlKey": true  }];
+	csInterface.registerKeyEventsInterest(keyEventsInterest);
+	console.log(csInterface.addEventListener('mouseover',function(e){
+	       alert("keydown detected");
+	}));*/
+
+	/*csInterface.addEventListener(CSInterface.THEME_COLOR_CHANGED_EVENT,function(e){
+	       alert("keydown detected");
+	});*/
+
 	var sideBarFraime = new _sideBarSideBarJs2["default"]().createBar();
 	/*let promise= new Promise((resolve)=>{
 		let sideBarInnerBlocks= new SideBar().createInnerBlocks();
@@ -68,6 +102,30 @@
 	var secondBarInnerBlocksEffects = new _sideBarSecondSideBarBlocksJs2["default"]().createStaticEffects();
 	var secondBarInnerBlocksControls = new _sideBarSecondSideBarBlocksJs2["default"]().createStaticCommonControls();
 	var secondBarInnerBlocksDistributor = new _sideBarSecondSideBarBlocksJs2["default"]().createStaticDistributorControls();
+	console.log(document.getElementsByTagName('svg')[0]);
+
+	document.getElementsByTagName('svg')[0].addEventListener('click', function (e) {
+	  console.log(e);
+	  console.log(e.target.nodeName === 'svg');
+	  if (e.target.nodeName === 'svg') {
+
+	    if (_storage2["default"].toDelete != undefined) {
+	      _storage2["default"].toDelete[1].attr({ stroke: "none" });
+	    }
+
+	    if (_storage2["default"].toDelete && _storage2["default"].prevActive != undefined && _storage2["default"].toDelete[1].node.effectName != _storage2["default"].prevActive[1].node.effectName) {
+	      console.log("YES");
+	      _storage2["default"].prevActive[1].attr({ stroke: "none" });
+	    }
+
+	    _storage2["default"].toDelete = undefined;
+	  }
+	});
+
+	/*csInterface.addEventListener("hover",
+	  function (event)     {
+	    console.log("type=" + event.type + ", data=" + event.data);
+	  } ); // Anonymous function is the second parameter*/
 
 /***/ },
 /* 1 */
@@ -156,12 +214,9 @@
 
 	        //Hover function
 	        _storage2["default"].mainMenuSet[item.systName].hover(function () {
-	          //Test event
-
-	          var event = new CSEvent("com.adobe.cep.test", "APPLICATION");event.data = "This is a test!";_csInterface2["default"].dispatchEvent(event);
 	          //
 	          //Hover In function
-	          _storage2["default"].storageOfSets[item.systName].show();
+	          _storage2["default"].storageOfSecondMenuSets[item.systName].show();
 	          _storage2["default"].mainMenuSet[item.systName][1].show();
 	        }, function (e) {
 	          //Hover Out function
@@ -170,7 +225,7 @@
 	              y = e.offsetY || e.clientY;
 
 	          if (this.isPointInside(x, y) === false) {
-	            _storage2["default"].storageOfSets[item.systName].hide();
+	            _storage2["default"].storageOfSecondMenuSets[item.systName].hide();
 	            objectWrap.hide();
 	          }
 	        });
@@ -223,7 +278,7 @@
 	});
 	var SecondButton = {
 	  effects: [{ name: "Stretcher" }, { name: "Repeater" }, { name: "Spiraler" }, { name: "Circular Waves" }, { name: "Meridian Waves" }, { name: "Flat Mirror" }, { name: "Curved Mirror" }, { name: "Magnifying Glass" }, { name: "Mobius Raw" }, { name: "Mobius Rotate" }, { name: "Mobius Zoom" }, { name: "Escher Droste" }],
-	  commonControls: [{ name: "POI" }, { name: "FOV" }, { name: "Waves" }],
+	  commonControls: [{ name: "POI", fullname: "Point of Interest" }, { name: "FOV", fullname: "FOV" }, { name: "Waves", fullname: "Waves" }],
 	  distributor: [{ name: "Cube" }, { name: "Sphere" }, { name: "Random" }]
 	};
 
@@ -299,31 +354,36 @@
 	          cursor: "pointer"
 	        });
 	        title.node.StaticGroupTipe = objName;
-	        //GlobalStorage.mainMenuSet[objName].push(x);
+
 	        var secondBlockMenuMiniSet = _raphaelContainerJs2["default"].set();
 	        secondBlockMenuMiniSet.push(title);
 	        secondBlockMenuMiniSet.push(x);
 
-	        _storage2["default"].storageOfSets[storageName].push(secondBlockMenuMiniSet);
-	        /*GlobalStorage.storageOfSets[storageName].push(x);*/
+	        _storage2["default"].storageOfSecondMenuSets[storageName].push(secondBlockMenuMiniSet);
 
-	        /*let line = R.path( ["M", 75, (sidebar_inner+16), "L", 35, (CoordY+12) ] );
-	          GlobalStorage.storageOfSets[storageName].push(line);*/
 	        secondBlockMenuMiniSet.mousedown(function () {
 	          var cordY = x.attr("y");
-	          console.log(this.node.StaticGroupTipe);
+
 	          if (this.node.StaticGroupTipe == 'effects') {
 	            /*test call to ExtScript*/
+	            if (_storage2["default"].lastEffectBlock.y == 0) {
+	              cordY = 5;
+	            } else {
+	              cordY = _storage2["default"].lastEffectBlock.y + 5;
+	            }
 
-	            _csInterface2["default"].evalScript("$._ext.applyEffect(\"" + item.name + "\")");
+	            _csInterface2["default"].evalScript("$._ext.applyEffect(\"" + item.name + "\")", function (res) {
+	              var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(800, cordY, item, res);
+	            });
 
 	            /**/
-	            var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(500, cordY, item);
+	            //--let res=item.name;//only for test in browser
+	            //--let workBlock=new mainBlock().createBlockEffects(500,cordY,item,res);//only for test in browser
 	          } else if (this.node.StaticGroupTipe == 'commonControls') {
-	            var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(500, cordY, item);
-	          }
+	              var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(500, cordY, item);
+	            }
 	        });
-	        _storage2["default"].storageOfSets[storageName].hide();
+	        _storage2["default"].storageOfSecondMenuSets[storageName].hide();
 	      });
 	    }
 	  }, {
@@ -381,9 +441,17 @@
 
 	var _helperFunctionsDrawLineFromToJs2 = _interopRequireDefault(_helperFunctionsDrawLineFromToJs);
 
+	/*import deleteFunctions from "../helperFunctions/deleteFunction.js"*/
+
+	var _helperFunctionsActiveBlockFunction = __webpack_require__(12);
+
+	var _helperFunctionsActiveBlockFunction2 = _interopRequireDefault(_helperFunctionsActiveBlockFunction);
+
 	var _storage = __webpack_require__(10);
 
 	var _storage2 = _interopRequireDefault(_storage);
+
+	// This class works with mainBlocks (Effects, commonControls, Distributor) and add eventListebers (click,mouseover etc) to them
 
 	var mainBlock = (function () {
 	  function mainBlock() {
@@ -392,40 +460,50 @@
 
 	  _createClass(mainBlock, [{
 	    key: "createBlockEffects",
-	    value: function createBlockEffects(x, y, item) {
-	      //csInterface.evalScript(`$._ext.sendText("${this.node.effectName}")`);
+	    value: function createBlockEffects(x, y, item, blockEffectName) {
+
 	      var workBlockSet = _raphaelContainerJs2["default"].set();
 	      var typeNode = "effects";
-
-	      var title = _raphaelContainerJs2["default"].text(x + 60, y + 15, item.name).attr({
+	      workBlockSet.setEffectName = blockEffectName;
+	      workBlockSet.baseEffect = item.name;
+	      var title = _raphaelContainerJs2["default"].text(x + 60, y + 15, blockEffectName).attr({
 	        cursor: "move",
 	        "font-size": 15
 	      });
 
-	      title.node.effectName = item.name;
+	      title.node.effectName = blockEffectName;
 	      workBlockSet.push(title);
-
+	      _storage2["default"].lastEffectBlock.y = y + 32;
 	      var workBlock = _raphaelContainerJs2["default"].rect(x, y, 120, 32, 5).attr({ fill: "rgb(64, 64, 64)",
 	        stroke: "none",
 	        cursor: "move",
 	        "class": ''
 	      });
-	      workBlock.node.effectName = item.name;
+	      workBlock.node.effectName = blockEffectName;
 	      workBlockSet.push(workBlock);
 	      title.toFront();
 
-	      var circleLeft = _raphaelContainerJs2["default"].circle(x + 1, y + 15, 6);
-	      circleLeft.node.effectName = item.name;
-	      circleLeft.node.circleName = "circleLeft";
-	      workBlockSet.push(circleLeft);
+	      /*let circleLeft=R.circle(x+1, y+15, 6);// If you need left circle for this block uncomment it
+	            circleLeft.node.effectName=item.name;
+	            circleLeft.node.circleName="circleLeft";
+	            workBlockSet.push(circleLeft);*/
 
+	      var toType = function toType(obj) {
+	        return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+	      };
+
+	      _storage2["default"].historyOfObjects[blockEffectName] = workBlockSet;
 	      workBlockSet.draggableSet(workBlockSet, typeNode);
+	      workBlockSet.click(function () {
+	        (0, _helperFunctionsActiveBlockFunction2["default"])(workBlockSet);
+	      });
 	      workBlockSet.mouseover(function () {
-	        console.log("OVER");
-	        _storage2["default"].overMouseSet.push(workBlockSet); //Push this set into temporary object fro compere reasone
+	        //console.log("OVER");
+	        _storage2["default"].overMouseSet = workBlockSet; //Push this set into temporary object for compere reasone
 	      });
 	      workBlockSet.mouseout(function () {
-	        _storage2["default"].overMouseSet.length = 0; //Clear interim object if mouse get out
+	        //console.log("OUT");
+	        _storage2["default"].overMouseSet = null; //Clear interim object if mouse get out
 	      });
 	    }
 	  }, {
@@ -460,14 +538,17 @@
 	      workBlockSet.push(circleRight);
 	      circleRight.node.circleName = "circleRight";
 
+	      workBlockSet.fullCommonContrlName = item.fullname;
+	      workBlockSet.click(function () {
+	        (0, _helperFunctionsActiveBlockFunction2["default"])(workBlockSet);
+	      });
 	      /*workBlockSet.drag(this.move,this.start,this.up);*/
 	      workBlockSet.draggableSet(workBlockSet, typeNode);
 	    }
 	  }, {
 	    key: "start",
 	    value: function start() {
-	      console.log(this.node.effectName);
-	      //csInterface.evalScript(`$._ext.sendText("${this.node.effectName}")`);
+
 	      this.ox = this.attr("x");
 	      this.oy = this.attr("y");
 	      this.attr({ opacity: 1 });
@@ -529,6 +610,10 @@
 
 	var _drawLineFromToJs2 = _interopRequireDefault(_drawLineFromToJs);
 
+	var _moveEffectsJs = __webpack_require__(11);
+
+	var _moveEffectsJs2 = _interopRequireDefault(_moveEffectsJs);
+
 	var _storage = __webpack_require__(10);
 
 	var _storage2 = _interopRequireDefault(_storage);
@@ -537,12 +622,14 @@
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
 
+	//Custom Raphael function which one properly handles dragging of Sets and handle all processes have binded with it
+
 	Raphael.st.draggableSet = function (setObj, type) {
 
 	  var thisSet = this;
-	  console.log();
+
 	  var bbox = this.getBBox();
-	  var curenLineLocal = undefined;
+	  //this.curenLineLocal;
 	  var moveFnc = function moveFnc(dx, dy) {
 	    var _this = this;
 	    if (this.node.nodeName != 'circle') {
@@ -559,9 +646,10 @@
 	      });
 	    } else {
 	      thisSet.forEach(function (item, i) {
-	        if (item.node.nodeName == "path") {
-
-	          curenLineLocal.attr("path", "M" + _this.ox + " " + _this.oy + "L" + (_this.ox + dx) + " " + (_this.oy + dy));
+	        if (item != undefined && item.node != null && item.node.nodeName == "path") {
+	          new _drawLineFromToJs2["default"]().moveLine(_this, dx, dy);
+	        } else if (item != undefined && item.node == null) {
+	          thisSet.splice(i, 1);
 	        }
 	      });
 	    };
@@ -570,64 +658,35 @@
 
 	    var bBoxCoordSet = _raphaelContainerJs2["default"].set();
 	    thisSet.forEach(function (item, i) {
-	      if (item.node.nodeName != "path") {
+	      //console.log(item);
+	      if (item != undefined && item.node != null && item.node.nodeName != "path") {
 	        bBoxCoordSet.push(item);
+	      } else if (item != undefined && item.node == null) {
+	        //console.log(i);
+	        thisSet.splice(i, 1);
 	      }
 	    });
 
 	    if (this.node.nodeName != 'circle') {
+	      //console.log(thisSet)
 	      var setCoord = bBoxCoordSet.getBBox();
 	      this.ox = setCoord.x;
 	      this.oy = setCoord.y;
 	    } else {
-	      this.ox = this.attr("cx");
-	      this.oy = this.attr("cy");
-	      var connectPath = _raphaelContainerJs2["default"].path(["M", this.ox, this.oy, "L", this.ox, this.oy]).attr({ stroke: "blue" });
-	      curenLineLocal = connectPath;
-
-	      thisSet.push(curenLineLocal);
-	      _storage2["default"].currentLine.push(connectPath); //Send just created Line into GlobalStorage object currentLine
-	      console.log(_storage2["default"].currentLine);
-	      console.log(_storage2["default"].overMouseSet);
+	      new _drawLineFromToJs2["default"]().startdrawLineFromTo(this, thisSet);
 	    };
-
-	    /*test call to ExtScript*/
-	    /*var csInterface = new CSInterface();
-	    
-	      							csInterface.evalScript('$._ext.sendText("Circular Waves")');*/
-
-	    /**/
 	  },
 	      endFnc = function endFnc() {
+	    // save a reference to the core implementation
 
-	    if (_storage2["default"].overMouseSet.length > 0 && curenLineLocal != undefined) {
-	      (function () {
-	        // in this case the current Line has connection to a destination block
-	        _storage2["default"].overMouseSet[0].push(curenLineLocal); //Push curent Line into destination set
-	        curenLineLocal.attr({ stroke: "black" });
-	        _storage2["default"].currentLine.length = 0;
-	        /*console.log(GlobalStorage.overMouseSet[0][1].node.effectName);*/
-	        var effectNameLocal = _storage2["default"].overMouseSet[0][1].node.effectName;
-	        var propName = "Point of Interest";
-	        var promise = new Promise(function (resolve) {
-	          resolve(_storage2["default"].overMouseSet[0].push(curenLineLocal));
-	        }).then(function (resolve) {
-	          return _storage2["default"].overMouseSet.length = 0;
-	        }).then(function (res) {
-	          curenLineLocal = undefined;
-	          /*test call to ExtScript*/
+	    if (type == "effects") {
+	      /*console.log(thisSet[1].node.effectName);*/
+	      (0, _moveEffectsJs2["default"])(thisSet);
+	      console.log("move");
+	    }
 
-	          _csInterface2["default"].evalScript("$._ext.addCommonControls(\"" + effectNameLocal + "\",\"" + propName + "\")");
-
-	          /**/
-	        });
-	      })();
-	    } else if (_storage2["default"].overMouseSet.length === 0 && curenLineLocal != undefined) {
-	        //in this case the current Line dosen't has a destination block
-	        curenLineLocal.remove(); //Remove Line when it dosen't has connection with other block
-	        thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
-	        curenLineLocal = undefined;
-	      }
+	    //console.log(GlobalStorage.historyOfObjects);
+	    new _drawLineFromToJs2["default"]().endDrawLine(this, thisSet);
 	  };
 
 	  this.drag(moveFnc, startFnc, endFnc);
@@ -635,7 +694,7 @@
 	/**/
 
 	function EffectMove(item, i, _this, dx, dy) {
-
+	  /*console.log(_this);*/
 	  if (item.node.nodeName == 'circle') {
 	    item.attr({ cx: _this.ox + dx + 1, cy: _this.oy + dy + 16 });
 	  } else if (item.node.nodeName == 'rect') {
@@ -664,36 +723,106 @@
 	  } else if (item.node.nodeName == 'text') {
 	    item.attr({ x: _this.ox + dx + 40, y: _this.oy + dy + 15 });
 	  } else if (item.node.nodeName == 'path') {
-	    var LX = item.attr().path[1][1];
-	    var LY = item.attr().path[1][2];
-	    item.attr("path", "M" + (_this.ox + dx) + " " + (_this.oy + dy) + "L" + LX + " " + LY);
+	    if (item.node.lineFromCyrcle == "circleRight") {
+	      var LX = item.attr().path[1][1];
+	      var LY = item.attr().path[1][2];
+	      item.attr("path", "M" + (_this.ox + dx + 80) + " " + (_this.oy + dy + 16) + "L" + LX + " " + LY);
+	    }
 	  }
 	}
-
-	function startdrawLineFromTo(ox, oy) {
-	  var connectPath = _raphaelContainerJs2["default"].path(["M", ox, oy, "L", ox, oy]);
-	}
-
-	function moveLine() {
-	  console.log(this);
-	}
-	function endDrawLine() {}
 
 /***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	var _raphaelContainerJs = __webpack_require__(2);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
-	/*drawLineFromTo();*/
+	var _csInterface = __webpack_require__(7);
 
-	// Script to generate projects of high complexity.
+	var _csInterface2 = _interopRequireDefault(_csInterface);
+
+	var _storage = __webpack_require__(10);
+
+	var _storage2 = _interopRequireDefault(_storage);
+
+	// Class which DRAWS CONNECTIONS line from/to blocks
+
+	var drawLineFromTo = (function () {
+	  function drawLineFromTo() {
+	    _classCallCheck(this, drawLineFromTo);
+	  }
+
+	  _createClass(drawLineFromTo, [{
+	    key: 'startdrawLineFromTo',
+	    value: function startdrawLineFromTo(_this, thisSet) {
+	      _this.ox = _this.attr("cx");
+	      _this.oy = _this.attr("cy");
+	      var connectPath = _raphaelContainerJs2['default'].path(["M", _this.ox, _this.oy, "L", _this.ox, _this.oy]).attr({ stroke: "blue" });
+	      connectPath.node.lineFromCyrcle = _this.node.circleName; //Here we asign from which one circle go the Line (Right cyrcle or LeftCyrcle)
+	      _storage2['default'].currentLine = connectPath; //Send just created Line into GlobalStorage object currentLine
+	      thisSet.push(_storage2['default'].currentLine);
+	    }
+	  }, {
+	    key: 'moveLine',
+	    value: function moveLine(_this, dx, dy) {
+	      _storage2['default'].currentLine.attr("path", 'M' + _this.ox + ' ' + _this.oy + 'L' + (_this.ox + dx) + ' ' + (_this.oy + dy));
+	    }
+	  }, {
+	    key: 'endDrawLine',
+	    value: function endDrawLine(_this, thisSet) {
+
+	      if (_storage2['default'].overMouseSet != null && _storage2['default'].currentLine != null) {
+	        (function () {
+	          // in this case the current Line has connection to a destination block
+	          _storage2['default'].currentLine.attr({ stroke: "black" });
+	          var overMouseSet = _storage2['default'].overMouseSet;
+	          var effectNameLocal = overMouseSet.setEffectName;
+	          _storage2['default'].currentLine.LineFrom = _this.node.effectName;
+	          _storage2['default'].currentLine.LineTo = effectNameLocal;
+	          _storage2['default'].currentLine.baseEffect = overMouseSet.baseEffect;
+
+	          var propName = thisSet.fullCommonContrlName;
+	          var promise = new Promise(function (resolve) {
+	            resolve(overMouseSet.push(_storage2['default'].currentLine).toBack()); //Push curent Line into destination set
+	          }).then(function (resolve) {
+	            return _storage2['default'].overMouseSet = null;
+	          }).then(function (res) {
+	            _storage2['default'].currentLine = null;
+	            //Call to ExtScript
+
+	            _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + propName + '")');
+
+	            //
+	          });
+	        })();
+	      } else if (_storage2['default'].overMouseSet === null && _storage2['default'].currentLine != null) {
+	          //in this case the current Line dosen't has a destination block
+	          _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
+	          thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
+	          _storage2['default'].currentLine = null;
+	        }
+	    }
+	  }]);
+
+	  return drawLineFromTo;
+	})();
+
+	exports['default'] = drawLineFromTo;
+	module.exports = exports['default'];
 
 /***/ },
 /* 10 */
@@ -711,8 +840,10 @@
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
+	// Global storage for ever functions. It uses to keep objects and variables which use as global.
+
 	var GlobalStorage = {
-	  storageOfSets: {
+	  storageOfSecondMenuSets: { //storage secondMenu items
 	    effects: _raphaelContainerJs2["default"].set(),
 	    commonControls: _raphaelContainerJs2["default"].set(),
 	    distributor: _raphaelContainerJs2["default"].set()
@@ -727,13 +858,207 @@
 	    commonControls: _raphaelContainerJs2["default"].set(),
 	    distributor: _raphaelContainerJs2["default"].set()
 	  },
-	  lastEffectBlock: {},
-	  currentLine: [], //Temporary object with just created Line
-	  overMouseSet: [] //Temporary object what contents Set over which fire event mouseover
+	  lastEffectBlock: {
+	    y: 0
+	  },
+	  prevActive: undefined,
+	  historyOfObjects: {
+	    itemArray: []
+	  },
+	  toDelete: undefined, //Temporary object which one contents object for deleting by pressing key "DELETE"
+	  currentLine: null, //Temporary object with just created Line
+	  overMouseSet: null //Temporary object what contents Set over which fire event mouseover
 	};
 
 	exports["default"] = GlobalStorage;
 	module.exports = exports["default"];
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _csInterface = __webpack_require__(7);
+
+	var _csInterface2 = _interopRequireDefault(_csInterface);
+
+	var _storage = __webpack_require__(10);
+
+	var _storage2 = _interopRequireDefault(_storage);
+
+	// Function to check an order of Effects' blocks (by X coordinate)
+
+	function moveEffects(thisSet) {
+	  console.log(thisSet);
+	  _storage2['default'].historyOfObjects.itemArray.length = 0;
+	  var storageName = thisSet[1].node.effectName;
+	  //GlobalStorage.historyOfObjects[storageName]=thisSet;
+	  for (var key in _storage2['default'].historyOfObjects) {
+	    if (key != "itemArray") {
+	      _storage2['default'].historyOfObjects.itemArray.push(_storage2['default'].historyOfObjects[key]);
+	    }
+	  }
+
+	  var promise = new Promise(function (resolve) {
+	    console.log(_storage2['default'].historyOfObjects);
+	    var test = _.sortBy(_storage2['default'].historyOfObjects.itemArray, function (i) {
+	      return i[1].attr("y"); // Y is point relatively which we are sorting our array. So we've sort array of effects by Y coordinate of rectangle.
+	    });
+
+	    resolve(test);
+	  }).then(function (resolve) {
+	    console.log(resolve);
+	    var mymap = _.map(resolve, function (i, num) {
+	      return i[1].node.effectName; // create map of the array and get array of effects' names
+	    });
+	    return mymap;
+	  }).then(function (mymap) {
+	    console.log(mymap);
+	    var myIndex = _.indexOf(mymap, storageName); //get index of the curent effect in array. This Index is  the place of effect in order
+	    myIndex += 1;
+	    console.log(myIndex);
+	    console.log(storageName);
+	    _csInterface2['default'].evalScript('$._ext.moveEffectIndex("' + storageName + '","' + myIndex + '")', function (res) {});
+	  });
+	}
+	exports['default'] = moveEffects;
+	module.exports = exports['default'];
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _storage = __webpack_require__(10);
+
+	var _storage2 = _interopRequireDefault(_storage);
+
+	var _csInterfaceJs = __webpack_require__(7);
+
+	var _csInterfaceJs2 = _interopRequireDefault(_csInterfaceJs);
+
+	function activeBlockFunction(workBlockSet) {
+
+	  _storage2["default"].toDelete = workBlockSet;
+	  if (_storage2["default"].prevActive != undefined && _storage2["default"].toDelete[1].node.effectName != _storage2["default"].prevActive[1].node.effectName) {
+
+	    _storage2["default"].prevActive[1].attr({ stroke: "none" });
+	  }
+	  _storage2["default"].prevActive = workBlockSet;
+	  _storage2["default"].toDelete[1].attr({ stroke: "red" });
+	}
+
+	exports["default"] = activeBlockFunction;
+	module.exports = exports["default"];
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	        value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _raphaelContainerJs = __webpack_require__(2);
+
+	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
+
+	var _csInterface = __webpack_require__(7);
+
+	var _csInterface2 = _interopRequireDefault(_csInterface);
+
+	var _storage = __webpack_require__(10);
+
+	var _storage2 = _interopRequireDefault(_storage);
+
+	//Function which handgle all process with Deleting Blocks
+
+	var deleteFunctions = window.addEventListener("contextmenu", function (event) {
+	        event.preventDefault();
+	        //let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 123,     "ctrlKey": true  }];
+	        //csInterface.registerKeyEventsInterest(keyEventsInterest);
+	        /*event.preventDefault();*/
+
+	        if (_storage2['default'].toDelete != undefined /*&&event.keyCode==46*/) {
+
+	                        var promise = new Promise(function (resolve) {
+	                                _storage2['default'].overMouseSet = null;
+
+	                                if (_storage2['default'].toDelete.setEffectName) {
+	                                        var effectName = _storage2['default'].toDelete.setEffectName;
+	                                        delete _storage2['default'].historyOfObjects[effectName];
+
+	                                        //Call to ExtScript
+
+	                                        _csInterface2['default'].evalScript('$._ext.deleteEffect("' + effectName + '")', function (res) {
+	                                                var remove = _storage2['default'].toDelete.remove();
+	                                                resolve(remove);
+	                                        });
+
+	                                        //
+	                                } else if (_storage2['default'].toDelete.fullCommonContrlName) {
+	                                                var CommonContrlName = _storage2['default'].toDelete.fullCommonContrlName;
+	                                                var itemsArray = _storage2['default'].toDelete.items;
+	                                                var arrayOfLinkedEffects = _.filter(itemsArray, function (i) {
+	                                                        if (i.node.nodeName == "path") {
+
+	                                                                return i.LineTo;
+	                                                        }
+	                                                });
+
+	                                                var arrayOfLinkedEffectsFiltered = _.map(arrayOfLinkedEffects, function (i) {
+	                                                        return i.LineTo;
+	                                                });
+	                                                var arrayOfBaseEffects = _.map(arrayOfLinkedEffects, function (i) {
+	                                                        return i.baseEffect;
+	                                                });
+
+	                                                console.log(arrayOfBaseEffects);
+
+	                                                var arrayOfBaseEffectsString = arrayOfBaseEffects.join(';');
+	                                                var arrayOfLinkedEffectsString = arrayOfLinkedEffectsFiltered.join(';');
+	                                                //Call to ExtScript
+
+	                                                _csInterface2['default'].evalScript('$._ext.deleteCommonControl("' + CommonContrlName + '","' + arrayOfLinkedEffectsString + '","' + arrayOfBaseEffectsString + '")', function (res) {
+
+	                                                        var remove = _storage2['default'].toDelete.remove();
+	                                                        resolve(remove);
+	                                                });
+
+	                                                //
+	                                        }
+	                                //resolve ()
+	                        }).then(function (resolve) {
+
+	                                resolve = undefined;
+	                                _storage2['default'].prevActive = undefined;
+	                        });
+	                }
+	        /*workBlockSet.remove()*/
+	});
+
+	function deleteEffects() {}
+
+	exports['default'] = deleteFunctions;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

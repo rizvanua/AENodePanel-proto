@@ -1,14 +1,17 @@
 import R from "../raphaelContainer.js";
 import drawLineFromTo  from "./drawLineFromTo.js";
+import moveEffecs  from "./moveEffects.js";
 import GlobalStorage from '../storage';
 import csInterface from '../csInterface';
+
+//Custom Raphael function which one properly handles dragging of Sets and handle all processes have binded with it
 
 Raphael.st.draggableSet = function (setObj,type) {
 
   var thisSet = this;
-  console.log();
+
   let bbox=this.getBBox();
-  let curenLineLocal;
+  //this.curenLineLocal;
   var moveFnc = function (dx, dy) {
     var _this = this;
     if (this.node.nodeName!= 'circle')
@@ -30,9 +33,11 @@ Raphael.st.draggableSet = function (setObj,type) {
   }
   else {
       thisSet.forEach(function (item, i) {
-        if(item.node.nodeName=="path"){
-
-          curenLineLocal.attr("path",`M${_this.ox} ${_this.oy}L${_this.ox+dx} ${_this.oy+dy}`);
+        if(item!=undefined&&item.node!=null&&item.node.nodeName=="path"){
+          new drawLineFromTo().moveLine(_this,dx,dy);
+        }
+        else if(item!=undefined&&item.node==null){
+          thisSet.splice(i,1);
 
         }
       });
@@ -42,68 +47,40 @@ Raphael.st.draggableSet = function (setObj,type) {
 
     let bBoxCoordSet=R.set();
     thisSet.forEach(function(item,i){
-      if(item.node.nodeName!="path"){
+      //console.log(item);
+      if(item!=undefined&&item.node!=null&&item.node.nodeName!="path"){
         bBoxCoordSet.push(item);
+      }
+      else if(item!=undefined&&item.node==null){
+        //console.log(i);
+        thisSet.splice(i,1);
       }
     })
 
     if (this.node.nodeName!= 'circle')
-    {
+    {//console.log(thisSet)
       let setCoord=bBoxCoordSet.getBBox();
       this.ox = setCoord.x;
       this.oy = setCoord.y;
     }
     else {
-      this.ox=this.attr("cx");
-      this.oy=this.attr("cy");
-      var connectPath = R.path( ["M", this.ox, this.oy, "L", this.ox, this.oy ] )
-      .attr({stroke:"blue"});
-      curenLineLocal=connectPath;
-
-      thisSet.push(curenLineLocal);
-      GlobalStorage.currentLine.push(connectPath);//Send just created Line into GlobalStorage object currentLine
-      console.log(GlobalStorage.currentLine);
-      console.log(GlobalStorage.overMouseSet);
-
-
+      new drawLineFromTo().startdrawLineFromTo(this,thisSet);
     };
 
 
-    /*test call to ExtScript*/
-/*var csInterface = new CSInterface();
 
-  							csInterface.evalScript('$._ext.sendText("Circular Waves")');*/
-
-    /**/
   }, endFnc = function endFnc() {
+    // save a reference to the core implementation
 
-    if (GlobalStorage.overMouseSet.length>0&&curenLineLocal!=undefined){// in this case the current Line has connection to a destination block
-      GlobalStorage.overMouseSet[0].push(curenLineLocal);//Push curent Line into destination set
-      curenLineLocal.attr({stroke:"black"});
-      GlobalStorage.currentLine.length=0;
-      /*console.log(GlobalStorage.overMouseSet[0][1].node.effectName);*/
-      let effectNameLocal=GlobalStorage.overMouseSet[0][1].node.effectName;
-      let propName="Point of Interest";
-      let promise= new Promise((resolve)=>{
-              resolve(GlobalStorage.overMouseSet[0].push(curenLineLocal));
-            }).then((resolve)=>{
-      				return GlobalStorage.overMouseSet.length=0;
-      			}).then((res)=>{
-              curenLineLocal=undefined;
-              /*test call to ExtScript*/
+      if(type=="effects")
+      {
+        /*console.log(thisSet[1].node.effectName);*/
+              moveEffecs (thisSet);
+              console.log("move");
+      }
 
-                          csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${propName}")`);
-
-              /**/
-            });
-
-    }
-    else if(GlobalStorage.overMouseSet.length===0&&curenLineLocal!=undefined){//in this case the current Line dosen't has a destination block
-      curenLineLocal.remove();//Remove Line when it dosen't has connection with other block
-      thisSet.splice(thisSet.length-1, 1);//Remove last element (path from set)
-      curenLineLocal=undefined;
-
-    }
+    //console.log(GlobalStorage.historyOfObjects);
+    new drawLineFromTo().endDrawLine(this,thisSet);
 
   };
 
@@ -112,7 +89,7 @@ Raphael.st.draggableSet = function (setObj,type) {
 /**/
 
 function EffectMove (item, i, _this, dx, dy){
-
+/*console.log(_this);*/
     if (item.node.nodeName == 'circle') {
       item.attr({ cx: _this.ox + dx+1, cy: _this.oy + dy+16 });
     }
@@ -128,6 +105,8 @@ function EffectMove (item, i, _this, dx, dy){
       item.attr("path",`M${MX} ${MY}L${_this.ox+ dx} ${_this.oy+ dy+15}`);
 
     }
+
+
 
 }
 
@@ -150,22 +129,15 @@ function CommonControlsMove(item, i, _this, dx, dy){
        item.attr({ x: _this.ox + dx+40, y: _this.oy + dy+15 });
      }
      else if (item.node.nodeName == 'path') {
-       let LX=item.attr().path[1][1];
-       let LY=item.attr().path[1][2];
-       item.attr("path",`M${_this.ox+ dx} ${_this.oy+ dy}L${LX} ${LY}`);
+       if(item.node.lineFromCyrcle=="circleRight")
+       {
+         let LX=item.attr().path[1][1];
+         let LY=item.attr().path[1][2];
+         item.attr("path",`M${_this.ox+ dx+80} ${_this.oy+ dy+16}L${LX} ${LY}`);
+       }
+
 
      }
 
-
-}
-
-function startdrawLineFromTo(ox, oy){
-  var connectPath = R.path( ["M", ox, oy, "L", ox, oy ] );
-}
-
-function moveLine(){
-  console.log(this);
-}
-function endDrawLine(){
 
 }

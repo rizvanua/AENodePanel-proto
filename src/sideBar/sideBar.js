@@ -51,10 +51,10 @@ class SideBar {
 
             //Hover function
             GlobalStorage.mainMenuSet[item.systName].hover(
-              function (){                
+              function (){
                 //
                 //Hover In function
-                GlobalStorage.storageOfSets[item.systName].show();
+                GlobalStorage.storageOfSecondMenuSets[item.systName].show();
                 GlobalStorage.mainMenuSet[item.systName][1].show()
               },
               function(e){
@@ -65,7 +65,7 @@ class SideBar {
 
                     if(this.isPointInside(x,y)===false)
                     {
-                      GlobalStorage.storageOfSets[item.systName].hide();
+                      GlobalStorage.storageOfSecondMenuSets[item.systName].hide();
                       objectWrap.hide()
                     }
               });

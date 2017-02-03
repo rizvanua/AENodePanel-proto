@@ -2,54 +2,64 @@ import R from "../raphaelContainer.js";
 import csInterface from "../csInterface.js";
 import draggableSet from "../helperFunctions/draggableSet.js";
 import drawLineFromTo  from "../helperFunctions/drawLineFromTo.js";
+/*import deleteFunctions from "../helperFunctions/deleteFunction.js"*/
+import activeBlockFunction from '../helperFunctions/activeBlockFunction';
 import GlobalStorage from '../storage';
 
-
+// This class works with mainBlocks (Effects, commonControls, Distributor) and add eventListebers (click,mouseover etc) to them
 
 class mainBlock{
   constructor(){
 
   }
-  createBlockEffects(x,y,item){
-//csInterface.evalScript(`$._ext.sendText("${this.node.effectName}")`);
+  createBlockEffects(x,y,item,blockEffectName){
+
     let workBlockSet=R.set();
     let typeNode="effects";
-
-    let title= R.text(x+60, y+15, item.name)
+    workBlockSet.setEffectName=blockEffectName;
+    workBlockSet.baseEffect=item.name;
+    let title= R.text(x+60, y+15, blockEffectName)
     .attr({
       cursor: "move",
       "font-size": 15
     });
 
-          title.node.effectName=item.name;
+          title.node.effectName=blockEffectName;
           workBlockSet.push(title);
-
+          GlobalStorage.lastEffectBlock.y=y+32;
     let workBlock=R.rect(x,y, 120, 32,5)
     .attr({   fill: "rgb(64, 64, 64)",
               stroke: "none",
               cursor: "move",
               class:''
           });
-          workBlock.node.effectName=item.name;
+          workBlock.node.effectName=blockEffectName;
           workBlockSet.push(workBlock);
           title.toFront();
 
 
-    let circleLeft=R.circle(x+1, y+15, 6);
+    /*let circleLeft=R.circle(x+1, y+15, 6);// If you need left circle for this block uncomment it
           circleLeft.node.effectName=item.name;
           circleLeft.node.circleName="circleLeft";
-          workBlockSet.push(circleLeft);
+          workBlockSet.push(circleLeft);*/
+
+          let toType = function(obj) {
+            return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+          }
 
 
 
 
+    GlobalStorage.historyOfObjects[blockEffectName]=workBlockSet;
     workBlockSet.draggableSet(workBlockSet,typeNode);
+    workBlockSet.click(()=>{activeBlockFunction(workBlockSet)});
     workBlockSet.mouseover(function(){
-      console.log("OVER");
-      GlobalStorage.overMouseSet.push(workBlockSet);//Push this set into temporary object fro compere reasone
+      //console.log("OVER");
+      GlobalStorage.overMouseSet=workBlockSet;//Push this set into temporary object for compere reasone
     });
     workBlockSet.mouseout(function(){
-        GlobalStorage.overMouseSet.length=0;//Clear interim object if mouse get out
+      //console.log("OUT");
+        GlobalStorage.overMouseSet=null;//Clear interim object if mouse get out
     });
   }
 
@@ -86,14 +96,15 @@ class mainBlock{
           workBlockSet.push(circleRight);
           circleRight.node.circleName="circleRight";
 
-
-
+    workBlockSet.fullCommonContrlName=item.fullname;
+    workBlockSet.click(()=>{activeBlockFunction(workBlockSet)});
     /*workBlockSet.drag(this.move,this.start,this.up);*/
     workBlockSet.draggableSet(workBlockSet,typeNode);
+
   }
   start(){
-    console.log(this.node.effectName);
-    //csInterface.evalScript(`$._ext.sendText("${this.node.effectName}")`);
+
+
     this.ox = this.attr("x");
     this.oy = this.attr("y");
     this.attr({opacity: 1});

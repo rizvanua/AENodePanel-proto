@@ -14,9 +14,9 @@ effects:[
  {name:"Escher Droste"}
 ],
   commonControls:[
-    {name:"POI"},
-    {name:"FOV"},
-    {name:"Waves"}
+    {name:"POI", fullname:"Point of Interest"},
+    {name:"FOV",fullname:"FOV"},
+    {name:"Waves",fullname:"Waves"}
   ],
   distributor:[
     {name:"Cube"},
