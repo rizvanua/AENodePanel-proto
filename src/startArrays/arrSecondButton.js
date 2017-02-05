@@ -23,6 +23,6 @@ effects:[
     {name:"Sphere"},
     {name:"Random"}
   ]
-}
+};
 
 export default SecondButton;

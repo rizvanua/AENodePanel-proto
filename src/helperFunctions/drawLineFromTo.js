@@ -26,14 +26,14 @@ class drawLineFromTo{
 
   endDrawLine(_this,thisSet){
 
-    if (GlobalStorage.overMouseSet!=null&&GlobalStorage.currentLine!=null){// in this case the current Line has connection to a destination block
+    if (GlobalStorage.overMouseSet!==null&&GlobalStorage.currentLine!==null){// in this case the current Line has connection to a destination block
       GlobalStorage.currentLine.attr({stroke:"black"});
       let overMouseSet=GlobalStorage.overMouseSet;
-      let effectNameLocal=overMouseSet.setEffectName
+      let effectNameLocal=overMouseSet.setEffectName;
       GlobalStorage.currentLine.LineFrom=_this.node.effectName;
       GlobalStorage.currentLine.LineTo=effectNameLocal;
       GlobalStorage.currentLine.baseEffect=overMouseSet.baseEffect;
-      
+
 
       let propName=thisSet.fullCommonContrlName;
       let promise= new Promise((resolve)=>{
@@ -50,7 +50,7 @@ class drawLineFromTo{
             });
 
     }
-    else if(GlobalStorage.overMouseSet===null&&GlobalStorage.currentLine!=null){//in this case the current Line dosen't has a destination block
+    else if(GlobalStorage.overMouseSet===null&&GlobalStorage.currentLine!==null){//in this case the current Line dosen't has a destination block
       GlobalStorage.currentLine.remove();//Remove Line when it dosen't has connection with other block
       thisSet.splice(thisSet.length-1, 1);//Remove last element (path from set)
       GlobalStorage.currentLine=null;

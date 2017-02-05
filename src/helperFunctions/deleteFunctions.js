@@ -6,7 +6,7 @@ import GlobalStorage from '../storage';
 //Function which handgle all process with Deleting Blocks
 
 let deleteFunctions = window.addEventListener("contextmenu",function(event){
-    event.preventDefault();
+    //event.preventDefault();
   //let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 123,     "ctrlKey": true  }];
   //csInterface.registerKeyEventsInterest(keyEventsInterest);
   /*event.preventDefault();*/
@@ -46,7 +46,7 @@ if(GlobalStorage.toDelete!=undefined/*&&event.keyCode==46*/)
         let arrayOfLinkedEffectsFiltered=_.map(arrayOfLinkedEffects,(i)=>{
             return i.LineTo;
 
-        });        
+        });
 let arrayOfLinkedEffectsString=arrayOfLinkedEffectsFiltered.join(';');
           //Call to ExtScript
 

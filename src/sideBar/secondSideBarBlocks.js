@@ -1,9 +1,11 @@
 import R from "../raphaelContainer.js";
 import arrSecondButton from "../startArrays/arrSecondButton.js";
 import mainBlock from "../mainBlock/mainBlock.js";
+import distributorBlocks from "../mainBlock/disributorBlocks";
 import SideBar from "./sideBar.js";
 import GlobalStorage from '../storage';
 import csInterface from '../csInterface';
+import simpleDraggable from '../helperFunctions/simpleDraggable';
 
 
 class secondSideBarBlocks {
@@ -43,13 +45,13 @@ class secondSideBarBlocks {
 
             GlobalStorage.storageOfSecondMenuSets[storageName].push(secondBlockMenuMiniSet);
 
-
-            secondBlockMenuMiniSet.mousedown(function(){
+            secondBlockMenuMiniSet.simpleDraggable(storageName);
+            /*secondBlockMenuMiniSet.mousedown(function(){
               let cordY=x.attr("y");
 
           if(this.node.StaticGroupTipe=='effects'){
-            /*test call to ExtScript*/
-            if(GlobalStorage.lastEffectBlock.y==0){
+
+            if(GlobalStorage.lastEffectBlock.y===0){
               cordY=5;
             }
             else{
@@ -57,20 +59,26 @@ class secondSideBarBlocks {
             }
 
 
-                      csInterface.evalScript(`$._ext.applyEffect("${item.name}")`,(res)=>{
-                        let workBlock=new mainBlock().createBlockEffects(800,cordY,item,res);
+                      //--csInterface.evalScript(`$._ext.applyEffect("${item.name}")`,(res)=>{
+                        //--let workBlock=new mainBlock().createBlockEffects(800,cordY,item,res);
 
-                      });
+                      //--});
 
-            /**/
-            //--let res=item.name;//only for test in browser
-                  //--let workBlock=new mainBlock().createBlockEffects(500,cordY,item,res);//only for test in browser
+
+            let res=item.name;//only for test in browser
+                  let workBlock=new mainBlock().createBlockEffects(500,cordY,item,res);//only for test in browser
           }
           else if(this.node.StaticGroupTipe=='commonControls'){
             let workBlock=new mainBlock().createBlockCommonControls(500,cordY,item);
           }
+          else if(this.node.StaticGroupTipe=='distributor'){
+            new distributorBlocks(300,cordY+150,item);
 
-            });
+
+            //let workBlock=new mainBlock().createBlockCommonControls(500,cordY,item);
+          }
+
+        });*/
 GlobalStorage.storageOfSecondMenuSets[storageName].hide();
     });
   }

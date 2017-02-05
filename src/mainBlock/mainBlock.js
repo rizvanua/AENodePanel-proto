@@ -44,15 +44,15 @@ class mainBlock{
           workBlockSet.push(circleLeft);*/
 
           let toType = function(obj) {
-            return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
-          }
+            return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+          };
 
 
 
 
     GlobalStorage.historyOfObjects[blockEffectName]=workBlockSet;
     workBlockSet.draggableSet(workBlockSet,typeNode);
-    workBlockSet.click(()=>{activeBlockFunction(workBlockSet)});
+    workBlockSet.click(()=>{activeBlockFunction(workBlockSet);});
     workBlockSet.mouseover(function(){
       //console.log("OVER");
       GlobalStorage.overMouseSet=workBlockSet;//Push this set into temporary object for compere reasone
@@ -85,10 +85,10 @@ class mainBlock{
           workBlockSet.push(workBlock);
           title.toFront();
 
-    let circleLeft=R.circle(x+1, y+15, 6);
+    /*let circleLeft=R.circle(x+1, y+15, 6);// Uncomment if you need Left circle
           circleLeft.node.effectName=item.name;
           workBlockSet.push(circleLeft);
-          circleLeft.node.circleName="circleLeft";
+          circleLeft.node.circleName="circleLeft";*/
 
 
     let circleRight=R.circle(x+80, y+15, 6);
@@ -97,9 +97,10 @@ class mainBlock{
           circleRight.node.circleName="circleRight";
 
     workBlockSet.fullCommonContrlName=item.fullname;
-    workBlockSet.click(()=>{activeBlockFunction(workBlockSet)});
+    workBlockSet.click(()=>{activeBlockFunction(workBlockSet);});
     /*workBlockSet.drag(this.move,this.start,this.up);*/
     workBlockSet.draggableSet(workBlockSet,typeNode);
+    return workBlockSet;
 
   }
   start(){

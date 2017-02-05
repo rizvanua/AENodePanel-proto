@@ -1,4 +1,4 @@
-import R from "../raphaelContainer.js"
+import R from "../raphaelContainer.js";
 import arrButton from "../startArrays/arrButtonmain.js";
 import arrSecondButton from "../startArrays/arrSecondButton.js";
 import secondSideBarBlocks from "./secondSideBarBlocks.js";
@@ -14,7 +14,7 @@ class SideBar {
   }
 
   createInnerBlocks(){
-    let sidebar_inner=5
+    let sidebar_inner=5;
     let self=this;
     arrButton.forEach((item,i)=>{
       if(i>0){
@@ -55,7 +55,7 @@ class SideBar {
                 //
                 //Hover In function
                 GlobalStorage.storageOfSecondMenuSets[item.systName].show();
-                GlobalStorage.mainMenuSet[item.systName][1].show()
+                GlobalStorage.mainMenuSet[item.systName][1].show();
               },
               function(e){
                 //Hover Out function
@@ -66,7 +66,7 @@ class SideBar {
                     if(this.isPointInside(x,y)===false)
                     {
                       GlobalStorage.storageOfSecondMenuSets[item.systName].hide();
-                      objectWrap.hide()
+                      objectWrap.hide();
                     }
               });
     });

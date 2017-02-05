@@ -23,39 +23,48 @@ Raphael.st.draggableSet = function (setObj,type) {
 
     thisSet.forEach(function (item, i) {
       if(type=="effects"){
+        console.log("effects");
         EffectMove(item, i, _this, dx, dy);
       }
       else if(type=="commonControls"){
+        console.log("commonControls");
         CommonControlsMove(item, i, _this, dx, dy);
+      }
+      if(type=="distributor"){
+      //console.log(item);
+        //console.log(i);
+        //console.log(_this);
+          DistributorRootMove(item, i, _this, dx, dy);
       }
 
     });
   }
   else {
       thisSet.forEach(function (item, i) {
-        if(item!=undefined&&item.node!=null&&item.node.nodeName=="path"){
+        if(item!==undefined&&item.node!==null&&item.node.nodeName=="path"){
           new drawLineFromTo().moveLine(_this,dx,dy);
         }
-        else if(item!=undefined&&item.node==null){
+        else if(item!==undefined&&item.node===null){
           thisSet.splice(i,1);
 
         }
       });
-  };
+  }
   },
   startFnc = function startFnc() {
 
     let bBoxCoordSet=R.set();
+
     thisSet.forEach(function(item,i){
       //console.log(item);
-      if(item!=undefined&&item.node!=null&&item.node.nodeName!="path"){
+      if(item!==undefined&&item.node!==null&&item.node.nodeName!="path"){
         bBoxCoordSet.push(item);
       }
-      else if(item!=undefined&&item.node==null){
+      else if(item!==undefined&&item.node===null){
         //console.log(i);
         thisSet.splice(i,1);
       }
-    })
+    });
 
     if (this.node.nodeName!= 'circle')
     {//console.log(thisSet)
@@ -65,7 +74,7 @@ Raphael.st.draggableSet = function (setObj,type) {
     }
     else {
       new drawLineFromTo().startdrawLineFromTo(this,thisSet);
-    };
+    }
 
 
 
@@ -89,6 +98,7 @@ Raphael.st.draggableSet = function (setObj,type) {
 /**/
 
 function EffectMove (item, i, _this, dx, dy){
+  //console.log(item);
 /*console.log(_this);*/
     if (item.node.nodeName == 'circle') {
       item.attr({ cx: _this.ox + dx+1, cy: _this.oy + dy+16 });
@@ -100,18 +110,16 @@ function EffectMove (item, i, _this, dx, dy){
       item.attr({ x: _this.ox + dx+60, y: _this.oy + dy+15 });
     }
     else if (item.node.nodeName == 'path') {
+
       let MX=item.attr().path[0][1];
       let MY=item.attr().path[0][2];
       item.attr("path",`M${MX} ${MY}L${_this.ox+ dx} ${_this.oy+ dy+15}`);
 
     }
-
-
-
 }
 
 function CommonControlsMove(item, i, _this, dx, dy){
-
+//console.log(item);
   if (item.node.nodeName == 'circle') {
        if(item.node.circleName=="circleLeft"){
 
@@ -129,15 +137,39 @@ function CommonControlsMove(item, i, _this, dx, dy){
        item.attr({ x: _this.ox + dx+40, y: _this.oy + dy+15 });
      }
      else if (item.node.nodeName == 'path') {
-       if(item.node.lineFromCyrcle=="circleRight")
+       if(item.node.lineFromCyrcle=="circleRight")//moving line from right circle of common control  to Effect Block
        {
          let LX=item.attr().path[1][1];
          let LY=item.attr().path[1][2];
          item.attr("path",`M${_this.ox+ dx+80} ${_this.oy+ dy+16}L${LX} ${LY}`);
        }
+       else if(item.node.lineFromCyrcle=="noCircleDistributor")//moving line from RootDistributorBlock  to common control
+       {
+         let MX=item.attr().path[0][1];
+         let MY=item.attr().path[0][2];
+         item.attr("path",`M${MX} ${MY}L${_this.ox+ dx} ${_this.oy+ dy+15}`);
+       }
 
 
      }
 
+}
 
+function DistributorRootMove (item, i, _this, dx, dy){
+/*console.log(_this);*/
+    if (item.node.nodeName == 'circle') {
+      item.attr({ cx: _this.ox + dx+1, cy: _this.oy + dy+16 });
+    }
+    else if (item.node.nodeName == 'rect'){
+      item.attr({ x: _this.ox + dx, y: _this.oy + dy });
+    }
+    else if (item.node.nodeName == 'text') {
+      item.attr({ x: _this.ox + dx+80, y: _this.oy + dy+32 });
+    }
+    else if (item.node.nodeName == 'path') {//moving line from this RootDistributorBlock  to common control
+      let LX=item.attr().path[1][1];
+      let LY=item.attr().path[1][2];
+      item.attr("path",`M${_this.ox+ dx+160} ${_this.oy+ dy+32}L${LX} ${LY}`);
+
+    }
 }
