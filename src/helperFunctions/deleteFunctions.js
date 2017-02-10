@@ -7,7 +7,7 @@ import GlobalStorage from '../storage';
 
 let deleteFunctions = window.addEventListener("contextmenu",function(event){
     event.preventDefault();
-
+console.log(GlobalStorage.toDelete);
   //let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 123,     "ctrlKey": true  }];
   //csInterface.registerKeyEventsInterest(keyEventsInterest);
   /*event.preventDefault();*/
@@ -90,6 +90,7 @@ let arrayOfLinkedEffectsString=arrayOfLinkedEffectsFiltered.join(';');//transfor
       .then((resolve)=>{
 
       resolve=undefined;
+      GlobalStorage.toDelete=undefined;
       GlobalStorage.prevActive=undefined;
 
       });

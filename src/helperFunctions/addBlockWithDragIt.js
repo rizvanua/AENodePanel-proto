@@ -6,7 +6,9 @@ import csInterface from '../csInterface';
 import moveEffects  from "./moveEffects.js";
 // Here we handle drag of blocks from secondMenu and add blocks on the main workspace
 Raphael.st.simpleDraggable = function(storageName,item) {
-  let itemH = item;
+  //console.log(item);
+  //let itemH = item;
+  let initialX;
   let me = this,
       lx = 0,
       ly = 0,
@@ -18,10 +20,11 @@ Raphael.st.simpleDraggable = function(storageName,item) {
           me.transform('t' + lx + ',' + ly);
       },
       startFnc = function() {
-        console.log(me[1].node.StaticGroupTipe);
+        initialX=me.getBBox().x;
+        //console.log(me[1].node.StaticGroupTipe);
         if(me[1].node.StaticGroupTipe=='effects'){
           GlobalStorage.effectCreateDrag.active=true;
-          console.log(me[2].node.poi);
+          //console.log(me[2].node.poi);
           GlobalStorage.effectCreateDrag.effectType=me[2].node.id;
             GlobalStorage.effectCreateDrag.poi=me[2].node.poi;
         }
@@ -29,8 +32,8 @@ Raphael.st.simpleDraggable = function(storageName,item) {
 
       },
       endFnc = function() {
-        console.log(me.getBBox().x);
-        if(me.getBBox().x>210){
+
+console.log();
 //console.log(itemH);
         if(GlobalStorage.effectCreateDrag.active===true&&GlobalStorage.effectCreateDrag.distribitorMouseOver!==null){//ADD effects blocks into DISTRIBITOR
 console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
@@ -38,7 +41,7 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
           let cordY;
           let connectPath;
           let workBlock;
-          let item=itemH;
+          //let item=itemH;
 
           let genId=GlobalStorage.effectCreateDrag.distribitorMouseOver;//get an Unic Id of Distributor over which one mouse being
           let distribitorObject=GlobalStorage.distribitorObjectsStorage[genId];//get object with this key
@@ -46,7 +49,7 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
           Object.keys(distribitorObject).map((objectKey, index)=> {
             if(distribitorObject[objectKey].poiName){//filter object priperty to get object with poiName only
                 let poiSet=distribitorObject[objectKey];//get set with this key
-                console.log(index);
+                //console.log(index);
               csInterface.evalScript(`$._ext.applyEffectDistributor("${item.name}","${distributorType}",${index})`,(res)=>{// send data to extendScript
 
                 let promise = new Promise(
@@ -89,13 +92,22 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
         GlobalStorage.effectCreateDrag.effectType=null;
         let cordY=me.getBBox().y;
         let cordX=me.getBBox().x;
-        let item=itemH;
+        //let item=itemH;
+
+        if((cordX-initialX)<100)
+        {
+          cordX+=120;
+        }
+        else{
+          cordX
+        }
 
 //console.log(me);
 
       if(this.node.StaticGroupTipe=='effects'&&GlobalStorage.effectCreateDrag.distribitorMouseOver===null){// check if this block is effect and distribitorMouseOver is null if this is true that means we want add ordinar effect not assign effect to dispacther.
 
                   csInterface.evalScript(`$._ext.applyEffect("${item.name}")`,(res)=>{//push data into extend script
+
                     let workBlock=new mainBlock().createBlockEffects(cordX,cordY,item,res);
                     moveEffects(workBlock);
                     GlobalStorage.effectCreateDrag.active=false// close ability to add this effect to dispatcher
@@ -107,35 +119,23 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
       }
       else if(this.node.StaticGroupTipe=='commonControls'){
 
+        console.log(item);
+//console.log(this[0].id);
         if (item.name=="POI"){
 
             csInterface.evalScript(`$._ext.createControlPoint()`,(res)=>{//push data into extend script
-
-              let index=res.length-1;
-
-              let number=res.charAt(index)*1;
-              if (number){
-              item.name=`${item.name} ${number}`;
-              }
 
               let workBlock=new mainBlock().createBlockCommonControls(cordX,cordY,item,false, res);
             });
         }
         else if (item.name=="FOV"){
-          console.log("FOV");
+
           csInterface.evalScript(`$._ext.createControlFOV()`,(res)=>{//push data into extend script
-
-            let index=res.length-1;
-
-            let number=res.charAt(index)*1;
-            if (number){
-            item.name=`${item.name} ${number}`;
-            }
 
             let workBlock=new mainBlock().createBlockCommonControls(cordX,cordY,item,false, res);
           });
         }
-        else{
+        else if(item.name=="Waves"){
           let workBlock=new mainBlock().createBlockCommonControls(cordX,cordY,item,false);
         }
 
@@ -146,10 +146,7 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
 
         //let workBlock=new mainBlock().createBlockCommonControls(500,cordY,item);
       }
-        }
-        else{
-          alert("Please drag the node by mouse")
-        }
+
       GlobalStorage.storageOfSecondMenuSets[storageName].hide();//hide the menu panel
         me.transform('t' + 0 + ',' + 0);//return a block from secondMenu to an enitial place
       };

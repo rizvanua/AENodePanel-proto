@@ -519,7 +519,7 @@
 
 	var _helperFunctionsDrawLineFromToJs2 = _interopRequireDefault(_helperFunctionsDrawLineFromToJs);
 
-	/*import deleteFunctions from "../helperFunctions/deleteFunction.js"*/
+	//import deleteFunctions from "../helperFunctions/deleteFunction.js"*/
 
 	var _helperFunctionsActiveBlockFunction = __webpack_require__(12);
 
@@ -588,6 +588,7 @@
 	      workBlockSet.click(function () {
 	        new _helperFunctionsActiveBlockFunction2["default"]().activeEffectBlock(workBlockSet, blockEffectName);
 	      });
+
 	      workBlockSet.mouseover(function () {
 	        //console.log("OVER");
 	        //console.log(workBlockSet);
@@ -615,6 +616,17 @@
 	  }, {
 	    key: "createBlockCommonControls",
 	    value: function createBlockCommonControls(x, y, item, distributor, res) {
+
+	      var thisItemName = item.name;
+	      if (res) {
+	        var index = res.length - 1;
+
+	        var number = res.charAt(index) * 1;
+	        if (number) {
+	          thisItemName = item.name + " " + number;
+	        }
+	      }
+
 	      var workBlockSet = _raphaelContainerJs2["default"].set();
 	      var typeNode = "commonControls";
 	      var dummy = _raphaelContainerJs2["default"].rect(x, y, 80, 32, 5).attr({ fill: "rgb(64, 64, 64)",
@@ -633,14 +645,14 @@
 	      });
 	      workBlock.node.effectName = item.effectName;
 
-	      var title = _raphaelContainerJs2["default"].text(x + 40, y + 15, item.name).attr({
+	      var title = _raphaelContainerJs2["default"].text(x + 40, y + 15, thisItemName).attr({
 	        cursor: "move",
 	        "font-size": 15
 	      });
 
 	      title.node.effectName = item.effectName;
 
-	      console.log(item);
+	      //console.log(item);
 	      workBlockSet.shortName = item.effectName.toLowerCase();
 	      workBlockSet.push(workBlock);
 	      workBlockSet.push(title);
@@ -664,7 +676,6 @@
 	      workBlockSet.click(function () {
 	        new _helperFunctionsActiveBlockFunction2["default"]().activeNotEffectBlock(workBlockSet);
 	      });
-	      /*workBlockSet.drag(this.move,this.start,this.up);*/
 	      workBlockSet.draggableSet(workBlockSet, typeNode);
 	      return workBlockSet;
 	    }
@@ -1457,7 +1468,9 @@
 
 	// Here we handle drag of blocks from secondMenu and add blocks on the main workspace
 	Raphael.st.simpleDraggable = function (storageName, item) {
-	  var itemH = item;
+	  //console.log(item);
+	  //let itemH = item;
+	  var initialX = undefined;
 	  var me = this,
 	      lx = 0,
 	      ly = 0,
@@ -1469,130 +1482,120 @@
 	    me.transform('t' + lx + ',' + ly);
 	  },
 	      startFnc = function startFnc() {
-	    console.log(me[1].node.StaticGroupTipe);
+	    initialX = me.getBBox().x;
+	    //console.log(me[1].node.StaticGroupTipe);
 	    if (me[1].node.StaticGroupTipe == 'effects') {
 	      _storage2["default"].effectCreateDrag.active = true;
-	      console.log(me[2].node.poi);
+	      //console.log(me[2].node.poi);
 	      _storage2["default"].effectCreateDrag.effectType = me[2].node.id;
 	      _storage2["default"].effectCreateDrag.poi = me[2].node.poi;
 	    }
 	  },
 	      endFnc = function endFnc() {
-	    var _this = this;
 
-	    console.log(me.getBBox().x);
-	    if (me.getBBox().x > 210) {
+	    console.log();
+	    //console.log(itemH);
+	    if (_storage2["default"].effectCreateDrag.active === true && _storage2["default"].effectCreateDrag.distribitorMouseOver !== null) {
 	      (function () {
-	        //console.log(itemH);
-	        if (_storage2["default"].effectCreateDrag.active === true && _storage2["default"].effectCreateDrag.distribitorMouseOver !== null) {
-	          (function () {
-	            //ADD effects blocks into DISTRIBITOR
-	            console.log(_storage2["default"].effectCreateDrag.distribitorMouseOver);
-	            var cordX = undefined;
-	            var cordY = undefined;
-	            var connectPath = undefined;
-	            var workBlock = undefined;
-	            var item = itemH;
+	        //ADD effects blocks into DISTRIBITOR
+	        console.log(_storage2["default"].effectCreateDrag.distribitorMouseOver);
+	        var cordX = undefined;
+	        var cordY = undefined;
+	        var connectPath = undefined;
+	        var workBlock = undefined;
+	        //let item=itemH;
 
-	            var genId = _storage2["default"].effectCreateDrag.distribitorMouseOver; //get an Unic Id of Distributor over which one mouse being
-	            var distribitorObject = _storage2["default"].distribitorObjectsStorage[genId]; //get object with this key
-	            var distributorType = distribitorObject.rootBlockSet.distributorType;
-	            Object.keys(distribitorObject).map(function (objectKey, index) {
-	              if (distribitorObject[objectKey].poiName) {
-	                (function () {
-	                  //filter object priperty to get object with poiName only
-	                  var poiSet = distribitorObject[objectKey]; //get set with this key
-	                  console.log(index);
-	                  _csInterface2["default"].evalScript("$._ext.applyEffectDistributor(\"" + item.name + "\",\"" + distributorType + "\"," + index + ")", function (res) {
-	                    // send data to extendScript
+	        var genId = _storage2["default"].effectCreateDrag.distribitorMouseOver; //get an Unic Id of Distributor over which one mouse being
+	        var distribitorObject = _storage2["default"].distribitorObjectsStorage[genId]; //get object with this key
+	        var distributorType = distribitorObject.rootBlockSet.distributorType;
+	        Object.keys(distribitorObject).map(function (objectKey, index) {
+	          if (distribitorObject[objectKey].poiName) {
+	            (function () {
+	              //filter object priperty to get object with poiName only
+	              var poiSet = distribitorObject[objectKey]; //get set with this key
+	              //console.log(index);
+	              _csInterface2["default"].evalScript("$._ext.applyEffectDistributor(\"" + item.name + "\",\"" + distributorType + "\"," + index + ")", function (res) {
+	                // send data to extendScript
 
-	                    var promise = new Promise(function (resolve) {
-	                      var value = distribitorObject[objectKey].poiName; // get name of object
-	                      cordX = distribitorObject[objectKey][1].attr("x"); // get coordinates of correspond POI block
-	                      cordY = distribitorObject[objectKey][1].attr("y"); // get coordinates of correspond POI block
-	                      workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(cordX + 130, cordY, item, res); // create effect block
+	                var promise = new Promise(function (resolve) {
+	                  var value = distribitorObject[objectKey].poiName; // get name of object
+	                  cordX = distribitorObject[objectKey][1].attr("x"); // get coordinates of correspond POI block
+	                  cordY = distribitorObject[objectKey][1].attr("y"); // get coordinates of correspond POI block
+	                  workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(cordX + 130, cordY, item, res); // create effect block
 
-	                      resolve(workBlock);
-	                    });
-	                    promise.then(function (resolve) {
-	                      (0, _moveEffectsJs2["default"])(workBlock);
-	                      connectPath = _raphaelContainerJs2["default"].path(["M", cordX + 80, cordY + 16, "L", cordX + 130, cordY + 16]); //create line between POI and effect blocks
-	                      connectPath.node.lineFromCyrcle = "circleRight"; //asign name of the line for POI blocks
-	                      resolve.push(connectPath);
-	                      poiSet.push(connectPath);
-	                      _storage2["default"].distribitorObjectsStorage[genId][resolve.setEffectName] = resolve;
-	                      _storage2["default"].effectCreateDrag.active = false; //put effectCreateDrag.active in false. This means that an effect was successfully added to the dispatcher.
-	                    });
-	                  });
-
-	                  //workBlock=new mainBlock().createBlockEffects((cordX+130),cordY,item,res);//only for test in browser
-	                })();
-	              }
-	            });
-	          })();
-	        }
-
-	        _storage2["default"].effectCreateDrag.effectType = null;
-	        var cordY = me.getBBox().y;
-	        var cordX = me.getBBox().x;
-	        var item = itemH;
-
-	        //console.log(me);
-
-	        if (_this.node.StaticGroupTipe == 'effects' && _storage2["default"].effectCreateDrag.distribitorMouseOver === null) {
-	          // check if this block is effect and distribitorMouseOver is null if this is true that means we want add ordinar effect not assign effect to dispacther.
-
-	          _csInterface2["default"].evalScript("$._ext.applyEffect(\"" + item.name + "\")", function (res) {
-	            //push data into extend script
-	            var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(cordX, cordY, item, res);
-	            (0, _moveEffectsJs2["default"])(workBlock);
-	            _storage2["default"].effectCreateDrag.active = false; // close ability to add this effect to dispatcher
-	          });
-
-	          //-let res=item.name;//only for test in browser
-	          //-let workBlock=new mainBlock().createBlockEffects(cordX,cordY,item,res);//only for test in browser
-	        } else if (_this.node.StaticGroupTipe == 'commonControls') {
-
-	            if (item.name == "POI") {
-
-	              _csInterface2["default"].evalScript("$._ext.createControlPoint()", function (res) {
-	                //push data into extend script
-
-	                var index = res.length - 1;
-
-	                var number = res.charAt(index) * 1;
-	                if (number) {
-	                  item.name = item.name + " " + number;
-	                }
-
-	                var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, cordY, item, false, res);
+	                  resolve(workBlock);
+	                });
+	                promise.then(function (resolve) {
+	                  (0, _moveEffectsJs2["default"])(workBlock);
+	                  connectPath = _raphaelContainerJs2["default"].path(["M", cordX + 80, cordY + 16, "L", cordX + 130, cordY + 16]); //create line between POI and effect blocks
+	                  connectPath.node.lineFromCyrcle = "circleRight"; //asign name of the line for POI blocks
+	                  resolve.push(connectPath);
+	                  poiSet.push(connectPath);
+	                  _storage2["default"].distribitorObjectsStorage[genId][resolve.setEffectName] = resolve;
+	                  _storage2["default"].effectCreateDrag.active = false; //put effectCreateDrag.active in false. This means that an effect was successfully added to the dispatcher.
+	                });
 	              });
-	            } else if (item.name == "FOV") {
-	              console.log("FOV");
-	              _csInterface2["default"].evalScript("$._ext.createControlFOV()", function (res) {
-	                //push data into extend script
 
-	                var index = res.length - 1;
-
-	                var number = res.charAt(index) * 1;
-	                if (number) {
-	                  item.name = item.name + " " + number;
-	                }
-
-	                var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, cordY, item, false, res);
-	              });
-	            } else {
-	              var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, cordY, item, false);
-	            }
-	          } else if (_this.node.StaticGroupTipe == 'distributor') {
-	            new _mainBlockDisributorBlocks2["default"](cordX, cordY, item);
-
-	            //let workBlock=new mainBlock().createBlockCommonControls(500,cordY,item);
+	              //workBlock=new mainBlock().createBlockEffects((cordX+130),cordY,item,res);//only for test in browser
+	            })();
 	          }
+	        });
 	      })();
+	    }
+
+	    _storage2["default"].effectCreateDrag.effectType = null;
+	    var cordY = me.getBBox().y;
+	    var cordX = me.getBBox().x;
+	    //let item=itemH;
+
+	    if (cordX - initialX < 100) {
+	      cordX += 120;
 	    } else {
-	        alert("Please drag the node by mouse");
+	      cordX;
+	    }
+
+	    //console.log(me);
+
+	    if (this.node.StaticGroupTipe == 'effects' && _storage2["default"].effectCreateDrag.distribitorMouseOver === null) {
+	      // check if this block is effect and distribitorMouseOver is null if this is true that means we want add ordinar effect not assign effect to dispacther.
+
+	      _csInterface2["default"].evalScript("$._ext.applyEffect(\"" + item.name + "\")", function (res) {
+	        //push data into extend script
+
+	        var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(cordX, cordY, item, res);
+	        (0, _moveEffectsJs2["default"])(workBlock);
+	        _storage2["default"].effectCreateDrag.active = false; // close ability to add this effect to dispatcher
+	      });
+
+	      //-let res=item.name;//only for test in browser
+	      //-let workBlock=new mainBlock().createBlockEffects(cordX,cordY,item,res);//only for test in browser
+	    } else if (this.node.StaticGroupTipe == 'commonControls') {
+
+	        console.log(item);
+	        //console.log(this[0].id);
+	        if (item.name == "POI") {
+
+	          _csInterface2["default"].evalScript("$._ext.createControlPoint()", function (res) {
+	            //push data into extend script
+
+	            var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, cordY, item, false, res);
+	          });
+	        } else if (item.name == "FOV") {
+
+	          _csInterface2["default"].evalScript("$._ext.createControlFOV()", function (res) {
+	            //push data into extend script
+
+	            var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, cordY, item, false, res);
+	          });
+	        } else if (item.name == "Waves") {
+	          var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, cordY, item, false);
+	        }
+	      } else if (this.node.StaticGroupTipe == 'distributor') {
+	        new _mainBlockDisributorBlocks2["default"](cordX, cordY, item);
+
+	        //let workBlock=new mainBlock().createBlockCommonControls(500,cordY,item);
 	      }
+
 	    _storage2["default"].storageOfSecondMenuSets[storageName].hide(); //hide the menu panel
 	    me.transform('t' + 0 + ',' + 0); //return a block from secondMenu to an enitial place
 	  };
@@ -1653,7 +1656,7 @@
 
 	var deleteFunctions = window.addEventListener("contextmenu", function (event) {
 	  event.preventDefault();
-
+	  console.log(_storage2['default'].toDelete);
 	  //let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 123,     "ctrlKey": true  }];
 	  //csInterface.registerKeyEventsInterest(keyEventsInterest);
 	  /*event.preventDefault();*/
@@ -1734,6 +1737,7 @@
 	      }).then(function (resolve) {
 
 	        resolve = undefined;
+	        _storage2['default'].toDelete = undefined;
 	        _storage2['default'].prevActive = undefined;
 	      });
 	    }

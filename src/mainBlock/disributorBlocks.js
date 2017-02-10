@@ -5,6 +5,7 @@ import activeBlockFunctionsClass from '../helperFunctions/activeBlockFunction';
 import generatorId from '../helperFunctions/generatorId';
 import GlobalStorage from '../storage';
 
+
 // Here we create Distributor blocks
 class distributorBlocks{
     constructor(x,y,item){
@@ -60,6 +61,8 @@ class distributorBlocks{
         this.rootBlockSet.hoverInBounds(hoverIn,hoverOut);
         GlobalStorage.distribitorObjectsStorage[this.genId].rootBlockSet=this.rootBlockSet;
         this.rootBlockSet.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(this.rootBlockSet);});
+
+      
 
         // Hover in function
           function hoverIn() {

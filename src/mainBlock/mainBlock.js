@@ -2,7 +2,7 @@ import R from "../raphaelContainer.js";
 import csInterface from "../csInterface.js";
 import draggableSet from "../helperFunctions/draggableSet.js";
 import drawLineFromTo  from "../helperFunctions/drawLineFromTo.js";
-/*import deleteFunctions from "../helperFunctions/deleteFunction.js"*/
+//import deleteFunctions from "../helperFunctions/deleteFunction.js"*/
 import activeBlockFunctionsClass from '../helperFunctions/activeBlockFunction';
 import GlobalStorage from '../storage';
 
@@ -67,6 +67,7 @@ class mainBlock{
     GlobalStorage.historyOfObjects[blockEffectName]=workBlockSet;
     workBlockSet.draggableSet(workBlockSet,typeNode);
     workBlockSet.click(()=>{new activeBlockFunctionsClass().activeEffectBlock(workBlockSet,blockEffectName);});
+
     workBlockSet.mouseover(function(){
       //console.log("OVER");
       //console.log(workBlockSet);
@@ -95,6 +96,18 @@ class mainBlock{
   }
 
   createBlockCommonControls(x,y,item,distributor,res){
+
+    let thisItemName=item.name;
+    if(res){
+      let index=res.length-1;
+
+      let number=res.charAt(index)*1;
+      if (number){
+      thisItemName=`${item.name} ${number}`;
+      }
+    }
+
+
     let workBlockSet=R.set();
     let typeNode="commonControls";
     let dummy=R.rect(x,y, 80, 32,5)
@@ -115,7 +128,7 @@ class mainBlock{
                 });
                 workBlock.node.effectName=item.effectName;
 
-    let title= R.text(x+40, y+15, item.name)
+    let title= R.text(x+40, y+15, thisItemName)
     .attr({
       cursor: "move",
       "font-size": 15
@@ -124,7 +137,7 @@ class mainBlock{
           title.node.effectName=item.effectName;
 
 
-          console.log(item);
+          //console.log(item);
           workBlockSet.shortName=item.effectName.toLowerCase();
           workBlockSet.push(workBlock);
           workBlockSet.push(title);
@@ -148,7 +161,6 @@ class mainBlock{
     workBlockSet.fullCommonContrlName=item.fullname;
     workBlockSet.thisCommonContrlName=res;
     workBlockSet.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(workBlockSet);});
-    /*workBlockSet.drag(this.move,this.start,this.up);*/
     workBlockSet.draggableSet(workBlockSet,typeNode);
     return workBlockSet;
 

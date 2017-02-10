@@ -109,6 +109,7 @@ $._ext = {
     createControlPoint: function(){
        
         var ControlPoint=this.currentLayer.Effects.addProperty("Point Control");
+         $.writeln(ControlPoint.name);
         return ControlPoint.name;
         },
     createControlFOV: function(){        
