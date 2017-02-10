@@ -1,117 +1,176 @@
-﻿// GLOBAL VARIABLES
-var currentLayer={};
-var effectNameArr=[];
-var itemWidth;
-// FUNCTIONS USED AS INTERNAL IN THIS  PROJECT
-function addPOIFunction(effectName, propName){    
-    defValuePOI=currentLayer.effect.property(effectName).property(propName).value;
-     //currentLayer.effect.property(effectName).property(propName).setValue([100,980]);
-     currentLayer.effect.property(effectName).property(propName).expression= "[100,itemWidth/2]";
+﻿function addPOIFunction(effectName, propName, thisPropName, _this){    
+    _this.currentLayer.effect.property(effectName).property(propName).expression="thisLayer.effect("+"'"+thisPropName+"'"+").point.value";
+    
+     
+    
 };
 
-function addFOVFunction(effectName, propName){
-    //defValueFOI=currentLayer.effect.property(effectName).property(propName).value;
-    
-    currentLayer.effect.property(effectName).property(propName).expression= "[index*30]";
+function addFOVFunction(effectName, propName, thisPropName, _this){    
+     _this.currentLayer.effect.property(effectName).property(propName).expression="thisLayer.effect("+"'"+thisPropName+"'"+").angle.value";
   
 };
 
-function addWavesFunction(effectName, propName){
+function addWavesFunction(effectName, propName, thisPropName,_this){
+    _this.currentLayer.effect.property(effectName).property("Amplitude").expression= "[300]";
+    _this.currentLayer.effect.property(effectName).property("Wavelength").expression= "[300]";
+    _this.currentLayer.effect.property(effectName).property("Phase").expression= "[50]";
+    _this.currentLayer.effect.property(effectName).property("Max Latitude").expression= "[50]";
+    _this.currentLayer.effect.property(effectName).property("Displacement").expression= "[50]";
 };
 
-//MAIN CODE
-$._ext = {   
-    applyEffect : function(effectName)
-    {
-        var currentComp = app.project.activeItem;
-        itemWidth= app.project.activeItem.width;
-         
-        if (currentComp){
-            var layerCount = currentComp.numLayers;
-            if (layerCount > 0){
-                for (var i = 1; i <= layerCount; ++i){
+function generatorPOI() {
+    var F1 = function() {
+       return (((1+Math.random())*0x100)|0);
+    };
+    var F2 = function() {
+       return (((1+Math.random())*0x200)|0);
+    };
+    return ("["+F1()+"," + F2() + "]");
+}
 
-                    if(currentComp.layer(i).selected&&currentComp.layer(i) instanceof AVLayer){
-                        currentLayer= currentComp.layer(i);
-                        var layerEffect=currentComp.layer(i).Effects.addProperty(effectName);
-                         /*$.writeln(layerEffect.propertyIndex);*/
-                         /*$.writeln(currentLayer.lselectedProperties);*/
-                        /*for(var ty=0; ty<currentLayer.length;  ty++){
-                            $.writeln(currentLayer.lselectedProperties);
-                            }*/
+//MAIN CODE
+$._ext = {
+     initialProjectTest : function()
+    {        
+       this.currentComp = app.project.activeItem;
+        
+        if (this.currentComp){
+            var layerCount = this.currentComp.numLayers;
+          
+            
+            if (layerCount > 0){
+             
+                for (var i = 1; i <= layerCount; ++i){
+                                    
+                    if(this.currentComp.layers[i] instanceof AVLayer)
+                    {
+                        this.currentComp = app.project.activeItem;
+                        this.itemWidth= app.project.activeItem.width;
+                        this.itemHight= app.project.activeItem.height;
+                        this.distributorProps={
+                                        cube:[[0.00*this.itemWidth, 0.5*this.itemHight],[0.25*this.itemWidth, 0.5*this.itemHight],[0.50*this.itemWidth, 0.5*this.itemHight],[0.75*this.itemWidth, 0.5*this.itemHight],[0.50*this.itemWidth, 0.0*this.itemHight],[0.50*this.itemWidth, 1.0*this.itemHight]],
+                                        sphere:[[0.00*this.itemWidth, 0.5*this.itemHight],[0.25*this.itemWidth, 0.5*this.itemHight],[0.50*this.itemWidth, 0.5*this.itemHight],[0.75*this.itemWidth, 0.5*this.itemHight],[0.10*this.itemWidth, 0.25*this.itemHight],[0.43*this.itemWidth, 0.25*this.itemHight],[0.77*this.itemWidth, 0.25*this.itemHight],[0.10*this.itemWidth, 0.75*this.itemHight],[0.43*this.itemWidth, 0.75*this.itemHight],[0.77*this.itemWidth, 0.75*this.itemHight]]
+                                        };
+                       
+                        this.currentLayer = this.currentComp.layers[i];  
+                       return true;
+
+                    }
+                     
+                }               
+              
+            } 
+        else{
+             return false;
+            }
+            
+          
+        } 
+        else {
+           
+             
+            return false;
+        }
+    },
+        applyEffect : function(effectName)
+    {        
+         
+        if (this.currentComp){
+            var layerEffect=this.currentLayer.Effects.addProperty(effectName);   
                           
                           return layerEffect.name;
-                        /*alert(currentComp.layer(i))*/
-                        }
-                    }
-
-                }
-            else{
-                alert("Please add a layer");
-                }
+            
+            
             }
     },
-    addCommonControls: function(effectName,propName)
+    applyEffectDistributor: function(effectName, distributorType,index){
+                      
+                     
+                        var layerEffect=this.currentLayer.Effects.addProperty(effectName);
+                        if(distributorType=="cube"){                          
+                            var newValue="["+this.distributorProps.cube[index-1].toString()+"]";
+                            layerEffect.property("Point of Interest").expression=newValue;
+                            }
+                        else if(distributorType=="sphere"){
+                            var newValue="["+this.distributorProps.sphere[index-1].toString()+"]";
+                            layerEffect.property("Point of Interest").expression=newValue;
+                            }
+                        else{
+                            layerEffect.property("Point of Interest").expression=generatorPOI();
+                            }                       
+                                                   
+                          return layerEffect.name;                 
+
+               
+            
+           
+        
+     },
+    createControlPoint: function(){
+       
+        var ControlPoint=this.currentLayer.Effects.addProperty("Point Control");
+        return ControlPoint.name;
+        },
+    createControlFOV: function(){        
+        var AngleControl=this.currentLayer.Effects.addProperty("Angle Control");
+        return AngleControl.name;
+        },
+    addCommonControls: function(effectName,propName,thisPropName)
    {       
-       /*$.writeln(currentLayer.selectedPropertie);*/
-       var hasProperty=currentLayer.effect.property(effectName).property(propName);
-       if(hasProperty)
-           {
+       
                switch (propName) {
                           case "Point of Interest":
-                            addPOIFunction(effectName, propName);
+                            addPOIFunction(effectName, propName,thisPropName,this);
                             break;
                           case "FOV":
-                            addFOVFunction(effectName, propName);
+                            addFOVFunction(effectName, propName,thisPropName,this);
                             break;
                           case "Waves":
-                            addWavesFunction(effectName, propName);
+                            addWavesFunction(effectName, propName,thisPropName,this);
                             break;
                           default:
                             alert( "Unrecognized control type" );                           
                             
                             }
                
-           }
-       else
-       {
-            alert("The effect doesn't support  this control");
-        }
+      
        
         
     },
     moveEffectIndex: function(effectName,number)
     {
-        //$.writeln(effectName);
-        //$.writeln(number);
+      
         
         var number=(number*1);
         if(number>0&&effectName)
         {
-            currentLayer.effect.property(effectName).moveTo(number);
+            this.currentLayer.effect.property(effectName).moveTo(number);
             return number;
         }
      },
  
     deleteEffect: function (effectName){
         if(effectName!=null){
-            currentLayer.effect.property(effectName).remove();
-         //$.writeln(effectName);
+            this.currentLayer.effect.property(effectName).remove();
+         
          return effectName;
             }
          
       },
   
-    deleteCommonControl: function(propName, arrayOfLinkedEffects){        
-        effectNameArr = arrayOfLinkedEffects.split(';');        
-        //matchName
-         if(effectNameArr[0]!=''){
-             for (var i =0; i<effectNameArr.length; i++){            
-         //currentLayer.effect.property(effectNameArr[i]).property(propName).setValue(defValuePOI); 
-         //$.writeln(currentLayer.effect.property(effectNameArr[i]).matchName.value);         
-         currentLayer.effect.property(effectNameArr[i]).property(propName).expressionEnabled = false;
+    deleteCommonControl: function(propName, arrayOfLinkedEffects, thisCommonContrlName){         
+        this.effectNameArr = arrayOfLinkedEffects.split(';');        
+       this.currentLayer.effect.property(thisCommonContrlName).remove();
+         if(this.effectNameArr[0]!=''){
+              for (var i =0; i<this.effectNameArr.length; i++){            
+             
+            
+             this.currentLayer.effect.property(this.effectNameArr[i]).property(propName).expressionEnabled = false;
+            }
+         }        
+    },
+    selectEffect: function(effectName){
+        this.currentLayer.effect.property(effectName).selected=true;
         }
-             }        
-    }
 };
 

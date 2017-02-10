@@ -22,6 +22,14 @@ class SideBar {
       }
 
       let firstLetter=item.name.charAt(0);
+      let dummy=R.rect(5,sidebar_inner, 32, 32,5)
+      .attr({   fill: "rgb(64, 64, 64)",
+                "fill-opacity":0,
+                stroke: "none",
+                opacity: 1,
+                cursor: "pointer"
+            });
+
 
       let x=R.rect(5,sidebar_inner, 32, 32,5)
       .attr({   fill: "rgb(64, 64, 64)",
@@ -46,8 +54,11 @@ class SideBar {
               menuWrapper.node.blockName=item.name;
               menuWrapper.hide();
       GlobalStorage.mainMenuSet[item.systName].push(menuWrapper);
+      GlobalStorage.mainMenuSet[item.systName].push(dummy).toFront();
       GlobalStorage.mainMenuSet[item.systName].push(x);
-            x.node.id=item.name;
+
+
+                          dummy.node.id=item.name;
 
             //Hover function
             GlobalStorage.mainMenuSet[item.systName].hover(

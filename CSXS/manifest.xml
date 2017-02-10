@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<ExtensionManifest ExtensionBundleId="com.mettelNodePanel" ExtensionBundleName="Mettel Node Panel" ExtensionBundleVersion="1.0" Version="4.0">
+<ExtensionManifest ExtensionBundleId="com.mettleNodePanel" ExtensionBundleName="Mettle Node Panel" ExtensionBundleVersion="1.0" Version="4.0">
   <ExtensionList>
-    <Extension Id="com.mettelNodePanel" Version="1.0"/>
+    <Extension Id="com.mettleNodePanel" Version="1.0"/>
   </ExtensionList>
   <ExecutionEnvironment>
     <HostList>
@@ -11,11 +11,11 @@
       <Locale Code="All"/>
     </LocaleList>
     <RequiredRuntimeList>
-      <RequiredRuntime Name="CSXS" Version="6.1.0"/>
+      <RequiredRuntime Name="CSXS" Version="6.0"/>
     </RequiredRuntimeList>
   </ExecutionEnvironment>
   <DispatchInfoList>
-    <Extension Id="com.mettelNodePanel">
+    <Extension Id="com.mettleNodePanel">
       <DispatchInfo>
         <Resources>
           <MainPath>./index.html</MainPath>
@@ -26,7 +26,7 @@
         </Lifecycle>
         <UI>
           <Type>Panel</Type>
-          <Menu>Mettel Node Panel</Menu>
+          <Menu>Mettle Node Panel</Menu>
           <Geometry>
             <Size>
               <Height>800</Height>

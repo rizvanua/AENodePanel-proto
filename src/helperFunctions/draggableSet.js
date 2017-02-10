@@ -1,6 +1,6 @@
 import R from "../raphaelContainer.js";
 import drawLineFromTo  from "./drawLineFromTo.js";
-import moveEffecs  from "./moveEffects.js";
+import moveEffects  from "./moveEffects.js";
 import GlobalStorage from '../storage';
 import csInterface from '../csInterface';
 
@@ -23,11 +23,11 @@ Raphael.st.draggableSet = function (setObj,type) {
 
     thisSet.forEach(function (item, i) {
       if(type=="effects"){
-        console.log("effects");
+
         EffectMove(item, i, _this, dx, dy);
       }
       else if(type=="commonControls"){
-        console.log("commonControls");
+
         CommonControlsMove(item, i, _this, dx, dy);
       }
       if(type=="distributor"){
@@ -84,8 +84,8 @@ Raphael.st.draggableSet = function (setObj,type) {
       if(type=="effects")
       {
         /*console.log(thisSet[1].node.effectName);*/
-              moveEffecs (thisSet);
-              console.log("move");
+              moveEffects (thisSet);
+              
       }
 
     //console.log(GlobalStorage.historyOfObjects);

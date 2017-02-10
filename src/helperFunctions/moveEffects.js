@@ -19,14 +19,14 @@ console.log(thisSet)
 
 
         let promise= new Promise((resolve)=>{
-          console.log(GlobalStorage.historyOfObjects);
+          //console.log(GlobalStorage.historyOfObjects);
           let test=_.sortBy(GlobalStorage.historyOfObjects.itemArray, function(i){
               return i[1].attr("y");// Y is point relatively which we are sorting our array. So we've sort array of effects by Y coordinate of rectangle.
           });
 
                 resolve(test);
               }).then((resolve)=>{
-                console.log(resolve);
+                //console.log(resolve);
                 let mymap=_.map(resolve,function(i,num){
                       return i[1].node.effectName;// create map of the array and get array of effects' names
 
@@ -34,11 +34,11 @@ console.log(thisSet)
                 ;
                   return mymap;
               }).then((mymap)=>{
-                console.log(mymap)
+                //console.log(mymap)
                 let myIndex=_.indexOf(mymap,storageName);//get index of the curent effect in array. This Index is  the place of effect in order
                 myIndex+=1;
-                console.log(myIndex);
-                  console.log(storageName);
+                //console.log(myIndex);
+                  //console.log(storageName);
                 csInterface.evalScript(`$._ext.moveEffectIndex("${storageName}","${myIndex}")`,(res)=>{});
               });
 

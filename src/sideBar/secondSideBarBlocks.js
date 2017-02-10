@@ -5,7 +5,8 @@ import distributorBlocks from "../mainBlock/disributorBlocks";
 import SideBar from "./sideBar.js";
 import GlobalStorage from '../storage';
 import csInterface from '../csInterface';
-import simpleDraggable from '../helperFunctions/simpleDraggable';
+import simpleDraggable from '../helperFunctions/addBlockWithDragIt';
+import CheckCommonContrlAbility from '../helperFunctions/checkCommonControlsTypeAbilitys';
 
 
 class secondSideBarBlocks {
@@ -18,11 +19,23 @@ class secondSideBarBlocks {
     let CoordX=(Coords.getAttribute('x')*1);
     let CoordY=(Coords.getAttribute('y')*1);
     arrSecondButton[objName].forEach((item,i)=>{
+      CheckCommonContrlAbility(item);
       if(i>0){
         sidebar_inner=sidebar_inner+34;
       }
 
-
+      let dummy=R.rect(58,sidebar_inner, 120, 32,5)
+      .attr({   fill: "rgb(64, 64, 64)",
+                "fill-opacity":0,
+                stroke: "none",
+                opacity: 1,
+                cursor: "pointer"
+            });
+            dummy.node.StaticGroupTipe=objName;
+            dummy.node.poi=item.poi;
+            dummy.node.fov=item.fov;
+            dummy.node.waves=item.waves;
+            dummy.node.id=item.name;
 
       let x=R.rect(58,sidebar_inner, 120, 32,5)
       .attr({   fill: "rgb(64, 64, 64)",
@@ -30,8 +43,7 @@ class secondSideBarBlocks {
                 opacity: 1,
                 cursor: "pointer"
             });
-              x.node.StaticGroupTipe=objName;
-              x.node.id=item.name;
+
       let title= R.text(117, (sidebar_inner+15), item.name)
       .attr({
         "font-size": 15,
@@ -40,12 +52,20 @@ class secondSideBarBlocks {
             title.node.StaticGroupTipe=objName;
 
             let secondBlockMenuMiniSet=R.set();
-            secondBlockMenuMiniSet.push(title);
-            secondBlockMenuMiniSet.push(x);
 
+
+            secondBlockMenuMiniSet.push(x);
+            secondBlockMenuMiniSet.push(title);
+            secondBlockMenuMiniSet.push(dummy).toFront();
+            secondBlockMenuMiniSet.poi=item.poi;
+            secondBlockMenuMiniSet.fov=item.fov;
+            secondBlockMenuMiniSet.waves=item.waves;
             GlobalStorage.storageOfSecondMenuSets[storageName].push(secondBlockMenuMiniSet);
 
-            secondBlockMenuMiniSet.simpleDraggable(storageName);
+            secondBlockMenuMiniSet.simpleDraggable(storageName,item);
+            secondBlockMenuMiniSet.mousedown(function(){
+              //console.log(item);
+            });
             /*secondBlockMenuMiniSet.mousedown(function(){
               let cordY=x.attr("y");
 
