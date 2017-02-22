@@ -1,0 +1,7 @@
+{
+	"name":"Little Planet1",
+	"arrOfPresetsEffects":[
+		{"Mobius Zoom":[{"Zoom In Point":"this.itemWidth*0.5,0"},{"Zoom Out Point":"this.itemWidth*0.5, this.itemHight"},{"Zoom Factor":3}]},
+		{"Rotator":[{"Tilt (X axis)": -90}]}
+	]
+}

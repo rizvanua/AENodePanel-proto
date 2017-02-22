@@ -18,8 +18,8 @@ circle:hover{
 rect:hover{
   stroke: red;
 }
-text:hover>rect{
-  stroke: red;
+rect.distr+text+rect{
+  opacity: 0.1!important;
 }
 
 #container{

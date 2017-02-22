@@ -35,6 +35,7 @@ class secondSideBarBlocks {
             dummy.node.poi=item.poi;
             dummy.node.fov=item.fov;
             dummy.node.waves=item.waves;
+            dummy.node.strength=item.strength;
             dummy.node.id=item.name;
 
       let x=R.rect(58,sidebar_inner, 120, 32,5)
@@ -60,6 +61,13 @@ class secondSideBarBlocks {
             secondBlockMenuMiniSet.poi=item.poi;
             secondBlockMenuMiniSet.fov=item.fov;
             secondBlockMenuMiniSet.waves=item.waves;
+            secondBlockMenuMiniSet.StaticGroupTipe=objName;
+
+            if(objName=="presets"){
+              secondBlockMenuMiniSet.presetsType=item.name;
+            }
+
+            //console.log(secondBlockMenuMiniSet);
             GlobalStorage.storageOfSecondMenuSets[storageName].push(secondBlockMenuMiniSet);
 
             secondBlockMenuMiniSet.simpleDraggable(storageName,item);
@@ -110,6 +118,9 @@ GlobalStorage.storageOfSecondMenuSets[storageName].hide();
   }
   createStaticDistributorControls(){
     this.createStaticFunction("Distributor","distributor","distributor");
+  }
+  createStaticPresets(){
+    this.createStaticFunction("Presets","presets","presets");
   }
 
 

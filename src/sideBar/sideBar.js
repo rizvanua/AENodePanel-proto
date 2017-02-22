@@ -1,5 +1,5 @@
 import R from "../raphaelContainer.js";
-import arrButton from "../startArrays/arrButtonmain.js";
+import arrButton from "../startArrays/arrButtonMain.js";
 import arrSecondButton from "../startArrays/arrSecondButton.js";
 import secondSideBarBlocks from "./secondSideBarBlocks.js";
 import GlobalStorage from '../storage';
@@ -17,8 +17,12 @@ class SideBar {
     let sidebar_inner=5;
     let self=this;
     arrButton.forEach((item,i)=>{
-      if(i>0){
-        sidebar_inner=sidebar_inner+34;
+      if(i>0&&i<3){
+          sidebar_inner=sidebar_inner+34;
+
+      }
+      else if (i>0&&i>=3){
+        sidebar_inner=sidebar_inner+64;
       }
 
       let firstLetter=item.name.charAt(0);

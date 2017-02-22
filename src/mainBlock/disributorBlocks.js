@@ -27,6 +27,28 @@ class distributorBlocks{
         GlobalStorage.distribitorObjectsStorage[this.genId]={};//create an object in storage with unic ID
         //console.log(GlobalStorage.distribitorObjectsStorage);
         let typeNode="distributor";
+
+        let distributorType=this.rootBlockSet.distributorType;
+
+        let dummy=R.rect(x,y, 160, 64,5)
+        .attr({   fill: "rgb(64, 64, 64)",
+                  "fill-opacity":0,
+                  stroke: "none",
+                  opacity: 1,
+                  cursor: "pointer"
+              });
+              this.rootBlockSet.push(dummy);
+              dummy.node.distributorName=item.name;
+
+        let workBlock=R.rect(x,y, 160, 64,5)
+        .attr({   fill: "rgb(64, 64, 64)",
+                  stroke: "none",
+                  cursor: "move",
+                  class:''
+              });
+        workBlock.node.distributorName=item.name;
+
+
         let title= R.text(x+80, y+32, item.name)
         .attr({
           cursor: "move",
@@ -35,34 +57,41 @@ class distributorBlocks{
         title.node.distributorName=item.name;
         this.rootBlockSet.push(title);
         this.rootBlockSet.distributorType=item.name.toLowerCase();
-        let distributorType=this.rootBlockSet.distributorType;
-        let workBlock=R.rect(x,y, 160, 64,5)
-        .attr({   fill: "rgb(64, 64, 64)",
-                  stroke: "none",
-                  cursor: "move",
-                  class:''
-              });
-        workBlock.node.distributorName=item.name;
         this.rootBlockSet.push(workBlock);
-        title.toFront();
+        dummy.toFront();
+
+
+
+        //title.toFront();
         this.LineFromCoordsX=workBlock.attr("x");
         this.LineFromCoordsY=workBlock.attr("y");
         this.rootBlockSet.draggableSet(this.rootBlockSet,typeNode);
-        this.rootBlockSet.mouseover(function(){
-          workBlock.attr({
-            stroke: "red",
-          });
-        });
-        this.rootBlockSet.mouseout(function(){
-          workBlock.attr({
-            stroke: "none",
-          });
-        });
+
         this.rootBlockSet.hoverInBounds(hoverIn,hoverOut);
         GlobalStorage.distribitorObjectsStorage[this.genId].rootBlockSet=this.rootBlockSet;
+        GlobalStorage.distribitorObjectsStorage[this.genId].countTypeOfEffects=0;
         this.rootBlockSet.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(this.rootBlockSet);});
 
-      
+        this.rootBlockSet.mouseover(()=>{
+
+          //console.log(this);
+
+          GlobalStorage.toDelete=this.rootBlockSet;
+          if (GlobalStorage.currentLine){
+            //console.log(GlobalStorage.currentLine);
+            //console.log("OVER");
+            GlobalStorage.overDistributorMouse=this.genId;
+            //console.log(this.genId);
+            //GlobalStorage.distribitorObjectsStorage[this.genId]
+
+          }
+        });
+        this.rootBlockSet.mouseout(()=>{
+          //GlobalStorage.toDelete=undefined;
+          //console.log(GlobalStorage.currentLine);
+          GlobalStorage.overDistributorMouse=null;
+          //console.log(GlobalStorage.currentLine.node.shortControlName)
+        });
 
         // Hover in function
           function hoverIn() {
@@ -70,16 +99,21 @@ class distributorBlocks{
             /*this.animate({
               r: 70
             }, 500);*/
-            console.log(GlobalStorage.effectCreateDrag);
+
+            //console.log(GlobalStorage.effectCreateDrag);
+
             if(GlobalStorage.effectCreateDrag.active!==false){
               GlobalStorage.effectCreateDrag.distribitorMouseOver=genId;
               //GlobalStorage.effectCreateDrag.distributorType=distributorType;
-              //console.log(this);
-               this.attr({opacity: .1});
+
+               /*this.attr({opacity: .1});*/
+               //this.node.setAttribute("class","distr");
+               this[0].previousElementSibling.previousElementSibling.style.opacity="0.1";
                //console.log(GlobalStorage.effectCreateDrag);
             }
-            if(GlobalStorage.effectCreateDrag.poi===false){
+            if(GlobalStorage.effectCreateDrag.poi===false&&GlobalStorage.effectCreateDrag.effectType&&GlobalStorage.effectCreateDrag.active!==false){
               this.attr({cursor: "no-drop"});
+
             }
 
           }
@@ -87,6 +121,8 @@ class distributorBlocks{
           // Hover out function
           function hoverOut() {
             console.log("OUT");
+            console.log(this);
+
             //console.log(GlobalStorage.effectCreateDrag);
             GlobalStorage.effectCreateDrag.distribitorMouseOver=null;
             this.attr({cursor: "move"});
@@ -96,7 +132,14 @@ class distributorBlocks{
             /*this.animate({
               r: 50
             }, 500);*/
-            this.attr({opacity: 1});
+            if(this[0]){
+              this[0].style.cursor="move";
+              this[0].previousElementSibling.previousElementSibling.style.opacity="1";
+            }
+
+
+            //this.attr({opacity: 1});
+
           }
         /*this.rootBlockSet.mousedown(function(){
           console.log(this);

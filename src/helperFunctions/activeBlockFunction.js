@@ -7,12 +7,23 @@ class activeBlockFunctionsClass{
   constructor(){}
 
   activeEffectBlock(workBlockSet,effectName){
-    GlobalStorage.toDelete=workBlockSet;
-      if(GlobalStorage.prevActive&&GlobalStorage.prevActive[1].node&&GlobalStorage.toDelete[1].node.effectName!=GlobalStorage.prevActive[1].node.effectName){
+    //GlobalStorage.toDelete=workBlockSet;
+    if(GlobalStorage.prevActive){
+      console.log(GlobalStorage.prevActive[0].id);
+    }
+
+      if(GlobalStorage.prevActive&&GlobalStorage.prevActive[0]&&workBlockSet[0].id!=GlobalStorage.prevActive[0].id){
 
         GlobalStorage.prevActive[0].attr(
           {stroke: "none"}
         );
+        if(GlobalStorage.prevActive.thisCommonContrlName){
+          let controlName=GlobalStorage.prevActive.thisCommonContrlName;
+          csInterface.evalScript(`$._ext.unSelectCommonControl("${controlName}")`,(res)=>{//Unselect commonControl in  After Effects native panel
+            //let remove=GlobalStorage.toDelete.remove()
+            //resolve(remove);
+          });
+        }
       }
 
 
@@ -24,26 +35,44 @@ class activeBlockFunctionsClass{
 
         GlobalStorage.toDelete[0].attr(
         {stroke: "red"}
-        )
+      )
 
   }
 
   activeNotEffectBlock(workBlockSet){
 
-    GlobalStorage.toDelete=workBlockSet;
-      if(GlobalStorage.prevActive&&GlobalStorage.prevActive[1].node&&GlobalStorage.toDelete[1].node.effectName!=GlobalStorage.prevActive[1].node.effectName){
+    //GlobalStorage.toDelete=workBlockSet;
+    if(GlobalStorage.prevActive){
+      console.log(GlobalStorage.prevActive);
+    }
+      if(GlobalStorage.prevActive&&GlobalStorage.prevActive[0]&&workBlockSet[0].id!=GlobalStorage.prevActive[0].id){
 
-        GlobalStorage.prevActive[1].attr(
+        GlobalStorage.prevActive[0].attr(
           {stroke: "none"}
         );
+        if(GlobalStorage.prevActive.thisCommonContrlName){
+          let controlName=GlobalStorage.prevActive.thisCommonContrlName;
+          csInterface.evalScript(`$._ext.unSelectCommonControl("${controlName}")`,(res)=>{//Selet effects in  After Effects native panel
+            //let remove=GlobalStorage.toDelete.remove()
+            //resolve(remove);
+          });
+        }
+
+      }
+      if(workBlockSet.thisCommonContrlName){
+        let controlName=workBlockSet.thisCommonContrlName;
+        csInterface.evalScript(`$._ext.selectCommonControl("${controlName}")`,(res)=>{//Selet effects in  After Effects native panel
+          //let remove=GlobalStorage.toDelete.remove()
+          //resolve(remove);
+        });
       }
 
 
         GlobalStorage.prevActive=workBlockSet;
 
-        GlobalStorage.toDelete[1].attr(
+        GlobalStorage.toDelete[0].attr(
         {stroke: "red"}
-        )
+      )
 
 
   }

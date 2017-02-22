@@ -4,6 +4,7 @@ import mainBlock from "../mainBlock/mainBlock.js";
 import distributorBlocks from "../mainBlock/disributorBlocks";
 import csInterface from '../csInterface';
 import moveEffects  from "./moveEffects.js";
+import presetsBlocks from "../mainBlock/presetsBlocks.js"
 // Here we handle drag of blocks from secondMenu and add blocks on the main workspace
 Raphael.st.simpleDraggable = function(storageName,item) {
   //console.log(item);
@@ -33,10 +34,11 @@ Raphael.st.simpleDraggable = function(storageName,item) {
       },
       endFnc = function() {
 
-console.log();
+
 //console.log(itemH);
-        if(GlobalStorage.effectCreateDrag.active===true&&GlobalStorage.effectCreateDrag.distribitorMouseOver!==null){//ADD effects blocks into DISTRIBITOR
-console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
+        if(GlobalStorage.effectCreateDrag.active===true&&GlobalStorage.effectCreateDrag.distribitorMouseOver!==null&&GlobalStorage.effectCreateDrag.poi){//ADD effects blocks into DISTRIBITOR
+//console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
+//console.log(GlobalStorage.effectCreateDrag);
           let cordX;
           let cordY;
           let connectPath;
@@ -46,8 +48,13 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
           let genId=GlobalStorage.effectCreateDrag.distribitorMouseOver;//get an Unic Id of Distributor over which one mouse being
           let distribitorObject=GlobalStorage.distribitorObjectsStorage[genId];//get object with this key
           let distributorType=distribitorObject.rootBlockSet.distributorType;
-          Object.keys(distribitorObject).map((objectKey, index)=> {
-            if(distribitorObject[objectKey].poiName){//filter object priperty to get object with poiName only
+          let countTypeOfEffects=distribitorObject.countTypeOfEffects+=1;
+          let distrObjectArray=Object.keys(distribitorObject)
+          let distrObjectArrayFiltered=distrObjectArray.filter((name)=>{return name==distribitorObject[name].poiName});
+            //console.log(distrObjectArrayFiltered);
+          distrObjectArrayFiltered.map((objectKey, index)=> {
+            //filter object priperty to get object with poiName only
+//console.log(index);
                 let poiSet=distribitorObject[objectKey];//get set with this key
                 //console.log(index);
               csInterface.evalScript(`$._ext.applyEffectDistributor("${item.name}","${distributorType}",${index})`,(res)=>{// send data to extendScript
@@ -57,15 +64,15 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
                           let value = distribitorObject[objectKey].poiName;// get name of object
                           cordX=distribitorObject[objectKey][1].attr("x");// get coordinates of correspond POI block
                           cordY=distribitorObject[objectKey][1].attr("y");// get coordinates of correspond POI block
-                          workBlock=new mainBlock().createBlockEffects((cordX+130),cordY,item,res);// create effect block
+                          workBlock=new mainBlock().createBlockEffects((cordX+(130*countTypeOfEffects)),cordY,item,res);// create effect block
 
                           resolve(workBlock);
                         }
                       );
                       promise.then (
                         (resolve)=>{
-                          moveEffects(workBlock);
-                          connectPath = R.path( ["M", cordX+80,cordY+16, "L", (cordX+130),(cordY+16) ] );//create line between POI and effect blocks
+                          moveEffects(workBlock);// range an order of this effect
+                          connectPath = R.path( ["M", cordX+80,cordY+16, "L", (cordX+(130*countTypeOfEffects)),(cordY+16) ] );//create line between POI and effect blocks
                           connectPath.node.lineFromCyrcle="circleRight";//asign name of the line for POI blocks
                           resolve.push(connectPath);
                           poiSet.push(connectPath);
@@ -82,11 +89,15 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
 
 
               //workBlock=new mainBlock().createBlockEffects((cordX+130),cordY,item,res);//only for test in browser
-            }
+
 
 });
 
 
+        }
+        else if(GlobalStorage.effectCreateDrag.active===true&&GlobalStorage.effectCreateDrag.distribitorMouseOver!==null&&GlobalStorage.effectCreateDrag.poi===false)
+        {
+          GlobalStorage.effectCreateDrag.active=false;//put effectCreateDrag.active in false.
         }
 
         GlobalStorage.effectCreateDrag.effectType=null;
@@ -119,7 +130,7 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
       }
       else if(this.node.StaticGroupTipe=='commonControls'){
 
-        console.log(item);
+        //console.log(item);
 //console.log(this[0].id);
         if (item.name=="POI"){
 
@@ -135,6 +146,12 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
             let workBlock=new mainBlock().createBlockCommonControls(cordX,cordY,item,false, res);
           });
         }
+        else if(item.name=="Strength"){
+          csInterface.evalScript(`$._ext. createControlStrength()`,(res)=>{//push data into extend script
+            let workBlock=new mainBlock().createBlockCommonControls(cordX,cordY,item,false, res);
+          });
+
+        }
         else if(item.name=="Waves"){
           let workBlock=new mainBlock().createBlockCommonControls(cordX,cordY,item,false);
         }
@@ -145,6 +162,11 @@ console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
 
 
         //let workBlock=new mainBlock().createBlockCommonControls(500,cordY,item);
+      }
+      else if (this.node.StaticGroupTipe=='presets'){
+        //console.log(GlobalStorage.arrOfPresetsEffects);
+        let lowestCoordY=GlobalStorage.undermostEffectBlock.y;
+        new presetsBlocks().createPresetsBlocks(cordX,lowestCoordY,item);
       }
 
       GlobalStorage.storageOfSecondMenuSets[storageName].hide();//hide the menu panel

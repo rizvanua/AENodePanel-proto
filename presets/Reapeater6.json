@@ -1,0 +1,9 @@
+{
+"name":"Reapeater6",
+"arrOfPresetsEffects":[
+  {"Mobius Rotate":[{"Zoom In Point":"this.itemWidth*0.25,this.itemHight*0.5"},{"Zoom Out Point":"this.itemWidth*0.75, this.itemHight*0.5"},{"Angle":90}]},
+  {"Repeater":[{"Repeat X": 1},{"Repeat Y": 1},{"Mirror X": 0}]},
+  {"Mobius Rotate":[{"Zoom In Point":"this.itemWidth*0.5,this.itemHight*0.5"},{"Zoom Out Point":"this.itemWidth, this.itemHight*0.5"},{"Angle":90}]},
+  {"Escher Droste":[{"Point of Interest": "this.itemWidth*0.5,this.itemHight"},{"Zoom Factor": 21},{"Zoom Cut-off": 1.52}]}
+]
+}

@@ -56,6 +56,10 @@
 
 	var _sideBarSecondSideBarBlocksJs2 = _interopRequireDefault(_sideBarSecondSideBarBlocksJs);
 
+	var _startArraysArrSecondButtonJs = __webpack_require__(4);
+
+	var _startArraysArrSecondButtonJs2 = _interopRequireDefault(_startArraysArrSecondButtonJs);
+
 	var _csInterface = __webpack_require__(7);
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
@@ -64,7 +68,7 @@
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
-	var _helperFunctionsDeleteFunctions = __webpack_require__(18);
+	var _helperFunctionsDeleteFunctions = __webpack_require__(19);
 
 	var _helperFunctionsDeleteFunctions2 = _interopRequireDefault(_helperFunctionsDeleteFunctions);
 
@@ -74,42 +78,122 @@
 
 	var myReq = undefined;
 	var status = false;
-
-	/*window.addEventListener("contextmenu",function(e){
-	   e.preventDefault();
-	  console.log(e);
-	  alert("keydown detected");
-	});*/
-	/*csInterface.prototype.registerKeyEventsInterest = function Prevent (){
-
-	};*/
-	/*let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 46,     "ctrlKey": true  }];
-	csInterface.registerKeyEventsInterest(keyEventsInterest);
-	console.log(csInterface.addEventListener('mouseover',function(e){
-	       alert("keydown detected");
-	}));*/
-
-	/*csInterface.addEventListener(CSInterface.THEME_COLOR_CHANGED_EVENT,function(e){
-	       alert("keydown detected");
-	});*/
-
-	/*function start(){
-	  console.log('start');
-	  csInterface.evalScript(`$._ext. initialProjectTest()`, (res)=>{
-	  console.log(res=='false');
-	    if(res=='false'){
-	      myReq =window.requestAnimationFrame(start);
-	    }
-	    else{
-	      document.getElementById("glass").style.display="none";
-	        window.cancelAnimationFrame(myReq);
-	    }
-
-	  });
-	}
-	myReq = window.requestAnimationFrame(start);*/
-
 	/**/
+
+	//let path = "./test.js";
+	//console.log();
+	var systemPathOS = _csInterface2["default"].getSystemPath(SystemPath.EXTENSION);
+	var path = _csInterface2["default"].getSystemPath(SystemPath.EXTENSION) + "/presets/";
+	//console.log(path);
+	var readDir = window.cep.fs.readdir(path);
+	if (readDir.err === 0) {
+	  var arrFiles = readDir.data;
+	  arrFiles.forEach(function (file) {
+	    //console.log(file);
+	    var filePath = path + file;
+	    var result = window.cep.fs.readFile(filePath);
+	    if (result.err === 0) {
+	      (function () {
+	        //console.log(JSON.parse(result.data));
+	        var filePresetObject = JSON.parse(result.data);
+	        _startArraysArrSecondButtonJs2["default"].presets.push({ name: filePresetObject.name });
+	        //GlobalStorage.arrOfPresetsEffects[filePresetObject.name]=filePresetObject.name;
+	        //console.log(filePresetObject);
+	        _storage2["default"].arrOfPresetsEffects[filePresetObject.name] = {};
+	        //console.log(GlobalStorage.arrOfPresetsEffects);
+	        filePresetObject.arrOfPresetsEffects.forEach(function (index, i) {
+
+	          //console.log(index);
+	          //let arrIndex=[];
+	          //console.log(filePresetObject.arrOfPresetsEffects[i]);
+	          for (var key in index) {
+	            //filePresetObject.arrOfPresetsEffects[i][key]=index[key];
+	            //console.log(JSON.stringify(filePresetObject.arrOfPresetsEffects[i][key]));
+	            //arrIndex.push(`{"${key}":${JSON.stringify(index[key])}}`);
+	            //console.log(key);
+	            _storage2["default"].arrOfPresetsEffects[filePresetObject.name]["\"" + key + i + "\""] = index[key];
+
+	            //GlobalStorage.arrOfPresetsEffects[filePresetObject.name][index][key]=`${JSON.stringify(index[key])}`;
+	            //console.log(`"${key}":${i[key]}`);
+	          }
+	          /*filePresetObject[index].forEach((i)=>{
+	            console.log(key);
+	              })*/
+
+	          //console.log(arrIndex);
+	          //console.log(GlobalStorage.arrOfPresetsEffects[filePresetObject.name]);
+	          /*if(GlobalStorage.arrOfPresetsEffects[filePresetObject.name].propEffect){
+	            GlobalStorage.arrOfPresetsEffects[filePresetObject.name].propEffect[`${index}`]=arrIndex.join(";");
+	          }*/
+	        });
+	      })();
+	    } else {
+	        //console.log("BAD");
+	      }
+	  });
+
+	  //console.log(readDir.data);
+	  //let readDir = window.cep.fs.readFile(path);
+	} else {}
+	  //console.log('FUCK')
+
+	  /**/
+
+	  /*var event = new CSEvent("dispatchEvent", "APPLICATION", function (e) {
+	  console.log(e);
+	  }); event.data = "This is a test!";
+	  csInterface.dispatchEvent(event);
+	  csInterface.addEventListener("applicationBeforeQuit", closePanel);
+	  function closePanel(evt) {
+	      console.dir(evt);
+	  }*/
+	  /*var appName = csInterface.hostEnvironment.appName;
+	  setTimeout(()=>{console.log(csInterface.getExtensionID())}, 10000)
+	  let event = new CSEvent("com.adobe.csxs.events.AppOffline", "APPLICATION");
+	  event.appId=csInterface.getApplicationID();
+	  event.extensionId=csInterface.getExtensionID();*/
+
+	  //csInterface.dispatchEvent(event);
+	  //console.log(appName);
+	  //console.log(appID);
+	  //var eventObj = new CSXSEvent();  eventObj.type="documentCreated";  eventObj.data="blahblah";
+
+	  /*window.addEventListener("contextmenu",function(e){
+	     e.preventDefault();
+	    console.log(e);
+	    alert("keydown detected");
+	  });*/
+	  /*csInterface.prototype.registerKeyEventsInterest = function Prevent (){
+	  
+	  };*/
+	  /*let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 46,     "ctrlKey": true  }];
+	  csInterface.registerKeyEventsInterest(keyEventsInterest);
+	  console.log(csInterface.addEventListener('mouseover',function(e){
+	         alert("keydown detected");
+	  }));*
+	  
+	  
+	  /*csInterface.addEventListener(CSInterface.THEME_COLOR_CHANGED_EVENT,function(e){
+	         alert("keydown detected");
+	  });*/
+
+	  /*function start(){
+	    console.log('start');
+	    csInterface.evalScript(`$._ext. initialProjectTest()`, (res)=>{
+	    console.log(res=='false');
+	      if(res=='false'){
+	        myReq =window.requestAnimationFrame(start);
+	      }
+	      else{
+	        document.getElementById("glass").style.display="none";
+	          window.cancelAnimationFrame(myReq);
+	      }
+	  
+	    });
+	  }
+	  myReq = window.requestAnimationFrame(start);*/
+
+	  /**/
 	function startCheck() {
 
 	  if (status != 'true') {
@@ -141,6 +225,7 @@
 	var secondBarInnerBlocksEffects = new _sideBarSecondSideBarBlocksJs2["default"]().createStaticEffects();
 	var secondBarInnerBlocksControls = new _sideBarSecondSideBarBlocksJs2["default"]().createStaticCommonControls();
 	var secondBarInnerBlocksDistributor = new _sideBarSecondSideBarBlocksJs2["default"]().createStaticDistributorControls();
+	var secondBarInnerBlocksPresets = new _sideBarSecondSideBarBlocksJs2["default"]().createStaticPresets();
 
 	document.getElementsByTagName('svg')[0].addEventListener('click', function (e) {
 
@@ -155,7 +240,7 @@
 	      _storage2["default"].prevActive[1].attr({ stroke: "none" });
 	    }
 
-	    _storage2["default"].toDelete = undefined;
+	    //GlobalStorage.toDelete=undefined;
 	  }
 	});
 
@@ -184,9 +269,9 @@
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
-	var _startArraysArrButtonmainJs = __webpack_require__(3);
+	var _startArraysArrButtonMainJs = __webpack_require__(3);
 
-	var _startArraysArrButtonmainJs2 = _interopRequireDefault(_startArraysArrButtonmainJs);
+	var _startArraysArrButtonMainJs2 = _interopRequireDefault(_startArraysArrButtonMainJs);
 
 	var _startArraysArrSecondButtonJs = __webpack_require__(4);
 
@@ -219,9 +304,11 @@
 	    value: function createInnerBlocks() {
 	      var sidebar_inner = 5;
 	      var self = this;
-	      _startArraysArrButtonmainJs2["default"].forEach(function (item, i) {
-	        if (i > 0) {
+	      _startArraysArrButtonMainJs2["default"].forEach(function (item, i) {
+	        if (i > 0 && i < 3) {
 	          sidebar_inner = sidebar_inner + 34;
+	        } else if (i > 0 && i >= 3) {
+	          sidebar_inner = sidebar_inner + 64;
 	        }
 
 	        var firstLetter = item.name.charAt(0);
@@ -307,7 +394,7 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	var arrButton = [{ name: 'Effects', systName: 'effects' }, { name: 'Common Controls', systName: 'commonControls' }, { name: 'Distributor', systName: 'distributor' }]; //Array with buttons
+	var arrButton = [{ name: 'Effects', systName: 'effects' }, { name: 'Common Controls', systName: 'commonControls' }, { name: 'Distributor', systName: 'distributor' }, { name: 'Presets', systName: 'presets' }]; //Array with buttons
 
 	exports['default'] = arrButton;
 	module.exports = exports['default'];
@@ -322,9 +409,12 @@
 	  value: true
 	});
 	var SecondButton = {
-	  effects: [{ name: "Stretcher", poi: false, fov: false, waves: false }, { name: "Repeater", poi: false, fov: false, waves: false }, { name: "Spiraler", poi: true, fov: false, waves: false }, { name: "Circular Waves", poi: true, fov: false, waves: true }, { name: "Meridian Waves", poi: true, fov: false, waves: true }, { name: "Flat Mirror", poi: true, fov: true, waves: false }, { name: "Curved Mirror", poi: true, fov: true, waves: false }, { name: "Magnifying Glass", poi: true, fov: true, waves: false }, { name: "Mobius Raw", poi: false, fov: false, waves: false }, { name: "Mobius Rotate", poi: false, fov: false, waves: false }, { name: "Mobius Zoom", poi: false, fov: false, waves: false }, { name: "Escher Droste", poi: true, fov: false, waves: false }, { name: "Rotator", poi: false, fov: false, waves: false }],
-	  commonControls: [{ name: "POI", effectName: "POI", fullname: "Point of Interest" }, { name: "FOV", effectName: "FOV", fullname: "FOV" }, { name: "Waves", effectName: "Waves", fullname: "Waves" }],
-	  distributor: [{ name: "Cube" }, { name: "Sphere" }, { name: "Random" }]
+	  effects: [{ name: "Stretcher", poi: false, fov: false, waves: false, strength: true }, //if you add new control (poi, fov, waves etc) don't forget add this into pages src\sideBar\secondSideBarBlocks.js into "dummy.node" propety and page src\mainBlock\mainBlock.js  createBlockEffects "workBlockSet" property
+	  { name: "Repeater", poi: false, fov: false, waves: false, strength: false }, { name: "Spiraler", poi: true, fov: false, waves: false, strength: true }, { name: "Circular Waves", poi: true, fov: false, waves: true, strength: false }, { name: "Meridian Waves", poi: true, fov: false, waves: true, strength: false }, { name: "Flat Mirror", poi: true, fov: true, waves: false, strength: false }, { name: "Curved Mirror", poi: true, fov: true, waves: false, strength: false }, { name: "Magnifying Glass", poi: true, fov: true, waves: false, strength: false }, { name: "Mobius Raw", poi: false, fov: false, waves: false, strength: false }, { name: "Mobius Rotate", poi: false, fov: false, waves: false, strength: false }, { name: "Mobius Zoom", poi: false, fov: false, waves: false, strength: false }, { name: "Escher Droste", poi: true, fov: false, waves: false, strength: false }, { name: "Rotator", poi: false, fov: false, waves: false, strength: false }],
+	  commonControls: [{ name: "POI", effectName: "POI", fullname: "Point of Interest" }, { name: "FOV", effectName: "FOV", fullname: "FOV" }, { name: "Waves", effectName: "Waves", fullname: "Waves" }, { name: "Strength", effectName: "Strength", fullname: "Slider Control" }],
+	  distributor: [{ name: "Cube" }, { name: "Sphere" }, { name: "Random" }],
+	  presets: [] //We push object {name: "SomeName"} from presets folder via window.cep.fs.readdir and window.cep.fs.readFile API
+
 	};
 
 	exports["default"] = SecondButton;
@@ -378,7 +468,7 @@
 
 	var _helperFunctionsAddBlockWithDragIt2 = _interopRequireDefault(_helperFunctionsAddBlockWithDragIt);
 
-	var _helperFunctionsCheckCommonControlsTypeAbilitys = __webpack_require__(17);
+	var _helperFunctionsCheckCommonControlsTypeAbilitys = __webpack_require__(18);
 
 	var _helperFunctionsCheckCommonControlsTypeAbilitys2 = _interopRequireDefault(_helperFunctionsCheckCommonControlsTypeAbilitys);
 
@@ -410,6 +500,7 @@
 	        dummy.node.poi = item.poi;
 	        dummy.node.fov = item.fov;
 	        dummy.node.waves = item.waves;
+	        dummy.node.strength = item.strength;
 	        dummy.node.id = item.name;
 
 	        var x = _raphaelContainerJs2["default"].rect(58, sidebar_inner, 120, 32, 5).attr({ fill: "rgb(64, 64, 64)",
@@ -432,6 +523,13 @@
 	        secondBlockMenuMiniSet.poi = item.poi;
 	        secondBlockMenuMiniSet.fov = item.fov;
 	        secondBlockMenuMiniSet.waves = item.waves;
+	        secondBlockMenuMiniSet.StaticGroupTipe = objName;
+
+	        if (objName == "presets") {
+	          secondBlockMenuMiniSet.presetsType = item.name;
+	        }
+
+	        //console.log(secondBlockMenuMiniSet);
 	        _storage2["default"].storageOfSecondMenuSets[storageName].push(secondBlockMenuMiniSet);
 
 	        secondBlockMenuMiniSet.simpleDraggable(storageName, item);
@@ -479,6 +577,11 @@
 	    value: function createStaticDistributorControls() {
 	      this.createStaticFunction("Distributor", "distributor", "distributor");
 	    }
+	  }, {
+	    key: "createStaticPresets",
+	    value: function createStaticPresets() {
+	      this.createStaticFunction("Presets", "presets", "presets");
+	    }
 	  }]);
 
 	  return secondSideBarBlocks;
@@ -519,7 +622,8 @@
 
 	var _helperFunctionsDrawLineFromToJs2 = _interopRequireDefault(_helperFunctionsDrawLineFromToJs);
 
-	//import deleteFunctions from "../helperFunctions/deleteFunction.js"*/
+	/*import deleteFunctions from "../helperFunctions/deleteFunctions.js"*/
+	//import deleteInOneClick from "../helperFunctions/deleteInOneClick.js"
 
 	var _helperFunctionsActiveBlockFunction = __webpack_require__(12);
 
@@ -546,6 +650,7 @@
 	      workBlockSet.baseEffect = item.name;
 	      workBlockSet.poi = item.poi;
 	      workBlockSet.fov = item.fov;
+	      workBlockSet.strength = item.strength;
 	      workBlockSet.waves = item.waves;
 	      var dummy = _raphaelContainerJs2["default"].rect(x, y, 120, 32, 5).attr({ fill: "rgb(64, 64, 64)",
 	        "fill-opacity": 0,
@@ -590,9 +695,12 @@
 	      });
 
 	      workBlockSet.mouseover(function () {
+	        _storage2["default"].toDelete = workBlockSet;
+	        console.log(_storage2["default"].currentLine);
 	        //console.log("OVER");
 	        //console.log(workBlockSet);
 	        //console.log(this);
+	        //workBlockSet.deleteInOneClick(workBlockSet);
 	        if (_storage2["default"].currentLine) {
 	          var typeOfControll = _storage2["default"].currentLine.node.shortControlName;
 
@@ -608,6 +716,7 @@
 	      });
 	      workBlockSet.mouseout(function () {
 	        //console.log("OUT");
+	        _storage2["default"].toDelete = undefined;
 	        workBlockSet.attr({ cursor: "move" });
 	        _storage2["default"].overMouseSet = null; //Clear interim object if mouse get out
 	      });
@@ -654,6 +763,7 @@
 
 	      //console.log(item);
 	      workBlockSet.shortName = item.effectName.toLowerCase();
+	      workBlockSet.currentName = thisItemName;
 	      workBlockSet.push(workBlock);
 	      workBlockSet.push(title);
 
@@ -677,6 +787,12 @@
 	        new _helperFunctionsActiveBlockFunction2["default"]().activeNotEffectBlock(workBlockSet);
 	      });
 	      workBlockSet.draggableSet(workBlockSet, typeNode);
+	      workBlockSet.mouseover(function () {
+	        _storage2["default"].toDelete = workBlockSet;
+	      });
+	      workBlockSet.mouseout(function () {
+	        _storage2["default"].toDelete = undefined;
+	      });
 	      return workBlockSet;
 	    }
 	  }, {
@@ -821,7 +937,7 @@
 	  },
 	      endFnc = function endFnc() {
 	    // save a reference to the core implementation
-
+	    //console.log(thisSet);
 	    if (type == "effects") {
 	      /*console.log(thisSet[1].node.effectName);*/
 	      (0, _moveEffectsJs2["default"])(thisSet);
@@ -889,11 +1005,15 @@
 	    item.attr({ x: _this.ox + dx, y: _this.oy + dy });
 	  } else if (item.node.nodeName == 'text') {
 	    item.attr({ x: _this.ox + dx + 80, y: _this.oy + dy + 32 });
-	  } else if (item.node.nodeName == 'path') {
+	  } else if (item.node.nodeName == 'path' && !item.DistributorEffects) {
 	    //moving line from this RootDistributorBlock  to common control
 	    var LX = item.attr().path[1][1];
 	    var LY = item.attr().path[1][2];
 	    item.attr("path", "M" + (_this.ox + dx + 160) + " " + (_this.oy + dy + 32) + "L" + LX + " " + LY);
+	  } else if (item.node.nodeName == 'path' && item.DistributorEffects) {
+	    var MX = item.attr().path[0][1];
+	    var MY = item.attr().path[0][2];
+	    item.attr("path", "M" + MX + " " + MY + "L" + (_this.ox + dx + 160) + " " + (_this.oy + dy + 32));
 	  }
 	}
 
@@ -935,7 +1055,7 @@
 	  _createClass(drawLineFromTo, [{
 	    key: 'startdrawLineFromTo',
 	    value: function startdrawLineFromTo(_this, thisSet) {
-	      console.log(thisSet);
+	      //console.log(thisSet);
 	      _this.ox = _this.attr("cx");
 	      _this.oy = _this.attr("cy");
 	      var connectPath = _raphaelContainerJs2['default'].path(["M", _this.ox, _this.oy, "L", _this.ox, _this.oy]).attr({ stroke: "blue" });
@@ -949,7 +1069,7 @@
 	  }, {
 	    key: 'moveLine',
 	    value: function moveLine(_this, dx, dy) {
-
+	      //console.log(GlobalStorage.overMouseSe);
 	      _storage2['default'].currentLine.attr("path", 'M' + _this.ox + ' ' + _this.oy + 'L' + (_this.ox + dx - 5) + ' ' + (_this.oy + dy - 5));
 	      /*var typeOfControll=GlobalStorage.currentLine.node.shortControlName;
 	          if(GlobalStorage.overMouseSet&&GlobalStorage.currentLine&&GlobalStorage.overMouseSet[typeOfControll]===true){
@@ -963,6 +1083,8 @@
 	  }, {
 	    key: 'endDrawLine',
 	    value: function endDrawLine(_this, thisSet) {
+	      //console.log(GlobalStorage.overMouseSet);
+
 	      if (_storage2['default'].currentLine) {
 	        var typeOfControll = _storage2['default'].currentLine.node.shortControlName;
 
@@ -970,6 +1092,7 @@
 	        if (_storage2['default'].overMouseSet !== null && _storage2['default'].currentLine !== null && _storage2['default'].overMouseSet[typeOfControll] === true) {
 	          (function () {
 	            // in this case the current Line has connection to a destination block
+
 	            _storage2['default'].currentLine.attr({ stroke: "black" }); //add black color for already successfully connected line
 	            var overMouseSet = _storage2['default'].overMouseSet;
 	            var effectNameLocal = overMouseSet.setEffectName;
@@ -987,21 +1110,88 @@
 	              _storage2['default'].currentLine = null; //clear objects in global storage
 	              //Call to ExtScript
 
-	              _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + propName + '","' + thisPropName + '")');
+	              switch (thisSet[0].node.effectName) {
+	                case "Strength":
+	                  _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","Strength","' + thisPropName + '")');
+	                  break;
+	                default:
+	                  _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + propName + '","' + thisPropName + '")');
+	              }
 
 	              //
 	            });
 	          })();
-	        } else if (_storage2['default'].overMouseSet === null && _storage2['default'].currentLine !== null) {
-	            //in this case the current Line dosen't has a destination block
-	            _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
-	            thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
-	            _storage2['default'].currentLine = null; //clear objects in global storage
-	          } else if (_storage2['default'].overMouseSet !== null && _storage2['default'].currentLine !== null && _storage2['default'].overMouseSet[typeOfControll] === false) {
+	        } else if (_storage2['default'].currentLine && _storage2['default'].overDistributorMouse) {
+	            var genId = _storage2['default'].overDistributorMouse;
+	            //console.log(GlobalStorage.distribitorObjectsStorage[genId]);
+	            if (_storage2['default'].distribitorObjectsStorage[genId].countTypeOfEffects > 0) {
+	              (function () {
+	                var contains = function contains() {
+	                  var flag = false;
+	                  Object.keys(distribitorObject).forEach(function (Object) {
+	                    if (Object != "countTypeOfEffects" && Object != "rootBlockSet" && !distribitorObject[Object].shortName && distribitorObject[Object][thisSet.shortName] === true) {
+	                      //if(distribitorObject[Object][thisSet.shortName]===true){
+	                      flag = true;
+	                      //}
+	                      DistributorEffects.push(Object);
+	                      //console.log(Object);
+	                      //console.log(thisSet.currentName);
+	                      var effectNameLocal = distribitorObject[Object].setEffectName;
+	                      var propName = thisSet.fullCommonContrlName;
+	                      var thisPropName = thisSet.thisCommonContrlName;
+	                      //console.log(thisSet.shortName);
+	                      switch (thisSet.shortName) {
+	                        case 'fov':
+	                          _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + propName + '","' + thisPropName + '")');
+	                          break;
+	                        case 'strength':
+	                          //console.log('strength');
+	                          _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","Strength","' + thisPropName + '")');
+	                          break;
+	                        //default:
+
+	                      }
+	                    }
+	                  });
+	                  return flag;
+	                };
+
+	                var distribitorObject = _storage2['default'].distribitorObjectsStorage[genId];
+	                var DistributorEffects = [];
+
+	                var checkDistrEffects = contains();
+	                if (checkDistrEffects === true) {
+
+	                  _storage2['default'].currentLine.DistributorEffects = DistributorEffects;
+	                  _storage2['default'].currentLine.attr({ stroke: "black" }); //add black color for already successfully connected line
+	                  //overMouseSet.push(GlobalStorage.currentLine).toBack()
+	                  _storage2['default'].currentLine.toBack();
+	                  _storage2['default'].distribitorObjectsStorage[genId].rootBlockSet.push(_storage2['default'].currentLine);
+	                  _storage2['default'].currentLine = null;
+	                  _storage2['default'].overDistributorMouse = null;
+	                } else {
+	                  _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
+	                  thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
+	                  _storage2['default'].currentLine = null;
+	                  //GlobalStorage.overDistributorMouse=null;
+	                }
+	              })();
+	            } else {
+	                _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
+	                thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
+	                _storage2['default'].currentLine = null;
+	              }
+	            //console.log(GlobalStorage.distribitorObjectsStorage[genId].countTypeOfEffects);
+	          } else if (_storage2['default'].overMouseSet === null && _storage2['default'].currentLine !== null) {
+	              //in this case the current Line dosen't has a destination block
 	              _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
 	              thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
 	              _storage2['default'].currentLine = null; //clear objects in global storage
-	            }
+	            } else if (_storage2['default'].overMouseSet !== null && _storage2['default'].currentLine !== null && _storage2['default'].overMouseSet[typeOfControll] === false) {
+	                _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
+	                thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
+	                _storage2['default'].currentLine = null; //clear objects in global storage
+	              }
 	      }
 	    }
 	  }]);
@@ -1035,17 +1225,20 @@
 	  storageOfSecondMenuSets: { //storage secondMenu items
 	    effects: _raphaelContainerJs2["default"].set(),
 	    commonControls: _raphaelContainerJs2["default"].set(),
-	    distributor: _raphaelContainerJs2["default"].set()
+	    distributor: _raphaelContainerJs2["default"].set(),
+	    presets: _raphaelContainerJs2["default"].set()
 	  },
 	  Flags: {
 	    effects: true,
 	    commonControls: true,
-	    distributor: true
+	    distributor: true,
+	    presets: true
 	  },
-	  mainMenuSet: {
+	  mainMenuSet: { //storage firsts (main) vertical line of menu
 	    effects: _raphaelContainerJs2["default"].set(),
 	    commonControls: _raphaelContainerJs2["default"].set(),
-	    distributor: _raphaelContainerJs2["default"].set()
+	    distributor: _raphaelContainerJs2["default"].set(),
+	    presets: _raphaelContainerJs2["default"].set()
 	  },
 	  lastEffectBlock: {
 	    y: 0
@@ -1054,15 +1247,20 @@
 	  historyOfObjects: {
 	    itemArray: []
 	  },
+	  undermostEffectBlock: {
+	    y: 10 //this is an Y coordinate of the lowermost blockEffect (see "moveEffects.js")
+	  },
 	  effectCreateDrag: {
 	    active: false,
 	    effectType: null,
 	    distribitorMouseOver: null
 	  },
+	  arrOfPresetsEffects: {}, // storage for all array with presets' effects
 	  distribitorObjectsStorage: {}, // Here we hold all Distributors sets
 	  toDelete: undefined, //Temporary object which one contents object for deleting by pressing key "DELETE"
 	  currentLine: null, //Temporary object with just created Line
-	  overMouseSet: null //Temporary object what contents Set over which fire event mouseover
+	  overMouseSet: null, //Temporary object what contents Set over which fire event mouseover
+	  overDistributorMouse: null //Temporary object what contents genId of DISTRIBUTOR need to add common control (FOV, Strange)
 	};
 
 	exports["default"] = GlobalStorage;
@@ -1091,7 +1289,8 @@
 	// Function to check an order of Effects' blocks (by X coordinate)
 
 	function moveEffects(thisSet) {
-	  console.log(thisSet);
+	  //console.log(thisSet)
+	  console.log(_storage2['default'].arrOfPresetsEffects);
 	  _storage2['default'].historyOfObjects.itemArray.length = 0;
 	  var storageName = thisSet[1].node.effectName;
 	  //GlobalStorage.historyOfObjects[storageName]=thisSet;
@@ -1104,8 +1303,11 @@
 	  var promise = new Promise(function (resolve) {
 	    //console.log(GlobalStorage.historyOfObjects);
 	    var test = _.sortBy(_storage2['default'].historyOfObjects.itemArray, function (i) {
+
 	      return i[1].attr("y"); // Y is point relatively which we are sorting our array. So we've sort array of effects by Y coordinate of rectangle.
 	    });
+
+	    _storage2['default'].undermostEffectBlock.y = test[test.length - 1][1].attr("y"); //this is the y coordinate of the lowermost blockEffect
 
 	    resolve(test);
 	  }).then(function (resolve) {
@@ -1158,10 +1360,21 @@
 	  _createClass(activeBlockFunctionsClass, [{
 	    key: "activeEffectBlock",
 	    value: function activeEffectBlock(workBlockSet, effectName) {
-	      _storage2["default"].toDelete = workBlockSet;
-	      if (_storage2["default"].prevActive && _storage2["default"].prevActive[1].node && _storage2["default"].toDelete[1].node.effectName != _storage2["default"].prevActive[1].node.effectName) {
+	      //GlobalStorage.toDelete=workBlockSet;
+	      if (_storage2["default"].prevActive) {
+	        console.log(_storage2["default"].prevActive[0].id);
+	      }
+
+	      if (_storage2["default"].prevActive && _storage2["default"].prevActive[0] && workBlockSet[0].id != _storage2["default"].prevActive[0].id) {
 
 	        _storage2["default"].prevActive[0].attr({ stroke: "none" });
+	        if (_storage2["default"].prevActive.thisCommonContrlName) {
+	          var controlName = _storage2["default"].prevActive.thisCommonContrlName;
+	          _csInterfaceJs2["default"].evalScript("$._ext.unSelectCommonControl(\"" + controlName + "\")", function (res) {//Unselect commonControl in  After Effects native panel
+	            //let remove=GlobalStorage.toDelete.remove()
+	            //resolve(remove);
+	          });
+	        }
 	      }
 
 	      _csInterfaceJs2["default"].evalScript("$._ext.selectEffect(\"" + effectName + "\")", function (res) {//Selet effects in  After Effects native panel
@@ -1176,15 +1389,32 @@
 	    key: "activeNotEffectBlock",
 	    value: function activeNotEffectBlock(workBlockSet) {
 
-	      _storage2["default"].toDelete = workBlockSet;
-	      if (_storage2["default"].prevActive && _storage2["default"].prevActive[1].node && _storage2["default"].toDelete[1].node.effectName != _storage2["default"].prevActive[1].node.effectName) {
+	      //GlobalStorage.toDelete=workBlockSet;
+	      if (_storage2["default"].prevActive) {
+	        console.log(_storage2["default"].prevActive);
+	      }
+	      if (_storage2["default"].prevActive && _storage2["default"].prevActive[0] && workBlockSet[0].id != _storage2["default"].prevActive[0].id) {
 
-	        _storage2["default"].prevActive[1].attr({ stroke: "none" });
+	        _storage2["default"].prevActive[0].attr({ stroke: "none" });
+	        if (_storage2["default"].prevActive.thisCommonContrlName) {
+	          var controlName = _storage2["default"].prevActive.thisCommonContrlName;
+	          _csInterfaceJs2["default"].evalScript("$._ext.unSelectCommonControl(\"" + controlName + "\")", function (res) {//Selet effects in  After Effects native panel
+	            //let remove=GlobalStorage.toDelete.remove()
+	            //resolve(remove);
+	          });
+	        }
+	      }
+	      if (workBlockSet.thisCommonContrlName) {
+	        var controlName = workBlockSet.thisCommonContrlName;
+	        _csInterfaceJs2["default"].evalScript("$._ext.selectCommonControl(\"" + controlName + "\")", function (res) {//Selet effects in  After Effects native panel
+	          //let remove=GlobalStorage.toDelete.remove()
+	          //resolve(remove);
+	        });
 	      }
 
 	      _storage2["default"].prevActive = workBlockSet;
 
-	      _storage2["default"].toDelete[1].attr({ stroke: "red" });
+	      _storage2["default"].toDelete[0].attr({ stroke: "red" });
 	    }
 	  }]);
 
@@ -1265,6 +1495,25 @@
 	      _storage2["default"].distribitorObjectsStorage[this.genId] = {}; //create an object in storage with unic ID
 	      //console.log(GlobalStorage.distribitorObjectsStorage);
 	      var typeNode = "distributor";
+
+	      var distributorType = this.rootBlockSet.distributorType;
+
+	      var dummy = _raphaelContainerJs2["default"].rect(x, y, 160, 64, 5).attr({ fill: "rgb(64, 64, 64)",
+	        "fill-opacity": 0,
+	        stroke: "none",
+	        opacity: 1,
+	        cursor: "pointer"
+	      });
+	      this.rootBlockSet.push(dummy);
+	      dummy.node.distributorName = item.name;
+
+	      var workBlock = _raphaelContainerJs2["default"].rect(x, y, 160, 64, 5).attr({ fill: "rgb(64, 64, 64)",
+	        stroke: "none",
+	        cursor: "move",
+	        "class": ''
+	      });
+	      workBlock.node.distributorName = item.name;
+
 	      var title = _raphaelContainerJs2["default"].text(x + 80, y + 32, item.name).attr({
 	        cursor: "move",
 	        "font-size": 15
@@ -1272,32 +1521,39 @@
 	      title.node.distributorName = item.name;
 	      this.rootBlockSet.push(title);
 	      this.rootBlockSet.distributorType = item.name.toLowerCase();
-	      var distributorType = this.rootBlockSet.distributorType;
-	      var workBlock = _raphaelContainerJs2["default"].rect(x, y, 160, 64, 5).attr({ fill: "rgb(64, 64, 64)",
-	        stroke: "none",
-	        cursor: "move",
-	        "class": ''
-	      });
-	      workBlock.node.distributorName = item.name;
 	      this.rootBlockSet.push(workBlock);
-	      title.toFront();
+	      dummy.toFront();
+
+	      //title.toFront();
 	      this.LineFromCoordsX = workBlock.attr("x");
 	      this.LineFromCoordsY = workBlock.attr("y");
 	      this.rootBlockSet.draggableSet(this.rootBlockSet, typeNode);
-	      this.rootBlockSet.mouseover(function () {
-	        workBlock.attr({
-	          stroke: "red"
-	        });
-	      });
-	      this.rootBlockSet.mouseout(function () {
-	        workBlock.attr({
-	          stroke: "none"
-	        });
-	      });
+
 	      this.rootBlockSet.hoverInBounds(hoverIn, hoverOut);
 	      _storage2["default"].distribitorObjectsStorage[this.genId].rootBlockSet = this.rootBlockSet;
+	      _storage2["default"].distribitorObjectsStorage[this.genId].countTypeOfEffects = 0;
 	      this.rootBlockSet.click(function () {
 	        new _helperFunctionsActiveBlockFunction2["default"]().activeNotEffectBlock(_this3.rootBlockSet);
+	      });
+
+	      this.rootBlockSet.mouseover(function () {
+
+	        //console.log(this);
+
+	        _storage2["default"].toDelete = _this3.rootBlockSet;
+	        if (_storage2["default"].currentLine) {
+	          //console.log(GlobalStorage.currentLine);
+	          //console.log("OVER");
+	          _storage2["default"].overDistributorMouse = _this3.genId;
+	          //console.log(this.genId);
+	          //GlobalStorage.distribitorObjectsStorage[this.genId]
+	        }
+	      });
+	      this.rootBlockSet.mouseout(function () {
+	        //GlobalStorage.toDelete=undefined;
+	        //console.log(GlobalStorage.currentLine);
+	        _storage2["default"].overDistributorMouse = null;
+	        //console.log(GlobalStorage.currentLine.node.shortControlName)
 	      });
 
 	      // Hover in function
@@ -1306,15 +1562,19 @@
 	        /*this.animate({
 	          r: 70
 	        }, 500);*/
-	        console.log(_storage2["default"].effectCreateDrag);
+
+	        //console.log(GlobalStorage.effectCreateDrag);
+
 	        if (_storage2["default"].effectCreateDrag.active !== false) {
 	          _storage2["default"].effectCreateDrag.distribitorMouseOver = genId;
 	          //GlobalStorage.effectCreateDrag.distributorType=distributorType;
-	          //console.log(this);
-	          this.attr({ opacity: .1 });
+
+	          /*this.attr({opacity: .1});*/
+	          //this.node.setAttribute("class","distr");
+	          this[0].previousElementSibling.previousElementSibling.style.opacity = "0.1";
 	          //console.log(GlobalStorage.effectCreateDrag);
 	        }
-	        if (_storage2["default"].effectCreateDrag.poi === false) {
+	        if (_storage2["default"].effectCreateDrag.poi === false && _storage2["default"].effectCreateDrag.effectType && _storage2["default"].effectCreateDrag.active !== false) {
 	          this.attr({ cursor: "no-drop" });
 	        }
 	      }
@@ -1322,6 +1582,8 @@
 	      // Hover out function
 	      function hoverOut() {
 	        console.log("OUT");
+	        console.log(this);
+
 	        //console.log(GlobalStorage.effectCreateDrag);
 	        _storage2["default"].effectCreateDrag.distribitorMouseOver = null;
 	        this.attr({ cursor: "move" });
@@ -1331,7 +1593,12 @@
 	        /*this.animate({
 	          r: 50
 	        }, 500);*/
-	        this.attr({ opacity: 1 });
+	        if (this[0]) {
+	          this[0].style.cursor = "move";
+	          this[0].previousElementSibling.previousElementSibling.style.opacity = "1";
+	        }
+
+	        //this.attr({opacity: 1});
 	      }
 	      /*this.rootBlockSet.mousedown(function(){
 	        console.log(this);
@@ -1466,6 +1733,10 @@
 
 	var _moveEffectsJs2 = _interopRequireDefault(_moveEffectsJs);
 
+	var _mainBlockPresetsBlocksJs = __webpack_require__(17);
+
+	var _mainBlockPresetsBlocksJs2 = _interopRequireDefault(_mainBlockPresetsBlocksJs);
+
 	// Here we handle drag of blocks from secondMenu and add blocks on the main workspace
 	Raphael.st.simpleDraggable = function (storageName, item) {
 	  //console.log(item);
@@ -1493,12 +1764,12 @@
 	  },
 	      endFnc = function endFnc() {
 
-	    console.log();
 	    //console.log(itemH);
-	    if (_storage2["default"].effectCreateDrag.active === true && _storage2["default"].effectCreateDrag.distribitorMouseOver !== null) {
+	    if (_storage2["default"].effectCreateDrag.active === true && _storage2["default"].effectCreateDrag.distribitorMouseOver !== null && _storage2["default"].effectCreateDrag.poi) {
 	      (function () {
 	        //ADD effects blocks into DISTRIBITOR
-	        console.log(_storage2["default"].effectCreateDrag.distribitorMouseOver);
+	        //console.log(GlobalStorage.effectCreateDrag.distribitorMouseOver);
+	        //console.log(GlobalStorage.effectCreateDrag);
 	        var cordX = undefined;
 	        var cordY = undefined;
 	        var connectPath = undefined;
@@ -1508,40 +1779,45 @@
 	        var genId = _storage2["default"].effectCreateDrag.distribitorMouseOver; //get an Unic Id of Distributor over which one mouse being
 	        var distribitorObject = _storage2["default"].distribitorObjectsStorage[genId]; //get object with this key
 	        var distributorType = distribitorObject.rootBlockSet.distributorType;
-	        Object.keys(distribitorObject).map(function (objectKey, index) {
-	          if (distribitorObject[objectKey].poiName) {
-	            (function () {
-	              //filter object priperty to get object with poiName only
-	              var poiSet = distribitorObject[objectKey]; //get set with this key
-	              //console.log(index);
-	              _csInterface2["default"].evalScript("$._ext.applyEffectDistributor(\"" + item.name + "\",\"" + distributorType + "\"," + index + ")", function (res) {
-	                // send data to extendScript
+	        var countTypeOfEffects = distribitorObject.countTypeOfEffects += 1;
+	        var distrObjectArray = Object.keys(distribitorObject);
+	        var distrObjectArrayFiltered = distrObjectArray.filter(function (name) {
+	          return name == distribitorObject[name].poiName;
+	        });
+	        //console.log(distrObjectArrayFiltered);
+	        distrObjectArrayFiltered.map(function (objectKey, index) {
+	          //filter object priperty to get object with poiName only
+	          //console.log(index);
+	          var poiSet = distribitorObject[objectKey]; //get set with this key
+	          //console.log(index);
+	          _csInterface2["default"].evalScript("$._ext.applyEffectDistributor(\"" + item.name + "\",\"" + distributorType + "\"," + index + ")", function (res) {
+	            // send data to extendScript
 
-	                var promise = new Promise(function (resolve) {
-	                  var value = distribitorObject[objectKey].poiName; // get name of object
-	                  cordX = distribitorObject[objectKey][1].attr("x"); // get coordinates of correspond POI block
-	                  cordY = distribitorObject[objectKey][1].attr("y"); // get coordinates of correspond POI block
-	                  workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(cordX + 130, cordY, item, res); // create effect block
+	            var promise = new Promise(function (resolve) {
+	              var value = distribitorObject[objectKey].poiName; // get name of object
+	              cordX = distribitorObject[objectKey][1].attr("x"); // get coordinates of correspond POI block
+	              cordY = distribitorObject[objectKey][1].attr("y"); // get coordinates of correspond POI block
+	              workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(cordX + 130 * countTypeOfEffects, cordY, item, res); // create effect block
 
-	                  resolve(workBlock);
-	                });
-	                promise.then(function (resolve) {
-	                  (0, _moveEffectsJs2["default"])(workBlock);
-	                  connectPath = _raphaelContainerJs2["default"].path(["M", cordX + 80, cordY + 16, "L", cordX + 130, cordY + 16]); //create line between POI and effect blocks
-	                  connectPath.node.lineFromCyrcle = "circleRight"; //asign name of the line for POI blocks
-	                  resolve.push(connectPath);
-	                  poiSet.push(connectPath);
-	                  _storage2["default"].distribitorObjectsStorage[genId][resolve.setEffectName] = resolve;
-	                  _storage2["default"].effectCreateDrag.active = false; //put effectCreateDrag.active in false. This means that an effect was successfully added to the dispatcher.
-	                });
-	              });
+	              resolve(workBlock);
+	            });
+	            promise.then(function (resolve) {
+	              (0, _moveEffectsJs2["default"])(workBlock); // range an order of this effect
+	              connectPath = _raphaelContainerJs2["default"].path(["M", cordX + 80, cordY + 16, "L", cordX + 130 * countTypeOfEffects, cordY + 16]); //create line between POI and effect blocks
+	              connectPath.node.lineFromCyrcle = "circleRight"; //asign name of the line for POI blocks
+	              resolve.push(connectPath);
+	              poiSet.push(connectPath);
+	              _storage2["default"].distribitorObjectsStorage[genId][resolve.setEffectName] = resolve;
+	              _storage2["default"].effectCreateDrag.active = false; //put effectCreateDrag.active in false. This means that an effect was successfully added to the dispatcher.
+	            });
+	          });
 
-	              //workBlock=new mainBlock().createBlockEffects((cordX+130),cordY,item,res);//only for test in browser
-	            })();
-	          }
+	          //workBlock=new mainBlock().createBlockEffects((cordX+130),cordY,item,res);//only for test in browser
 	        });
 	      })();
-	    }
+	    } else if (_storage2["default"].effectCreateDrag.active === true && _storage2["default"].effectCreateDrag.distribitorMouseOver !== null && _storage2["default"].effectCreateDrag.poi === false) {
+	        _storage2["default"].effectCreateDrag.active = false; //put effectCreateDrag.active in false.
+	      }
 
 	    _storage2["default"].effectCreateDrag.effectType = null;
 	    var cordY = me.getBBox().y;
@@ -1571,7 +1847,7 @@
 	      //-let workBlock=new mainBlock().createBlockEffects(cordX,cordY,item,res);//only for test in browser
 	    } else if (this.node.StaticGroupTipe == 'commonControls') {
 
-	        console.log(item);
+	        //console.log(item);
 	        //console.log(this[0].id);
 	        if (item.name == "POI") {
 
@@ -1587,6 +1863,11 @@
 
 	            var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, cordY, item, false, res);
 	          });
+	        } else if (item.name == "Strength") {
+	          _csInterface2["default"].evalScript("$._ext. createControlStrength()", function (res) {
+	            //push data into extend script
+	            var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, cordY, item, false, res);
+	          });
 	        } else if (item.name == "Waves") {
 	          var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, cordY, item, false);
 	        }
@@ -1594,7 +1875,11 @@
 	        new _mainBlockDisributorBlocks2["default"](cordX, cordY, item);
 
 	        //let workBlock=new mainBlock().createBlockCommonControls(500,cordY,item);
-	      }
+	      } else if (this.node.StaticGroupTipe == 'presets') {
+	          //console.log(GlobalStorage.arrOfPresetsEffects);
+	          var lowestCoordY = _storage2["default"].undermostEffectBlock.y;
+	          new _mainBlockPresetsBlocksJs2["default"]().createPresetsBlocks(cordX, lowestCoordY, item);
+	        }
 
 	    _storage2["default"].storageOfSecondMenuSets[storageName].hide(); //hide the menu panel
 	    me.transform('t' + 0 + ',' + 0); //return a block from secondMenu to an enitial place
@@ -1605,6 +1890,121 @@
 
 /***/ },
 /* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var _raphaelContainerJs = __webpack_require__(2);
+
+	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
+
+	var _mainBlockJs = __webpack_require__(6);
+
+	var _mainBlockJs2 = _interopRequireDefault(_mainBlockJs);
+
+	var _storage = __webpack_require__(10);
+
+	var _storage2 = _interopRequireDefault(_storage);
+
+	var _csInterfaceJs = __webpack_require__(7);
+
+	var _csInterfaceJs2 = _interopRequireDefault(_csInterfaceJs);
+
+	var _startArraysArrSecondButtonJs = __webpack_require__(4);
+
+	var _startArraysArrSecondButtonJs2 = _interopRequireDefault(_startArraysArrSecondButtonJs);
+
+	var _helperFunctionsMoveEffectsJs = __webpack_require__(11);
+
+	var _helperFunctionsMoveEffectsJs2 = _interopRequireDefault(_helperFunctionsMoveEffectsJs);
+
+	var presetsBlocks = (function () {
+	  function presetsBlocks() {
+	    _classCallCheck(this, presetsBlocks);
+	  }
+
+	  _createClass(presetsBlocks, [{
+	    key: "createPresetsBlocks",
+	    value: function createPresetsBlocks(cordX, lowestCoordY, presetsType) {
+	      console.log(presetsType);
+	      this.createPresetsEffects(cordX, lowestCoordY, presetsType);
+	    }
+	  }, {
+	    key: "createPresetsEffects",
+	    value: function createPresetsEffects(cordX, lowestCoordY, presetsType) {
+
+	      console.log(_storage2["default"].arrOfPresetsEffects[presetsType.name]);
+	      //  GlobalStorage.arrOfPresetsEffects[presetsType.name].forEach((itemName)=>{
+	      var effectBlocks = _storage2["default"].arrOfPresetsEffects[presetsType.name];
+
+	      var _loop = function () {
+	        var itemArr = _startArraysArrSecondButtonJs2["default"].effects.filter(function (a, index) {
+	          var keyName = key.replace(/(^")|("$)/g, '');
+	          return _startArraysArrSecondButtonJs2["default"].effects[index].name == keyName.slice(0, -1);
+	        });
+	        var item = itemArr[0];
+
+	        var propertyOfEffectString = JSON.stringify(effectBlocks[key]);
+
+	        console.log(propertyOfEffectString);
+	        _csInterfaceJs2["default"].evalScript("$._ext.applyEffectPresets(\"" + item.name + "\"," + propertyOfEffectString + ")", function (res) {
+	          //push data into extend script
+	          lowestCoordY += 40;
+	          var workBlock = new _mainBlockJs2["default"]().createBlockEffects(cordX, lowestCoordY, item, res);
+	          console.log(workBlock);
+	          (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
+	          _storage2["default"].effectCreateDrag.active = false; // close ability to add this effect to dispatcher
+	        });
+	      };
+
+	      for (var key in effectBlocks) {
+	        _loop();
+	      }
+
+	      var propertyOfEffect = _storage2["default"].arrOfPresetsEffects[presetsType.name];
+	      /*console.log(propertyOfEffect);
+	      function stringProp (obj){
+	        let ObjOfString={};
+	      for (var key in obj) {
+	                     ObjOfString[`"${key}"`]=`${obj[key]}`;
+	        }
+	        return ObjOfString;
+	      }*/
+	      //let testData=stringProp(propertyOfEffect);
+	      //let propertyOfEffectString=JSON.stringify(stringProp(propertyOfEffect));
+
+	      /*let testX=JSON.stringify(testData);
+	      let objParsed=JSON.parse(testX);
+	      console.log(objParsed["Mobius Zoom"].split(';'))*/
+	      //let propertyOfEffect=GlobalStorage.arrOfPresetsEffects[presetsType.name][itemName].join(';');
+	      /*console.log(propertyOfEffect.forEach((i)=>{
+	        console.log(i);
+	      }));*/
+
+	      //});
+	    }
+	  }]);
+
+	  return presetsBlocks;
+	})();
+
+	;
+
+	exports["default"] = presetsBlocks;
+	module.exports = exports["default"];
+
+/***/ },
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1629,7 +2029,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1656,10 +2056,10 @@
 
 	var deleteFunctions = window.addEventListener("contextmenu", function (event) {
 	  event.preventDefault();
-	  console.log(_storage2['default'].toDelete);
+	  //console.log(event);
 	  //let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 123,     "ctrlKey": true  }];
 	  //csInterface.registerKeyEventsInterest(keyEventsInterest);
-	  /*event.preventDefault();*/
+
 	  //console.log(GlobalStorage.distribitorObjectsStorage[genId]);
 	  if (_storage2['default'].toDelete != undefined /*&&event.keyCode==46*/) {
 
@@ -1670,6 +2070,7 @@
 	            //Remove whole Distributor Blocks with all childs
 	            var genId = _storage2['default'].toDelete.genId;
 	            var distribitorObject = _storage2['default'].distribitorObjectsStorage[genId];
+	            var remove = _storage2['default'].toDelete.remove();
 	            Object.keys(distribitorObject).map(function (objectKey, index) {
 	              //console.log(objectKey);
 	              if (_storage2['default'].historyOfObjects[objectKey]) {
@@ -1679,14 +2080,16 @@
 
 	                _csInterface2['default'].evalScript('$._ext.deleteEffect("' + objectKey + '")', function (res) {
 	                  //Remove effects from After Effects
-	                  var remove = _storage2['default'].toDelete.remove();
+	                  console.log("REMOVE");
+	                  var remove = _storage2['default'].toDelete;
 	                  resolve(remove);
 	                });
 
 	                //
 	              }
-
-	              _storage2['default'].distribitorObjectsStorage[genId][objectKey].remove(); //Remove this object from GlobalStorage.distribitorObjectsStorage
+	              if (objectKey != "countTypeOfEffects") {
+	                _storage2['default'].distribitorObjectsStorage[genId][objectKey].remove(); //Remove this object from GlobalStorage.distribitorObjectsStorage
+	              }
 	            });
 	          })();
 	        } else if (_storage2['default'].toDelete.setEffectName) {
@@ -1704,32 +2107,49 @@
 
 	            //
 	          } else if (_storage2['default'].toDelete.fullCommonContrlName) {
-	              //Remove CommonControls (not chained with Distributor)
+	              //Remove CommonControls
 	              var CommonContrlName = _storage2['default'].toDelete.fullCommonContrlName;
 	              var thisCommonContrlName = _storage2['default'].toDelete.thisCommonContrlName;
 	              var itemsArray = _storage2['default'].toDelete.items;
 	              var arrayOfLinkedEffects = _.filter(itemsArray, function (i) {
 	                //filter array to get just paths to linked effects (names of linked effects are stored in property "LineTo" of path )
-	                if (i.node.nodeName == "path") {
+	                if (i.node.nodeName == "path" && !i.DistributorEffects) {
 
 	                  return i.LineTo;
+	                } else if (i.node.nodeName == "path" && i.DistributorEffects) {
+	                  return i.DistributorEffects;
 	                }
 	              });
 
 	              var arrayOfLinkedEffectsFiltered = _.map(arrayOfLinkedEffects, function (i) {
 	                //get array with names of linked to this common control ffects
+	                if (i.DistributorEffects) {
+	                  return i.DistributorEffects.join(';');
+	                }
 	                return i.LineTo;
 	              });
+
 	              var arrayOfLinkedEffectsString = arrayOfLinkedEffectsFiltered.join(';'); //transform array to string to pass in into "ext.deleteCommonControl" function
 	              //Call to ExtScript
-
+	              console.log(arrayOfLinkedEffectsString);
 	              //console.log(GlobalStorage.toDelete.thisCommonContrlName);
 
-	              _csInterface2['default'].evalScript('$._ext.deleteCommonControl("' + CommonContrlName + '","' + arrayOfLinkedEffectsString + '","' + thisCommonContrlName + '")', function (res) {
+	              switch (_storage2['default'].toDelete[0].node.effectName) {
+	                case "Strength":
+	                  //console.log(thisCommonContrlName);
+	                  _csInterface2['default'].evalScript('$._ext.deleteCommonControl("Strength","' + arrayOfLinkedEffectsString + '","' + thisCommonContrlName + '")', function (res) {
 
-	                var remove = _storage2['default'].toDelete.remove();
-	                resolve(remove);
-	              });
+	                    var remove = _storage2['default'].toDelete.remove();
+	                    resolve(remove);
+	                  });
+	                  break;
+	                default:
+	                  _csInterface2['default'].evalScript('$._ext.deleteCommonControl("' + CommonContrlName + '","' + arrayOfLinkedEffectsString + '","' + thisCommonContrlName + '")', function (res) {
+
+	                    var remove = _storage2['default'].toDelete.remove();
+	                    resolve(remove);
+	                  });
+	              }
 
 	              //
 	            }

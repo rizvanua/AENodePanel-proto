@@ -8,16 +8,19 @@ let GlobalStorage={
     effects: R.set(),
     commonControls:R.set(),
     distributor:R.set(),
+    presets:R.set()
   },
   Flags:{
     effects: true,
     commonControls:true,
-    distributor:true
+    distributor:true,
+    presets:true
   },
-  mainMenuSet:{
+  mainMenuSet:{//storage firsts (main) vertical line of menu
     effects:R.set(),
     commonControls:R.set(),
-    distributor:R.set()
+    distributor:R.set(),
+    presets:R.set()
   },
   lastEffectBlock:{
     y:0
@@ -26,15 +29,20 @@ let GlobalStorage={
   historyOfObjects:{
     itemArray:[]
   },
+  undermostEffectBlock:{
+    y:10 //this is an Y coordinate of the lowermost blockEffect (see "moveEffects.js")
+  },
   effectCreateDrag:{
     active:false,
     effectType:null,
     distribitorMouseOver:null
   },
+  arrOfPresetsEffects:{},// storage for all array with presets' effects
   distribitorObjectsStorage:{},// Here we hold all Distributors sets
   toDelete:undefined,//Temporary object which one contents object for deleting by pressing key "DELETE"
   currentLine:null, //Temporary object with just created Line
-  overMouseSet:null //Temporary object what contents Set over which fire event mouseover
+  overMouseSet:null, //Temporary object what contents Set over which fire event mouseover
+  overDistributorMouse:null //Temporary object what contents genId of DISTRIBUTOR need to add common control (FOV, Strange)
 }
 
 export default GlobalStorage;

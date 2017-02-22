@@ -2,7 +2,8 @@ import R from "../raphaelContainer.js";
 import csInterface from "../csInterface.js";
 import draggableSet from "../helperFunctions/draggableSet.js";
 import drawLineFromTo  from "../helperFunctions/drawLineFromTo.js";
-//import deleteFunctions from "../helperFunctions/deleteFunction.js"*/
+/*import deleteFunctions from "../helperFunctions/deleteFunctions.js"*/
+//import deleteInOneClick from "../helperFunctions/deleteInOneClick.js"
 import activeBlockFunctionsClass from '../helperFunctions/activeBlockFunction';
 import GlobalStorage from '../storage';
 
@@ -20,6 +21,7 @@ class mainBlock{
     workBlockSet.baseEffect=item.name;
     workBlockSet.poi=item.poi;
     workBlockSet.fov=item.fov;
+    workBlockSet.strength=item.strength;
     workBlockSet.waves=item.waves;
     let dummy=R.rect(x,y, 120, 32,5)
     .attr({   fill: "rgb(64, 64, 64)",
@@ -68,10 +70,15 @@ class mainBlock{
     workBlockSet.draggableSet(workBlockSet,typeNode);
     workBlockSet.click(()=>{new activeBlockFunctionsClass().activeEffectBlock(workBlockSet,blockEffectName);});
 
+
+
     workBlockSet.mouseover(function(){
+      GlobalStorage.toDelete=workBlockSet;
+      console.log(GlobalStorage.currentLine);
       //console.log("OVER");
       //console.log(workBlockSet);
       //console.log(this);
+        //workBlockSet.deleteInOneClick(workBlockSet);
     if (GlobalStorage.currentLine){
       let typeOfControll=GlobalStorage.currentLine.node.shortControlName;
 
@@ -89,6 +96,7 @@ class mainBlock{
     });
     workBlockSet.mouseout(function(){
       //console.log("OUT");
+        GlobalStorage.toDelete=undefined;
         workBlockSet.attr({cursor: "move"})
         GlobalStorage.overMouseSet=null;//Clear interim object if mouse get out
     });
@@ -139,6 +147,7 @@ class mainBlock{
 
           //console.log(item);
           workBlockSet.shortName=item.effectName.toLowerCase();
+          workBlockSet.currentName=thisItemName;
           workBlockSet.push(workBlock);
           workBlockSet.push(title);
 
@@ -162,6 +171,12 @@ class mainBlock{
     workBlockSet.thisCommonContrlName=res;
     workBlockSet.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(workBlockSet);});
     workBlockSet.draggableSet(workBlockSet,typeNode);
+    workBlockSet.mouseover(function(){
+      GlobalStorage.toDelete=workBlockSet;
+    });
+      workBlockSet.mouseout(function(){
+        GlobalStorage.toDelete=undefined;
+      });
     return workBlockSet;
 
   }

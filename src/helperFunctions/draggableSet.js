@@ -80,12 +80,12 @@ Raphael.st.draggableSet = function (setObj,type) {
 
   }, endFnc = function endFnc() {
     // save a reference to the core implementation
-
+//console.log(thisSet);
       if(type=="effects")
       {
         /*console.log(thisSet[1].node.effectName);*/
               moveEffects (thisSet);
-              
+
       }
 
     //console.log(GlobalStorage.historyOfObjects);
@@ -166,10 +166,17 @@ function DistributorRootMove (item, i, _this, dx, dy){
     else if (item.node.nodeName == 'text') {
       item.attr({ x: _this.ox + dx+80, y: _this.oy + dy+32 });
     }
-    else if (item.node.nodeName == 'path') {//moving line from this RootDistributorBlock  to common control
+    else if (item.node.nodeName == 'path'&&!item.DistributorEffects) {//moving line from this RootDistributorBlock  to common control
       let LX=item.attr().path[1][1];
       let LY=item.attr().path[1][2];
       item.attr("path",`M${_this.ox+ dx+160} ${_this.oy+ dy+32}L${LX} ${LY}`);
+
+
+    }
+    else if(item.node.nodeName == 'path'&&item.DistributorEffects){
+      let MX=item.attr().path[0][1];
+      let MY=item.attr().path[0][2];
+      item.attr("path",`M${MX} ${MY}L${_this.ox+ dx+160} ${_this.oy+ dy+32}`);
 
     }
 }
