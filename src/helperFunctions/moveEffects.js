@@ -1,12 +1,15 @@
 import csInterface from '../csInterface';
 import GlobalStorage from '../storage';
+import R from "../raphaelContainer.js";
 
 // Function to check an order of Effects' blocks (by X coordinate)
 
 
  function moveEffects (thisSet){
 //console.log(thisSet)
-console.log(GlobalStorage.arrOfPresetsEffects);
+//console.log(JSON.stringify(R.canvas.innerHTML));
+//console.log(GlobalStorage.historyOfObjects);
+//console.log(JSON.stringify(GlobalStorage.historyOfObjects));
   GlobalStorage.historyOfObjects.itemArray.length=0;
     let storageName=thisSet[1].node.effectName;
     //GlobalStorage.historyOfObjects[storageName]=thisSet;

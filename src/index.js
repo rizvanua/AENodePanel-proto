@@ -9,7 +9,11 @@ import GlobalStorage from './storage';
 let myReq;
 let status=false;
 /**/
-
+/*window.localStorage.hey="one";*/
+console.log(window.localStorage);
+csInterface.addEventListener('mouseover',function(e){
+       alert("keydown detected");
+});
 //let path = "./test.js";
 //console.log();
 let systemPathOS=csInterface.getSystemPath(SystemPath.EXTENSION);
@@ -31,22 +35,30 @@ if(readDir.err === 0)
       //GlobalStorage.arrOfPresetsEffects[filePresetObject.name]=filePresetObject.name;
       //console.log(filePresetObject);
       GlobalStorage.arrOfPresetsEffects[filePresetObject.name]={};
+      GlobalStorage.arrOfPresetsEffects[filePresetObject.name].propsArray=[];
       //console.log(GlobalStorage.arrOfPresetsEffects);
       filePresetObject.arrOfPresetsEffects.forEach((index,i)=>{
 
 //console.log(index);
         //let arrIndex=[];
 //console.log(filePresetObject.arrOfPresetsEffects[i]);
+
+
+
         for (var key in index) {
           //filePresetObject.arrOfPresetsEffects[i][key]=index[key];
           //console.log(JSON.stringify(filePresetObject.arrOfPresetsEffects[i][key]));
         //arrIndex.push(`{"${key}":${JSON.stringify(index[key])}}`);
         //console.log(key);
-        GlobalStorage.arrOfPresetsEffects[filePresetObject.name][`"${key}${i}"`]=index[key];
+        let obj={[`"${key}"`]:index[key]};
+        //console.log(obj);
+        GlobalStorage.arrOfPresetsEffects[filePresetObject.name].propsArray.push(obj);
+        //GlobalStorage.arrOfPresetsEffects[filePresetObject.name].[`"${key}"`]=index[key];
 
         //GlobalStorage.arrOfPresetsEffects[filePresetObject.name][index][key]=`${JSON.stringify(index[key])}`;
         //console.log(`"${key}":${i[key]}`);
         }
+        //console.log(GlobalStorage.arrOfPresetsEffects)
           /*filePresetObject[index].forEach((i)=>{
             console.log(key);
 

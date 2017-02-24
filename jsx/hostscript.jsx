@@ -1,7 +1,5 @@
 ﻿function addPOIFunction(effectName, propName, thisPropName, _this){    
-    _this.currentLayer.effect.property(effectName).property(propName).expression="thisLayer.effect("+"'"+thisPropName+"'"+").point.value";
-    
-     
+    _this.currentLayer.effect.property(effectName).property(propName).expression="thisLayer.effect("+"'"+thisPropName+"'"+").point.value"; 
     
 };
 
@@ -39,9 +37,17 @@ function generatorPOI() {
 
 //MAIN CODE
 $._ext = {
+    checkChangesGloba: function()
+    {
+        this.currentCompName;
+        this.currentLayerName;
+        this.currentEffectName;
+        this.effectsQuantity;
+    },
      initialProjectTest : function()
     {        
        this.currentComp = app.project.activeItem;
+       $.writeln(app.project.activeItem)
         
         if (this.currentComp){
             var layerCount = this.currentComp.numLayers;
@@ -49,10 +55,16 @@ $._ext = {
             
             if (layerCount > 0){
              
-                for (var i = 1; i <= layerCount; ++i){
-                                    
+                for (var i = 1; i>=layerCount; i++){
+                                   
                     if(this.currentComp.layers[i] instanceof AVLayer)
                     {
+                        $.writeln(this.currentComp.layers[i].effect.numProperties);
+                        for (var key in this.currentComp.layers[i]) {
+                            //$.writeln(key);
+                            }
+                        //this.currentComp.layers[i].unicID="9:80 PM";
+                         //$.writeln(this.currentComp.layers[i].effect);
                         this.currentComp = app.project.activeItem;
                         this.itemWidth= app.project.activeItem.width;
                         this.itemHight= app.project.activeItem.height;
@@ -86,55 +98,70 @@ $._ext = {
          
         if (this.currentComp){
             var layerEffect=this.currentLayer.Effects.addProperty(effectName);   
-                          
+             
                           return layerEffect.name;      
             
             }
     },
-      applyEffectPresets: function(effectName, propertyOfEffect) {     
-           var layerEffect=this.currentLayer.Effects.addProperty(effectName);
-           
-          function findObj(propertyOfEffect) {
-              for (var key in propertyOfEffect) {
-                if (typeof propertyOfEffect[key] == "object") {
-                  findObj.call(this, propertyOfEffect[key]);
-                  //$.writeln(propertyOfEffect[key]);
-                  //$.writeln(layerEffect.name);
-                  //$.writeln(layerEffect.property(key).value);
-                } else {
-                    //$.writeln(propertyOfEffect[key].toString());
-                    var propString=String(propertyOfEffect[key]);
-                     var string_array = propString.split(',');
+      applyEffectPresets: function(effectName, propertyOfEffect) {
+          var layerEffect = this.currentLayer.Effects.addProperty(effectName);
+
+          //function findObj(propertyOfEffect) {
+          for (var key in propertyOfEffect) {
+            if (typeof propertyOfEffect[key] == "object") {
+            //$.writeln('null'==0);
+            //$.writeln(typeof  propertyOfEffect[key].expression=='number');
+            
+
+              if (typeof propertyOfEffect[key].value=='number'||typeof propertyOfEffect[key].value=='string'&& propertyOfEffect[key].value !='null') {
+                //$.writeln(propertyOfEffect[key].value)          
+                var propString = propertyOfEffect[key].value;
+                if (typeof propertyOfEffect[key].value == "string") {
+                  var string_array = propString.split(',');
+                  //$.writeln(this['itemWidth']) ; 
+                  var propertyNew = [];
+                  for (var i = 0; i < string_array.length; i++) {
+                    //propertyNew.push(eval(string_array[i]));
+                    //$.writeln(string_array[i].split('*'));
+                    var arrData = string_array[i].split('*');
+
+                    if (arrData.length ==2) {
+                      var result = this[arrData[0]] * arrData[1];
+                      propertyNew.push(result);
+                    } else if(arrData.length ==1) {
+                      var result = this[arrData[0]];
+                      propertyNew.push(result);
+                    }
                     
-                     var propertyNew=[];
-                   for(var i=0; i<string_array.length; i++)
-                     {                                                             
-                                   propertyNew.push(eval(string_array[i]));
-                                    
-                         }
-                     $.writeln(propertyNew)
-                     layerEffect.property(key).expression="["+String(propertyNew)+"]";
-                     
-                  //addPropertyToEffect(effectName, key, propertyOfEffect[key], this)
-                  //$.writeln(layerEffect.property("Zoom in Point"));
-                  //$.writeln(key);
-                  //$.writeln(_this.currentLayer.effect.property(layerEffect.name).property(key).value);
-                  //$.writeln(this.currentLayer.effect.property(layerEffect.name));
-                  //$.writeln(propertyOfEffect[key]);
-                  //_this.currentLayer.effect.property(key).setValue([propValue]);
+                  }
+             
+                  layerEffect.property(key).setValue(propertyNew);
+                } else {
+                  var result = propertyOfEffect[key].value;
+                  // $.writeln(propertyOfEffect[key].value);
+                  layerEffect.property(key).setValue([result]);
                 }
 
+
+
+
+                // layerEffect.property(key).setValue("[" + String(propertyNew) + "]") ;
               }
-        }
-        findObj.call(this, propertyOfEffect);
+              if (typeof propertyOfEffect[key].expression=='number'||typeof propertyOfEffect[key].expression=='string'&& propertyOfEffect[key].expression !='null') {
+                //layerEffect.property(key).expression = "[" + String(propertyNew) + "]";
+                 layerEffect.property(key).expression=propertyOfEffect[key].expression;
+               
+              }
+            }
 
-        return layerEffect.name;   
-            
-           
+          }
 
-                         
+          //}
 
-    },
+          //findObj.call(this, propertyOfEffect);
+
+          return layerEffect.name;
+},
     applyEffectDistributor: function(effectName, distributorType,index){
                       
                      
@@ -160,8 +187,7 @@ $._ext = {
      },
     createControlPoint: function(){
        
-        var ControlPoint=this.currentLayer.Effects.addProperty("Point Control");
-         $.writeln(ControlPoint.name);
+        var ControlPoint=this.currentLayer.Effects.addProperty("Point Control");        
         return ControlPoint.name;
         },
     createControlFOV: function(){        

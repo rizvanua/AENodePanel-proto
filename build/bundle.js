@@ -48,6 +48,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	var _sideBarSideBarJs = __webpack_require__(1);
 
 	var _sideBarSideBarJs2 = _interopRequireDefault(_sideBarSideBarJs);
@@ -79,7 +81,11 @@
 	var myReq = undefined;
 	var status = false;
 	/**/
-
+	/*window.localStorage.hey="one";*/
+	console.log(window.localStorage);
+	_csInterface2["default"].addEventListener('mouseover', function (e) {
+	  alert("keydown detected");
+	});
 	//let path = "./test.js";
 	//console.log();
 	var systemPathOS = _csInterface2["default"].getSystemPath(SystemPath.EXTENSION);
@@ -100,22 +106,28 @@
 	        //GlobalStorage.arrOfPresetsEffects[filePresetObject.name]=filePresetObject.name;
 	        //console.log(filePresetObject);
 	        _storage2["default"].arrOfPresetsEffects[filePresetObject.name] = {};
+	        _storage2["default"].arrOfPresetsEffects[filePresetObject.name].propsArray = [];
 	        //console.log(GlobalStorage.arrOfPresetsEffects);
 	        filePresetObject.arrOfPresetsEffects.forEach(function (index, i) {
 
 	          //console.log(index);
 	          //let arrIndex=[];
 	          //console.log(filePresetObject.arrOfPresetsEffects[i]);
+
 	          for (var key in index) {
 	            //filePresetObject.arrOfPresetsEffects[i][key]=index[key];
 	            //console.log(JSON.stringify(filePresetObject.arrOfPresetsEffects[i][key]));
 	            //arrIndex.push(`{"${key}":${JSON.stringify(index[key])}}`);
 	            //console.log(key);
-	            _storage2["default"].arrOfPresetsEffects[filePresetObject.name]["\"" + key + i + "\""] = index[key];
+	            var obj = _defineProperty({}, "\"" + key + "\"", index[key]);
+	            //console.log(obj);
+	            _storage2["default"].arrOfPresetsEffects[filePresetObject.name].propsArray.push(obj);
+	            //GlobalStorage.arrOfPresetsEffects[filePresetObject.name].[`"${key}"`]=index[key];
 
 	            //GlobalStorage.arrOfPresetsEffects[filePresetObject.name][index][key]=`${JSON.stringify(index[key])}`;
 	            //console.log(`"${key}":${i[key]}`);
 	          }
+	          //console.log(GlobalStorage.arrOfPresetsEffects)
 	          /*filePresetObject[index].forEach((i)=>{
 	            console.log(key);
 	              })*/
@@ -1286,11 +1298,17 @@
 
 	var _storage2 = _interopRequireDefault(_storage);
 
+	var _raphaelContainerJs = __webpack_require__(2);
+
+	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
+
 	// Function to check an order of Effects' blocks (by X coordinate)
 
 	function moveEffects(thisSet) {
 	  //console.log(thisSet)
-	  console.log(_storage2['default'].arrOfPresetsEffects);
+	  //console.log(JSON.stringify(R.canvas.innerHTML));
+	  //console.log(GlobalStorage.historyOfObjects);
+	  //console.log(JSON.stringify(GlobalStorage.historyOfObjects));
 	  _storage2['default'].historyOfObjects.itemArray.length = 0;
 	  var storageName = thisSet[1].node.effectName;
 	  //GlobalStorage.historyOfObjects[storageName]=thisSet;
@@ -1942,20 +1960,23 @@
 	  }, {
 	    key: "createPresetsEffects",
 	    value: function createPresetsEffects(cordX, lowestCoordY, presetsType) {
+	      var _this = this;
 
-	      console.log(_storage2["default"].arrOfPresetsEffects[presetsType.name]);
+	      //console.log(GlobalStorage.arrOfPresetsEffects[presetsType.name]);
 	      //  GlobalStorage.arrOfPresetsEffects[presetsType.name].forEach((itemName)=>{
-	      var effectBlocks = _storage2["default"].arrOfPresetsEffects[presetsType.name];
-
-	      var _loop = function () {
+	      var effectBlocks = _storage2["default"].arrOfPresetsEffects[presetsType.name].propsArray;
+	      //console.log(effectBlocks);
+	      effectBlocks.forEach(function (obj, num) {
+	        //console.log(obj);
+	        //console.log(this.innerForEach(obj));
 	        var itemArr = _startArraysArrSecondButtonJs2["default"].effects.filter(function (a, index) {
-	          var keyName = key.replace(/(^")|("$)/g, '');
-	          return _startArraysArrSecondButtonJs2["default"].effects[index].name == keyName.slice(0, -1);
+	          var keyName = Object.keys(obj)[0].replace(/(^")|("$)/g, '');
+	          return _startArraysArrSecondButtonJs2["default"].effects[index].name == keyName;
+	          //return arrSecondButton.effects[index].name==keyName.slice(0, -1);
 	        });
+
 	        var item = itemArr[0];
-
-	        var propertyOfEffectString = JSON.stringify(effectBlocks[key]);
-
+	        var propertyOfEffectString = _this.innerForEach(obj);
 	        console.log(propertyOfEffectString);
 	        _csInterfaceJs2["default"].evalScript("$._ext.applyEffectPresets(\"" + item.name + "\"," + propertyOfEffectString + ")", function (res) {
 	          //push data into extend script
@@ -1965,10 +1986,20 @@
 	          (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
 	          _storage2["default"].effectCreateDrag.active = false; // close ability to add this effect to dispatcher
 	        });
-	      };
-
+	      });
 	      for (var key in effectBlocks) {
-	        _loop();
+
+	        //let propertyOfEffectString=JSON.stringify(effectBlocks[key]);
+
+	        //console.log(propertyOfEffectString);
+	        /*csInterface.evalScript(`$._ext.applyEffectPresets("${item.name}",${propertyOfEffectString})`,(res)=>{//push data into extend script
+	        lowestCoordY+=40
+	          let workBlock=new mainBlock().createBlockEffects(cordX,lowestCoordY,item,res);
+	          console.log(workBlock);
+	          moveEffects(workBlock);
+	          GlobalStorage.effectCreateDrag.active=false// close ability to add this effect to dispatcher
+	        });*/
+
 	      }
 
 	      var propertyOfEffect = _storage2["default"].arrOfPresetsEffects[presetsType.name];
@@ -1992,6 +2023,19 @@
 	      }));*/
 
 	      //});
+	    }
+	  }, {
+	    key: "innerForEach",
+	    value: function innerForEach(obj) {
+	      var objToStringlify = {};
+	      var objName = Object.keys(obj)[0];
+	      obj[objName].forEach(function (innerObj, innerNum) {
+	        var innerObjName = Object.keys(innerObj)[0];
+	        objToStringlify[innerObjName] = innerObj[innerObjName];
+	        //console.log(innerObjName);
+	        //console.log(innerObj[innerObjName]);
+	      });
+	      return JSON.stringify(objToStringlify);
 	    }
 	  }]);
 
