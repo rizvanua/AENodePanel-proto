@@ -6,10 +6,12 @@ class activeBlockFunctionsClass{
 
   constructor(){}
 
-  activeEffectBlock(workBlockSet,effectName){
+  activeEffectBlock(workBlockSet){
     //GlobalStorage.toDelete=workBlockSet;
+    let effectName=workBlockSet.setEffectName;
+    //console.log(effectName);
     if(GlobalStorage.prevActive){
-      console.log(GlobalStorage.prevActive[0].id);
+      //console.log(GlobalStorage.prevActive[0].id);
     }
 
       if(GlobalStorage.prevActive&&GlobalStorage.prevActive[0]&&workBlockSet[0].id!=GlobalStorage.prevActive[0].id){

@@ -13,7 +13,7 @@ class drawLineFromTo{
     //console.log(thisSet);
     _this.ox=_this.attr("cx");
     _this.oy=_this.attr("cy");
-    var connectPath = R.path( ["M", _this.ox, _this.oy, "L", _this.ox, _this.oy ] )
+    let connectPath = R.path( ["M", _this.ox, _this.oy, "L", _this.ox, _this.oy ] )
     .attr({stroke:"blue"});
     connectPath.node.lineFromCyrcle=_this.node.circleName;//Here we asign from which one circle go the Line (Right cyrcle or LeftCyrcle)
     connectPath.node.shortControlName=thisSet.shortName;
@@ -45,13 +45,14 @@ class drawLineFromTo{
 
     if(GlobalStorage.currentLine){
       let typeOfControll=GlobalStorage.currentLine.node.shortControlName;
+      console.log(typeOfControll);
 
+      //console.log(GlobalStorage.currentLine);
+      //console.log(GlobalStorage.overMouseSet[typeOfControll]);
 
-
-
-//console.log(GlobalStorage.overMouseSet);
-    if (GlobalStorage.overMouseSet!==null&&GlobalStorage.currentLine!==null&&GlobalStorage.overMouseSet[typeOfControll]===true){// in this case the current Line has connection to a destination block
-
+console.log(GlobalStorage.overMouseSet);
+    if (GlobalStorage.overMouseSet!==null&&GlobalStorage.currentLine!==null&&GlobalStorage.overMouseSet[typeOfControll]){// in this case the current Line has connection to a destination block
+      console.log(GlobalStorage.currentLine);
       GlobalStorage.currentLine.attr({stroke:"black"});//add black color for already successfully connected line
       let overMouseSet=GlobalStorage.overMouseSet;
       let effectNameLocal=overMouseSet.setEffectName;
@@ -69,13 +70,40 @@ class drawLineFromTo{
             }).then((res)=>{
               GlobalStorage.currentLine=null;//clear objects in global storage
               //Call to ExtScript
-
-                  switch (thisSet[0].node.effectName) {
+//console.log(effectNameLocal);
+//console.log(thisPropName);
+let type=thisSet.shortName;
+console.log(overMouseSet);
+console.log(GlobalStorage.overMouseSet);
+                  switch (thisSet.shortName) {
+                    case "point":
+                    let pointArr=[];
+                    for(let key in overMouseSet.point){
+                       pointArr.push(key);
+                    }
+                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${pointArr[0]}","${thisPropName}","${type}")`);
+                      break;
+                    case "angle":
+                    let angleArr=[];
+                    for(let key in overMouseSet.angle){
+                       angleArr.push(key);
+                    }
+                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${angleArr[0]}","${thisPropName}","${type}")`);
+                      break;
+                    case "slider":
+                    let sliderArr=[];
+                    for(let key in overMouseSet.slider){
+                       sliderArr.push(key);
+                    }
+                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${sliderArr[0]}","${thisPropName}","${type}")`);
+                      break;
                     case "Strength":
                       csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","Strength","${thisPropName}")`);
                       break;
                     default:
-                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${propName}","${thisPropName}")`);
+                    GlobalStorage.currentLine.remove();//Remove Line when it dosen't has connection with other block
+                    thisSet.splice(thisSet.length-1, 1);//Remove last element (path from set)
+                    GlobalStorage.currentLine=null;//clear objects in global storage
                   }
 
               //
@@ -151,7 +179,7 @@ class drawLineFromTo{
       GlobalStorage.currentLine=null;//clear objects in global storage
 
     }
-    else if(GlobalStorage.overMouseSet!==null&&GlobalStorage.currentLine!==null&&GlobalStorage.overMouseSet[typeOfControll]===false){
+    else if(GlobalStorage.overMouseSet!==null&&GlobalStorage.currentLine!==null){
       GlobalStorage.currentLine.remove();//Remove Line when it dosen't has connection with other block
       thisSet.splice(thisSet.length-1, 1);//Remove last element (path from set)
       GlobalStorage.currentLine=null;//clear objects in global storage

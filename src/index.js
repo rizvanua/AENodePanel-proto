@@ -1,23 +1,98 @@
-import SideBar from "./sideBar/sideBar.js";
-import secondSideBarBlocks from "./sideBar/secondSideBarBlocks.js";
+//import SideBar from "./sideBar/sideBar.js";
+//import secondSideBarBlocks from "./sideBar/secondSideBarBlocks.js";
 import arrSecondButton from "./startArrays/arrSecondButton.js";
 import csInterface from './csInterface';
 import R from "./raphaelContainer.js";
 import deleteFunctions from "./helperFunctions/deleteFunctions";
+import deleteBlockEvent from "./customEvents/deleteEventListener.js";
 import GlobalStorage from './storage';
+import checkBackEnd from "./helperFunctions/checkBackEnd";
+import mainMenu from "./mainMenu";
 
 let myReq;
 let status=false;
+let AnimationFrame;
 /**/
 /*window.localStorage.hey="one";*/
-console.log(window.localStorage);
-csInterface.addEventListener('mouseover',function(e){
-       alert("keydown detected");
-});
+//console.log(window.localStorage);
+let jsonString=`[{"keyCode": 	46},{"keyCode": 46,"ctrlKey": true}]`;
+csInterface.registerKeyEventsInterest(jsonString);
+
+
+//window.addEventListener('keydown',function(e){
+       //alert("window:keydown detected");
+//});
+
+/*document.addEventListener('mouseleave',function(e){
+  let effectCheckArr=[]
+      setTimeout(function() {
+
+        csInterface.evalScript(`$._ext.checkChangesGlobal()`, (res)=>{
+            //console.log(GlobalStorage.historyOfObjects);
+            if(res&&res!="undefined"){
+              effectCheckArr=res.split(',');
+              if(GlobalStorage.effectCheckArr.length>effectCheckArr.length){
+                console.log(GlobalStorage.effectCheckArr);
+                console.log(effectCheckArr);
+                let promise = new Promise(
+                          (resolve) => {
+                            let blockToRemove=_.difference(GlobalStorage.effectCheckArr, effectCheckArr);
+                            GlobalStorage.effectCheckArr=effectCheckArr;
+                            GlobalStorage.blockToRemove=blockToRemove[0];
+                            resolve(blockToRemove);
+                          }
+                        );
+                        promise.then (
+                          (resolve)=>{
+                            document.dispatchEvent(deleteBlockEvent);
+                            //console.log(effectToRemove[0]);
+                          }
+
+                        );
+
+
+              }
+              else{
+                console.log(GlobalStorage.effectCheckArr);
+                GlobalStorage.effectCheckArr=effectCheckArr;
+              }
+            }
+
+
+
+          //console.log(res);
+
+        });
+              requestAnimationFrame(startCheck);
+
+          }, 500);
+});*/
+
+/*document.addEventListener('mouseenter',function(e){
+       //alert("window:mouseenter detected");
+       cancelAnimationFrame(AnimationFrame);
+});*/
 //let path = "./test.js";
 //console.log();
-let systemPathOS=csInterface.getSystemPath(SystemPath.EXTENSION);
-let path = csInterface.getSystemPath(SystemPath.EXTENSION)+"/presets/";
+let systemPathOS=csInterface.getSystemPath(SystemPath.EXTENSION);//path to files
+//let MantraPath=csInterface.getSystemPath(SystemPath.HOST_APPLICATION).replace("AfterFX.exe", "Plug-ins/Mettle/Mantra/");
+/*let readDirMantra = window.cep.fs.readdir(MantraPath);
+if(readDirMantra.err === 0)
+{
+  let arrFilesMantra=readDirMantra.data;
+  arrFilesMantra.forEach((file)=>{
+    let objMantra={}
+    let nameEffect=file.replace("Mantra ", "").replace(".aex", "");
+    if (nameEffect=="VR AE")
+    {
+      nameEffect="Mettle Mantra VR";
+    }
+    objMantra.name=nameEffect;
+    arrSecondButton.effects.push(objMantra);
+
+  });
+}*/
+let path = csInterface.getSystemPath(SystemPath.EXTENSION)+"/presets/";// here we get information from JSON files
 //console.log(path);
 let readDir = window.cep.fs.readdir(path);
 if(readDir.err === 0)
@@ -145,7 +220,7 @@ console.log(csInterface.addEventListener('mouseover',function(e){
 myReq = window.requestAnimationFrame(start);*/
 
 /**/
-function startCheck() {
+/*function startCheck() {
 
   if(status!='true'){
     setTimeout(function() {
@@ -162,14 +237,15 @@ function startCheck() {
   }
   else{
 
+
   document.getElementById("glass").style.display="none";
   }
 
 }
-startCheck();
+startCheck();*/
 /**/
-
-let sideBarFraime= new SideBar().createBar();
+let createMainMenu = new mainMenu();
+//let sideBarFraime= new SideBar().createBar();
 /*let promise= new Promise((resolve)=>{
 	let sideBarInnerBlocks= new SideBar().createInnerBlocks();
         resolve(sideBarInnerBlocks);
@@ -177,11 +253,12 @@ let sideBarFraime= new SideBar().createBar();
 				let secondBarInnerBlocks= new secondSideBarBlocks().createStaticEffects();
 			});*/
 
-let sideBarInnerBlocks= new SideBar().createInnerBlocks();
-let secondBarInnerBlocksEffects= new secondSideBarBlocks().createStaticEffects();
-let secondBarInnerBlocksControls= new secondSideBarBlocks().createStaticCommonControls();
-let secondBarInnerBlocksDistributor= new secondSideBarBlocks().createStaticDistributorControls();
-let secondBarInnerBlocksPresets= new secondSideBarBlocks().createStaticPresets();
+//let sideBarInnerBlocks= new SideBar().createInnerBlocks();
+//let secondBarInnerBlocksEffects= new secondSideBarBlocks().createStaticEffects();
+//let secondBarInnerBlocksControls= new secondSideBarBlocks().createStaticCommonControls();
+//let secondBarInnerBlocksDistributor= new secondSideBarBlocks().createStaticDistributorControls();
+//let secondBarInnerBlocksPresets= new secondSideBarBlocks().createStaticPresets();
+let checkStart=new checkBackEnd();
 
 
 document.getElementsByTagName('svg')[0].addEventListener('click',(e)=>{

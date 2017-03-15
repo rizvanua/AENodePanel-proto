@@ -6,16 +6,34 @@ import R from "../raphaelContainer.js";
 
 
  function moveEffects (thisSet){
+   //console.log(thisSet);
 //console.log(thisSet)
 //console.log(JSON.stringify(R.canvas.innerHTML));
 //console.log(GlobalStorage.historyOfObjects);
 //console.log(JSON.stringify(GlobalStorage.historyOfObjects));
   GlobalStorage.historyOfObjects.itemArray.length=0;
-    let storageName=thisSet[1].node.effectName;
+  let storageName;
+  if(thisSet.setEffectName){
+    storageName=thisSet.setEffectName;
+      //console.log(storageName);
+  }
+  else if(thisSet.thisCommonContrlName){
+    storageName=thisSet.thisCommonContrlName;
+    //console.log(storageName);
+  }
     //GlobalStorage.historyOfObjects[storageName]=thisSet;
     for (let key in GlobalStorage.historyOfObjects) {
       if(key!="itemArray"){
-        GlobalStorage.historyOfObjects.itemArray.push(GlobalStorage.historyOfObjects[key]);
+        let thisBlockEffectName;
+        if(GlobalStorage.historyOfObjects[key].setEffectName){
+          thisBlockEffectName=GlobalStorage.historyOfObjects[key].setEffectName;
+        }
+        else if(GlobalStorage.historyOfObjects[key].thisCommonContrlName) {
+          thisBlockEffectName=GlobalStorage.historyOfObjects[key].thisCommonContrlName;
+        }
+        let attrY=GlobalStorage.historyOfObjects[key][0].attr("y");
+        let obj={name:thisBlockEffectName, y:attrY};
+        GlobalStorage.historyOfObjects.itemArray.push(obj);
       }
         }
 
@@ -26,19 +44,25 @@ import R from "../raphaelContainer.js";
           //console.log(GlobalStorage.historyOfObjects);
           let test=_.sortBy(GlobalStorage.historyOfObjects.itemArray, function(i){
 
-              return i[1].attr("y");// Y is point relatively which we are sorting our array. So we've sort array of effects by Y coordinate of rectangle.
+              return i.y;// Y is point relatively which we are sorting our array. So we've sort array of effects by Y coordinate of rectangle.
           });
 
-            GlobalStorage.undermostEffectBlock.y=test[test.length-1][1].attr("y");//this is the y coordinate of the lowermost blockEffect
-
+          //  GlobalStorage.undermostEffectBlock.y=test[test.length-1][1].attr("y");//this is the y coordinate of the lowermost blockEffect
+//console.log(test);
                 resolve(test);
               }).then((resolve)=>{
                 //console.log(resolve);
                 let mymap=_.map(resolve,function(i,num){
-                      return i[1].node.effectName;// create map of the array and get array of effects' names
+                  //if(i.name){
+                    return i.name;// create map of the array and get array of effects' names
+                //  }
+                //  else if(i.thisCommonContrlName){
+                  //  console.log(i.thisCommonContrlName);
+                    //return i.thisCommonContrlName;// create map of the array and get array of effects' names
+                  //}
 
-                })
-                ;
+
+                });
                   return mymap;
               }).then((mymap)=>{
                 //console.log(mymap)
@@ -46,7 +70,14 @@ import R from "../raphaelContainer.js";
                 myIndex+=1;
                 //console.log(myIndex);
                   //console.log(storageName);
-                csInterface.evalScript(`$._ext.moveEffectIndex("${storageName}","${myIndex}")`,(res)=>{});
+                csInterface.evalScript(`$._ext.moveEffectIndex("${storageName}","${myIndex}")`,(res)=>{
+                  console.log(GlobalStorage.effectCheckArr);
+                  console.log(GlobalStorage.historyOfObjects.itemArray);
+                  GlobalStorage.effectCheckArr=GlobalStorage.historyOfObjects.itemArray.map((i)=>{
+                    return i.name
+                  });
+                    console.log(GlobalStorage.effectCheckArr);
+                });
               });
 
 }

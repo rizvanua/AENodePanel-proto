@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ExtensionManifest ExtensionBundleId="com.mettleNodePanel" ExtensionBundleName="Mantra VR" ExtensionBundleVersion="1.0" Version="4.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExtensionManifest ExtensionBundleId="com.mettelNodePanel" ExtensionBundleName="Mettle Node Panel" ExtensionBundleVersion="1.0" Version="4.0">
   <ExtensionList>
-    <Extension Id="com.mettleNodePanel" Version="1.0"/>
+    <Extension Id="com.mettelNodePanel" Version="1.0"/>
   </ExtensionList>
   <ExecutionEnvironment>
     <HostList>
-	
       <Host Name="AEFT" Version="[14.0,14.9]"/>
     </HostList>
     <LocaleList>
@@ -16,7 +15,7 @@
     </RequiredRuntimeList>
   </ExecutionEnvironment>
   <DispatchInfoList>
-    <Extension Id="com.mettleNodePanel">
+    <Extension Id="com.mettelNodePanel">
       <DispatchInfo>
         <Resources>
           <MainPath>./index.html</MainPath>
@@ -27,7 +26,7 @@
         </Lifecycle>
         <UI>
           <Type>Panel</Type>
-          <Menu>Mantra VR</Menu>
+          <Menu>Mettel Node Panel</Menu>
           <Geometry>
             <Size>
               <Height>800</Height>

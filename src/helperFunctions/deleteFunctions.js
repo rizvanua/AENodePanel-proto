@@ -5,14 +5,15 @@ import GlobalStorage from '../storage';
 
 //Function which handgle all process with Deleting Blocks
 
-let deleteFunctions = window.addEventListener("contextmenu",function(event){
+let deleteFunctions = window.addEventListener("keydown",function(event){
     event.preventDefault();
 //console.log(event);
   //let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 123,     "ctrlKey": true  }];
   //csInterface.registerKeyEventsInterest(keyEventsInterest);
 
 //console.log(GlobalStorage.distribitorObjectsStorage[genId]);
-if(GlobalStorage.toDelete!=undefined/*&&event.keyCode==46*/)
+
+if(GlobalStorage.toDelete!=undefined&&event.keyCode==46)
   {
 
 
@@ -61,9 +62,11 @@ if(GlobalStorage.toDelete!=undefined/*&&event.keyCode==46*/)
         let CommonContrlName= GlobalStorage.toDelete.fullCommonContrlName;
         let thisCommonContrlName=GlobalStorage.toDelete.thisCommonContrlName;
         let itemsArray=GlobalStorage.toDelete.items;
-        let arrayOfLinkedEffects=_.filter(itemsArray,(i)=>{//filter array to get just paths to linked effects (names of linked effects are stored in property "LineTo" of path )
-          if(i.node.nodeName=="path"&&!i.DistributorEffects){
 
+        let arrayOfLinkedEffects=_.filter(itemsArray,(i)=>{//filter array to get just paths to linked effects (names of linked effects are stored in property "LineTo" of path )
+
+          if(i.node.nodeName=="path"&&!i.DistributorEffects){
+            //console.log(i.LineTo);
             return i.LineTo;
           }
           else if(i.node.nodeName=="path"&&i.DistributorEffects){
@@ -71,19 +74,30 @@ if(GlobalStorage.toDelete!=undefined/*&&event.keyCode==46*/)
 
           }
 
+
         });
 
-        let arrayOfLinkedEffectsFiltered=_.map(arrayOfLinkedEffects,(i)=>{//get array with names of linked to this common control ffects
+
+        /*let arrayOfLinkedEffectsFiltered=_.map(arrayOfLinkedEffects,(i)=>{//get array with names of linked to this common control ffects
             if(i.DistributorEffects){
               return i.DistributorEffects.join(';')
             }
             return i.LineTo;
 
-        });
+        });*/
+        let arrayOfLinkedEffectsFiltered=_.map(arrayOfLinkedEffects,(i)=>{//get array with names of linked to this common control ffects
+              if(i.DistributorEffects){
+                return i.DistributorEffects.join(';')
+              }
+              let jsonObject;
+                jsonObject='{"Lineto":"'+i.LineTo+'","propertyOfEffect":"'+i.propertyOfEffect+'"}';
+            return jsonObject;
+
+          });
 
 let arrayOfLinkedEffectsString=arrayOfLinkedEffectsFiltered.join(';');//transform array to string to pass in into "ext.deleteCommonControl" function
           //Call to ExtScript
-console.log(arrayOfLinkedEffectsString);
+//console.log(arrayOfLinkedEffectsString);
                       //console.log(GlobalStorage.toDelete.thisCommonContrlName);
 
 switch (GlobalStorage.toDelete[0].node.effectName) {
@@ -97,7 +111,11 @@ switch (GlobalStorage.toDelete[0].node.effectName) {
 });
     break;
   default:
-  csInterface.evalScript(`$._ext.deleteCommonControl("${CommonContrlName}","${arrayOfLinkedEffectsString}","${thisCommonContrlName}")`,(res)=>{
+  console.log(CommonContrlName);
+
+console.log(thisCommonContrlName);
+
+  csInterface.evalScript(`$._ext.deleteCommonControl('${arrayOfLinkedEffectsString}',"${thisCommonContrlName}")`,(res)=>{
 
   let remove=GlobalStorage.toDelete.remove()
   resolve(remove);

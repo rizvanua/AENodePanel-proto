@@ -6,20 +6,6 @@ body{
   height: 100%;
   margin: 0;
 }
-.disable{
-  background: rgba(128, 128, 128, 0.1)!important;
-}
-rect.multiplier{
-  fill: rgb(157,49,45);
-}
-
-.commonControl{
-  fill: rgb(255,255,0);
-}
-.control, .subs li.control{
-  background-color: rgb(255,255,0)!important;
-}
-
 circle{
   fill: rgb(255, 102, 102);
   stroke: white;
@@ -92,32 +78,17 @@ font-family: Arial;
 font-size: 15px;
 }
 .bage-small{
-  display: flex;
+  display: table-cell;
   height: 32px;
   width: 32px;
   background-color: rgb(64, 64, 64);
   border-radius: 5px;
   border: solid 1px;
-  justify-content:center;
-  align-content:center;
+  text-align: center;
+  vertical-align: middle;
   cursor: pointer;
-  overflow: hidden;
 }
-.bage-small p{
-  position: absolute;
-  display:  table-cell;
-  padding: 0;
-  margin: 0;
-  top:8px;
-  left:12px;
-  background-color: transparent;
-
-}
-
-.bage-small.presets{
-  margin-top: 50px!important;
-}
-.bage-small:hover:not(.disable){
+.bage-small:hover{
   border-color: red;
 }
 #nav,#nav ul{
@@ -146,7 +117,7 @@ font-size: 15px;
     position: relative;
 }
 
-#nav li:hover ul.subs:not(.disable) {
+#nav li:hover ul.subs {
     left: 50px!important;
     opacity:1;
     top: 0!important;

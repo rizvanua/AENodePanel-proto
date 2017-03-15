@@ -4,7 +4,7 @@ import mainBlock from "../mainBlock/mainBlock.js";
 import distributorBlocks from "../mainBlock/disributorBlocks";
 import csInterface from '../csInterface';
 import moveEffects  from "./moveEffects.js";
-import presetsBlocks from "../mainBlock/presetsBlocks.js"
+import presetsBlocks from "../mainBlock/presetsBlocks.js";
 // Here we handle drag of blocks from secondMenu and add blocks on the main workspace
 Raphael.st.simpleDraggable = function(storageName,item) {
   //console.log(item);
@@ -25,9 +25,8 @@ Raphael.st.simpleDraggable = function(storageName,item) {
         //console.log(me[1].node.StaticGroupTipe);
         if(me[1].node.StaticGroupTipe=='effects'){
           GlobalStorage.effectCreateDrag.active=true;
-          //console.log(me[2].node.poi);
           GlobalStorage.effectCreateDrag.effectType=me[2].node.id;
-            GlobalStorage.effectCreateDrag.poi=me[2].node.poi;
+          GlobalStorage.effectCreateDrag.poi=me[2].node.poi;
         }
 
 
@@ -118,8 +117,10 @@ Raphael.st.simpleDraggable = function(storageName,item) {
       if(this.node.StaticGroupTipe=='effects'&&GlobalStorage.effectCreateDrag.distribitorMouseOver===null){// check if this block is effect and distribitorMouseOver is null if this is true that means we want add ordinar effect not assign effect to dispacther.
 
                   csInterface.evalScript(`$._ext.applyEffect("${item.name}")`,(res)=>{//push data into extend script
-
-                    let workBlock=new mainBlock().createBlockEffects(cordX,cordY,item,res);
+                    let obj=JSON.parse(res);
+                    console.log(obj);
+                    
+                    let workBlock=new mainBlock().createBlockEffects(cordX,cordY,item,obj);
                     moveEffects(workBlock);
                     GlobalStorage.effectCreateDrag.active=false// close ability to add this effect to dispatcher
                 });
@@ -132,11 +133,13 @@ Raphael.st.simpleDraggable = function(storageName,item) {
 
         //console.log(item);
 //console.log(this[0].id);
+
         if (item.name=="POI"){
 
             csInterface.evalScript(`$._ext.createControlPoint()`,(res)=>{//push data into extend script
 
               let workBlock=new mainBlock().createBlockCommonControls(cordX,cordY,item,false, res);
+              moveEffects(workBlock);// range an order of this effect
             });
         }
         else if (item.name=="FOV"){
@@ -144,11 +147,13 @@ Raphael.st.simpleDraggable = function(storageName,item) {
           csInterface.evalScript(`$._ext.createControlFOV()`,(res)=>{//push data into extend script
 
             let workBlock=new mainBlock().createBlockCommonControls(cordX,cordY,item,false, res);
+            moveEffects(workBlock);// range an order of this effect
           });
         }
         else if(item.name=="Strength"){
           csInterface.evalScript(`$._ext. createControlStrength()`,(res)=>{//push data into extend script
             let workBlock=new mainBlock().createBlockCommonControls(cordX,cordY,item,false, res);
+            moveEffects(workBlock);// range an order of this effect
           });
 
         }

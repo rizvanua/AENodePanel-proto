@@ -32,11 +32,16 @@ let GlobalStorage={
   undermostEffectBlock:{
     y:10 //this is an Y coordinate of the lowermost blockEffect (see "moveEffects.js")
   },
+  undermostCommonControlBlock:{
+    y:10 //this is an Y coordinate of the lowermost blockEffect (see "moveEffects.js")
+  },
   effectCreateDrag:{
     active:false,
     effectType:null,
     distribitorMouseOver:null
   },
+  effectCheckArr:[],
+  blockToRemove:null,
   arrOfPresetsEffects:{},// storage for all array with presets' effects
   distribitorObjectsStorage:{},// Here we hold all Distributors sets
   toDelete:undefined,//Temporary object which one contents object for deleting by pressing key "DELETE"

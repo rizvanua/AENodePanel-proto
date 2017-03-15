@@ -13,16 +13,21 @@ class mainBlock{
   constructor(){
 
   }
-  createBlockEffects(x,y,item,blockEffectName){
-
+  createBlockEffects(x,y,item,obj){
+    //console.log("BOOOOOO");
+    //let objectEffect=JSON.parse(obj);
+    let blockEffectName=obj.name;
     let workBlockSet=R.set();
     let typeNode="effects";
     workBlockSet.setEffectName=blockEffectName;
     workBlockSet.baseEffect=item.name;
-    workBlockSet.poi=item.poi;
+    workBlockSet.point=obj.point;
+    workBlockSet.angle=obj.angle;
+    workBlockSet.slider=obj.slider;
+    /*workBlockSet.poi=item.poi;
     workBlockSet.fov=item.fov;
     workBlockSet.strength=item.strength;
-    workBlockSet.waves=item.waves;
+    workBlockSet.waves=item.waves;*/
     let dummy=R.rect(x,y, 120, 32,5)
     .attr({   fill: "rgb(64, 64, 64)",
               "fill-opacity":0,
@@ -46,10 +51,10 @@ class mainBlock{
             "font-size": 15
           });
 
-                title.node.effectName=blockEffectName;
+                //title.node.effectName=blockEffectName;
                 workBlockSet.push(title);
 
-          workBlock.node.effectName=blockEffectName;
+          //workBlock.node.effectName=blockEffectName;
           workBlockSet.push(workBlock);
           dummy.toFront();
 
@@ -67,6 +72,7 @@ class mainBlock{
 
 
     GlobalStorage.historyOfObjects[blockEffectName]=workBlockSet;
+    //console.log(GlobalStorage.historyOfObjects);
     workBlockSet.draggableSet(workBlockSet,typeNode);
     workBlockSet.click(()=>{new activeBlockFunctionsClass().activeEffectBlock(workBlockSet,blockEffectName);});
 
@@ -74,7 +80,7 @@ class mainBlock{
 
     workBlockSet.mouseover(function(){
       GlobalStorage.toDelete=workBlockSet;
-      console.log(GlobalStorage.currentLine);
+      //console.log(GlobalStorage.currentLine);
       //console.log("OVER");
       //console.log(workBlockSet);
       //console.log(this);
@@ -105,20 +111,20 @@ class mainBlock{
 
   createBlockCommonControls(x,y,item,distributor,res){
 
-    let thisItemName=item.name;
-    if(res){
+    let thisItemName=res;
+  /*  if(res){
       let index=res.length-1;
 
       let number=res.charAt(index)*1;
       if (number){
       thisItemName=`${item.name} ${number}`;
       }
-    }
+    }*/
 
 
     let workBlockSet=R.set();
     let typeNode="commonControls";
-    let dummy=R.rect(x,y, 80, 32,5)
+    let dummy=R.rect(x,y, 120, 32,5)
     .attr({   fill: "rgb(64, 64, 64)",
               "fill-opacity":0,
               stroke: "none",
@@ -126,27 +132,27 @@ class mainBlock{
               cursor: "pointer"
           });
           workBlockSet.push(dummy);
-          dummy.node.effectName=item.effectName;
+          //dummy.node.effectName=item.effectName;
 
-          let workBlock=R.rect(x,y, 80, 32,5)
-          .attr({   fill: "rgb(64, 64, 64)",
+          let workBlock=R.rect(x,y, 120, 32,5)
+          .attr({   //fill: "rgb(64, 64, 64)",
                     stroke: "none",
                     cursor: "move",
-                    class:''
+                    class:"commonControl"
                 });
-                workBlock.node.effectName=item.effectName;
+          //workBlock.node.effectName=item.effectName;
 
-    let title= R.text(x+40, y+15, thisItemName)
+    let title= R.text(x+60, y+15, thisItemName)
     .attr({
       cursor: "move",
       "font-size": 15
     });
 
-          title.node.effectName=item.effectName;
+          //title.node.effectName=item.effectName;
 
 
           //console.log(item);
-          workBlockSet.shortName=item.effectName.toLowerCase();
+          workBlockSet.shortName=item.shortName;
           workBlockSet.currentName=thisItemName;
           workBlockSet.push(workBlock);
           workBlockSet.push(title);
@@ -160,13 +166,90 @@ class mainBlock{
           circleLeft.node.circleName="circleLeft";*/
 
         if(distributor==false){
-          let circleRight=R.circle(x+80, y+15, 6);
+          let circleRight=R.circle(x+120, y+15, 6);
                 circleRight.node.effectName=item.name;
                 workBlockSet.push(circleRight);
                 circleRight.node.circleName="circleRight";
         }
 
+    GlobalStorage.historyOfObjects[res]=workBlockSet;
+    workBlockSet.fullCommonContrlName=item.fullname;
+    workBlockSet.thisCommonContrlName=res;
+    workBlockSet.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(workBlockSet);});
+    workBlockSet.draggableSet(workBlockSet,typeNode);
+    workBlockSet.mouseover(function(){
+      GlobalStorage.toDelete=workBlockSet;
+    });
+      workBlockSet.mouseout(function(){
+        GlobalStorage.toDelete=undefined;
+      });
+    return workBlockSet;
 
+  }
+  createBlockMaster(x,y,item,distributor,res){
+
+    let thisItemName=res;
+  /*  if(res){
+      let index=res.length-1;
+
+      let number=res.charAt(index)*1;
+      if (number){
+      thisItemName=`${item.name} ${number}`;
+      }
+    }*/
+
+
+    let workBlockSet=R.set();
+    let typeNode="commonControls";
+    let dummy=R.rect(x,y, 120, 32,5)
+    .attr({
+              "fill-opacity":0,
+              stroke: "none",
+              opacity: 1,
+              cursor: "pointer"
+          });
+          workBlockSet.push(dummy);
+          //dummy.node.effectName=item.effectName;
+
+          let workBlock=R.rect(x,y, 120, 32,5)
+          .attr({   //fill: "rgb(64, 64, 64)",
+                    stroke: "none",
+                    cursor: "move",
+                    class:"multiplier"
+                });
+          //workBlock.node.effectName=item.effectName;
+
+    let title= R.text(x+60, y+15, thisItemName)
+    .attr({
+      cursor: "move",
+      "font-size": 15
+    });
+
+          //title.node.effectName=item.effectName;
+
+
+          //console.log(item);
+          workBlockSet.shortName=item.shortName;
+          workBlockSet.currentName=thisItemName;
+          workBlockSet.push(workBlock);
+          workBlockSet.push(title);
+
+
+          dummy.toFront();
+
+    /*let circleLeft=R.circle(x+1, y+15, 6);// Uncomment if you need Left circle
+          circleLeft.node.effectName=item.name;
+          workBlockSet.push(circleLeft);
+          circleLeft.node.circleName="circleLeft";*/
+
+        /*if(distributor==false){
+          let circleRight=R.circle(x+120, y+15, 6);
+                circleRight.node.effectName=item.name;
+                workBlockSet.push(circleRight);
+                circleRight.node.circleName="circleRight";
+        }*/
+
+    GlobalStorage.historyOfObjects[res]=workBlockSet;
     workBlockSet.fullCommonContrlName=item.fullname;
     workBlockSet.thisCommonContrlName=res;
     workBlockSet.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(workBlockSet);});

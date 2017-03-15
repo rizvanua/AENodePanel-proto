@@ -79,14 +79,15 @@ Raphael.st.draggableSet = function (setObj,type) {
 
 
   }, endFnc = function endFnc() {
+    //console.log(GlobalStorage.historyOfObjects);
     // save a reference to the core implementation
 //console.log(thisSet);
-      if(type=="effects")
-      {
+      //if(type=="effects")
+      //{
         /*console.log(thisSet[1].node.effectName);*/
               moveEffects (thisSet);
 
-      }
+      //}
 
     //console.log(GlobalStorage.historyOfObjects);
     new drawLineFromTo().endDrawLine(this,thisSet);
@@ -127,21 +128,21 @@ function CommonControlsMove(item, i, _this, dx, dy){
        }
        else if(item.node.circleName=="circleRight"){
 
-         item.attr({ cx: _this.ox + dx+80, cy: _this.oy + dy+16 });
+         item.attr({ cx: _this.ox + dx+120, cy: _this.oy + dy+16 });
        }
      }
      else if (item.node.nodeName == 'rect'){
        item.attr({ x: _this.ox + dx, y: _this.oy + dy });
      }
      else if (item.node.nodeName == 'text') {
-       item.attr({ x: _this.ox + dx+40, y: _this.oy + dy+15 });
+       item.attr({ x: _this.ox + dx+60, y: _this.oy + dy+15 });
      }
      else if (item.node.nodeName == 'path') {
        if(item.node.lineFromCyrcle=="circleRight")//moving line from right circle of common control  to Effect Block
        {
          let LX=item.attr().path[1][1];
          let LY=item.attr().path[1][2];
-         item.attr("path",`M${_this.ox+ dx+80} ${_this.oy+ dy+16}L${LX} ${LY}`);
+         item.attr("path",`M${_this.ox+ dx+120} ${_this.oy+ dy+16}L${LX} ${LY}`);
        }
        else if(item.node.lineFromCyrcle=="noCircleDistributor")//moving line from RootDistributorBlock  to common control
        {
