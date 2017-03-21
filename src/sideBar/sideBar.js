@@ -10,7 +10,8 @@ class SideBar {
 
   }
   createBar(){
-    this.sidebar = R.rect(0,0, 42, '100%');
+
+    //this.propertiesHideBlock = R.rect(0,0, 120, 32,5);
   }
 
   createInnerBlocks(){

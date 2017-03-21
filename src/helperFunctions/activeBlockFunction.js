@@ -34,8 +34,8 @@ class activeBlockFunctionsClass{
           //resolve(remove);
         });
         GlobalStorage.prevActive=workBlockSet;
-
-        GlobalStorage.toDelete[0].attr(
+        console.log(GlobalStorage.toDelete[0][1][0]);
+        GlobalStorage.toDelete[0][1][0].attr(
         {stroke: "red"}
       )
 

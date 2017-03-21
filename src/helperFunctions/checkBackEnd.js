@@ -67,7 +67,7 @@ class checkBackEnd{
     this.AnimationFrame=setTimeout(()=> {
 
       csInterface.evalScript(`$._ext.checkChangesGlobal()`, (res)=>{
-          console.log(res);
+          //console.log(res);
           //console.log(res===undefined);
           if(res&&res==0){//CHECK if we use went on new Layer
             let promise = new Promise(
@@ -102,7 +102,7 @@ class checkBackEnd{
 
           }
           else if(res&res==100||res=='100'){// No one layer is selected
-            console.log('SILENCE IS GOLD');
+            //console.log('SILENCE IS GOLD');
             GlobalStorage.historyOfObjects={
               itemArray:[]
             }
@@ -159,7 +159,7 @@ class checkBackEnd{
 
             }
             else {
-              console.log('RENAME');
+              //console.log('RENAME');
               //console.log(GlobalStorage.historyOfObjects);
               //console.log(res);
               //console.log(GlobalStorage.effectCheckArr);
@@ -247,7 +247,7 @@ class checkBackEnd{
       //console.log(res);
       let workBlock;
       if(res!='Master')
-      {
+      {//
         workBlock=new mainBlock().createBlockCommonControls(cordX,GlobalStorage.undermostCommonControlBlock.y+=50,item,false, res);
         moveEffects(workBlock);
       }
@@ -265,21 +265,48 @@ class checkBackEnd{
     });
     startObject.linesObj.forEach((i, num)=>{//Create lines beetween commonControl Block and Effect Block
       //console.log(i);
-      //console.log(GlobalStorage.historyOfObjects[i.LineFrom]);
+      let coordDif;
+      //console.log(GlobalStorage.historyOfObjects[i.LineTo][0].getBBox());
+      //console.log(GlobalStorage.historyOfObjects[i.LineTo][0][0]);
+      for(let keyP in GlobalStorage.historyOfObjects[i.LineTo][0][0]){
+        let objElem=GlobalStorage.historyOfObjects[i.LineTo][0][0][keyP]
+        if(objElem.node&&objElem.node.nodeName=='rect'&&objElem.attr('coordDif')&&objElem.attr('propDataName')==i.propertyOfEffect){
+          objElem.node.previousElementSibling.classList.remove('false');
+          objElem.node.previousElementSibling.classList.add('true');
+          coordDif=objElem.attr('coordDif');
+        }
+        //console.log(GlobalStorage.historyOfObjects[i.LineTo][0][0][keyP].node.nodeName);
+      }
+      /*for(let keyH in GlobalStorage.historyOfObjects[i.LineTo][0][0]){
+        console.log(GlobalStorage.historyOfObjects[i.LineTo][0][0])
+        if(GlobalStorage.historyOfObjects[i.LineTo][0][0][keyH].node=='rect'){
+          console.log(GlobalStorage.historyOfObjects[i.LineTo][0][0][keyH].attr('propDataName'))
+        }
+      }*/
+
+      //console.log(GlobalStorage.historyOfObjects[i.LineTo][0][1].getBBox());
       //console.log(GlobalStorage.historyOfObjects[i.LineFrom][0].attr("x"));
-      let LineFromX= GlobalStorage.historyOfObjects[i.LineFrom][0].attr("x")
+      let LineFromX= GlobalStorage.historyOfObjects[i.LineFrom][0].getBBox().x;
       //console.log(GlobalStorage.historyOfObjects[i.LineFrom][0].attr("y"));
-      let LineFromY= GlobalStorage.historyOfObjects[i.LineFrom][0].attr("y")
+      let LineFromY= GlobalStorage.historyOfObjects[i.LineFrom][0].getBBox().y;
       GlobalStorage.historyOfObjects[i.LineTo];
       //console.log(GlobalStorage.historyOfObjects[i.LineTo][0].attr("x"));
-      let LineToX=GlobalStorage.historyOfObjects[i.LineTo][0].attr("x");
+      let LineToX=GlobalStorage.historyOfObjects[i.LineTo][0][1].getBBox().x;
       //console.log(GlobalStorage.historyOfObjects[i.LineTo][0].attr("y"));
-      let LineToY=GlobalStorage.historyOfObjects[i.LineTo][0].attr("y");
-      let connectPath = R.path( ["M", LineFromX+120, LineFromY+16, "L", LineToX, LineToY+15 ] );
+      let LineToY=GlobalStorage.historyOfObjects[i.LineTo][0][1].getBBox().y;
+      //let connectPath = R.path( ["M", LineFromX+120, LineFromY+16, "L", LineToX, LineToY+15 ] );
+      let connectPath = R.path(`M${LineFromX+120} ${LineFromY+16}L${LineToX} ${LineToY+15}`);
+      connectPath.attr({stroke:"black"});
+
       connectPath.LineFrom=i.LineFrom;
       connectPath.LineTo=i.LineTo;
       connectPath.propertyOfEffect=i.propertyOfEffect;
-      console.log(connectPath.propertyOfEffect);
+      connectPath.coordDif=coordDif;
+      //console.log(connectPath.coordDif);
+      //console.log(i.propertyOfEffect);
+      //console.log(connectPath);
+      //connectPath.coordDif=i.coordDif
+      //console.log(connectPath.propertyOfEffect);
       connectPath.node.lineFromCyrcle="circleRight";
       GlobalStorage.historyOfObjects[i.LineFrom].push(connectPath);
       GlobalStorage.historyOfObjects[i.LineTo].push(connectPath);
@@ -311,13 +338,14 @@ class checkBackEnd{
     //console.log(newName);
     //console.log(oldName);
     //console.log(GlobalStorage.historyOfObjects[oldName]);
-    if(GlobalStorage.historyOfObjects[oldName]){//Rename EffectBlock
-      GlobalStorage.historyOfObjects[oldName][1].attr({text:newName});
-      if(GlobalStorage.historyOfObjects[oldName].setEffectName){
+    if(GlobalStorage.historyOfObjects[oldName]){
+      //console.log(GlobalStorage.historyOfObjects[oldName][0]);
+      if(GlobalStorage.historyOfObjects[oldName].setEffectName){//Rename EffectBlock
+      GlobalStorage.historyOfObjects[oldName][0][1][1].attr({text:newName});
       GlobalStorage.historyOfObjects[oldName].setEffectName=newName;
       GlobalStorage.historyOfObjects[newName]=GlobalStorage.historyOfObjects[oldName];
       delete GlobalStorage.historyOfObjects[oldName];
-      console.log(GlobalStorage.historyOfObjects[newName]);
+      //console.log(GlobalStorage.historyOfObjects[newName]);
       GlobalStorage.historyOfObjects[newName].forEach((i)=>{
         if(i.node.nodeName=='path'){
           i.LineTo=newName;
@@ -325,8 +353,10 @@ class checkBackEnd{
       });
 
     }
-    else if(GlobalStorage.historyOfObjects[oldName].thisCommonContrlName){//Rename CreateBlock
+    else if(GlobalStorage.historyOfObjects[oldName].thisCommonContrlName){//Rename CommonControlBlock
+      GlobalStorage.historyOfObjects[oldName][0][1].attr({text:newName});
       GlobalStorage.historyOfObjects[oldName].thisCommonContrlName=newName;
+      //console.log(GlobalStorage.historyOfObjects[oldName]);
       //let thisNewName=newName.replace(" Control", "");
       let thisNewName=newName;
       //console.log(GlobalStorage.historyOfObjects[oldName][2]);
@@ -334,7 +364,7 @@ class checkBackEnd{
       GlobalStorage.historyOfObjects[oldName].currentName=thisNewName;
       GlobalStorage.historyOfObjects[thisNewName]=GlobalStorage.historyOfObjects[oldName];
       delete GlobalStorage.historyOfObjects[oldName];
-      console.log(GlobalStorage.historyOfObjects[thisNewName]);
+      //console.log(GlobalStorage.historyOfObjects[thisNewName]);
       GlobalStorage.historyOfObjects[thisNewName].forEach((i)=>{
         if(i.node.nodeName=='path'){
           i.LineFrom=thisNewName;

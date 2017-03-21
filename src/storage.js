@@ -4,7 +4,7 @@ import R from "./raphaelContainer.js"
 
 let GlobalStorage={
   initial:false,
-  storageOfSecondMenuSets:{//storage secondMenu items
+  /*storageOfSecondMenuSets:{//storage secondMenu items
     effects: R.set(),
     commonControls:R.set(),
     distributor:R.set(),
@@ -21,7 +21,7 @@ let GlobalStorage={
     commonControls:R.set(),
     distributor:R.set(),
     presets:R.set()
-  },
+  },*/
   lastEffectBlock:{
     y:0
   },
@@ -39,6 +39,12 @@ let GlobalStorage={
     active:false,
     effectType:null,
     distribitorMouseOver:null
+  },
+  controlProp:{
+    type:null,//type of common control ('point' or 'angle' or 'slider')
+    name:null,// name of commonControls property (for example 'Point of Interest')
+    circle:null,// link to the sibling circle to toogle className
+    coordDif:null//different in number between getBBox().y of CommonControlBlock and this property block
   },
   effectCheckArr:[],
   blockToRemove:null,

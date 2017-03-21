@@ -646,6 +646,11 @@ else {
             }
          
       },
+  deletePropExpression: function(effectName,propertyName){
+      //$.writeln(effectName);  
+      //$.writeln(propertyName);          
+      this.currentLayer.effect.property(effectName).property(propertyName).expressionEnabled = false;
+      },
   
     deleteCommonControl: function(arrayOfLinkedEffects, thisCommonContrlName){   
         $.writeln(arrayOfLinkedEffects);
@@ -653,8 +658,10 @@ else {
        
         this.effectNameArr = arrayOfLinkedEffects.split(';');  
        
-      
-       this.currentLayer.effect.property(thisCommonContrlName).remove();
+      if(this.currentLayer.effect.property(thisCommonContrlName)){
+          this.currentLayer.effect.property(thisCommonContrlName).remove();
+          }
+       
          if(this.effectNameArr[0]!=''){
               for (var i =0; i<this.effectNameArr.length; i++){            
              
@@ -663,7 +670,8 @@ else {
               $.writeln(effectNameArr.propertyOfEffect);
              this.currentLayer.effect.property(effectNameArr.Lineto).property(effectNameArr.propertyOfEffect).expressionEnabled = false;
             }
-         }        
+         } 
+     this.currentLayer.selected=true;
     },
     selectEffect: function(effectName){
          //$.writeln(effectName);

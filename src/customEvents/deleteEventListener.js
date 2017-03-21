@@ -6,12 +6,20 @@ document.addEventListener('deleteBlockEvent', function (e) {
 /*console.log(GlobalStorage.blockToRemove);
 console.log(GlobalStorage.effectCheckArr);
 console.log(this.effectCheckArr);*/
+let nameOfBlock
 GlobalStorage.undermostEffectBlock.y=10;
 GlobalStorage.blockToRemove.forEach((i, num)=>{
   console.log(GlobalStorage.blockToRemove[num]);
   console.log(GlobalStorage.historyOfObjects);
-  GlobalStorage.historyOfObjects[GlobalStorage.blockToRemove[num]].remove();
-  delete GlobalStorage.historyOfObjects[GlobalStorage.blockToRemove[num]];
+  nameOfBlock=GlobalStorage.blockToRemove[num];
+  GlobalStorage.historyOfObjects[nameOfBlock].remove();
+if(GlobalStorage.historyOfObjects[nameOfBlock].setEffectName){
+
+}
+else if(GlobalStorage.historyOfObjects[nameOfBlock].thisCommonContrlName){
+
+}
+  delete GlobalStorage.historyOfObjects[nameOfBlock];
 });
 
 

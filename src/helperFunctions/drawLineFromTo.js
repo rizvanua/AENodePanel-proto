@@ -2,7 +2,7 @@ import R from "../raphaelContainer.js";
 import csInterface from '../csInterface';
 import GlobalStorage from '../storage';
 
-// Class which DRAWS CONNECTIONS line from/to blocks
+// Class which DRAWS CONNECTIONS line from/to blocks. We use this in files: "draggableSet.js
 
 class drawLineFromTo{
 
@@ -13,8 +13,8 @@ class drawLineFromTo{
     //console.log(thisSet);
     _this.ox=_this.attr("cx");
     _this.oy=_this.attr("cy");
-    let connectPath = R.path( ["M", _this.ox, _this.oy, "L", _this.ox, _this.oy ] )
-    .attr({stroke:"blue"});
+    /*let connectPath = R.path( ["M", _this.ox, _this.oy, "L", _this.ox, _this.oy ] )*/
+    let connectPath = R.path(`M${_this.ox} ${_this.oy}L${_this.ox} ${_this.oy}`).attr({stroke:"blue"});
     connectPath.node.lineFromCyrcle=_this.node.circleName;//Here we asign from which one circle go the Line (Right cyrcle or LeftCyrcle)
     connectPath.node.shortControlName=thisSet.shortName;
     connectPath.node.nameOfControl=thisSet.fullCommonContrlName//name of current commonControls
@@ -25,8 +25,16 @@ class drawLineFromTo{
   }
 
   moveLine(_this,dx,dy){
-//console.log(GlobalStorage.overMouseSe);
-  GlobalStorage.currentLine.attr("path",`M${_this.ox} ${_this.oy}L${(_this.ox+dx)-5} ${(_this.oy+dy)-5}`);
+    //console.log(GlobalStorage.controlProp);
+    //console.log(GlobalStorage.overMouseSet);
+//console.log(GlobalStorage.currentLine.node.shortControlName);
+//console.log(event.target);
+//console.log(`M${_this.ox} ${_this.oy}L${(_this.ox*1+dx)-5} ${(_this.oy*1+dy)-5}`);
+//console.log(_this.ox);
+//console.log(_this.oy);
+//console.log(dx);
+//console.log(dy);
+  GlobalStorage.currentLine.attr({d:`M${_this.ox} ${_this.oy}L${(_this.ox*1+dx)-5} ${(_this.oy*1+dy)-5}`});
   /*var typeOfControll=GlobalStorage.currentLine.node.shortControlName;
 
     if(GlobalStorage.overMouseSet&&GlobalStorage.currentLine&&GlobalStorage.overMouseSet[typeOfControll]===true){
@@ -45,26 +53,41 @@ class drawLineFromTo{
 
     if(GlobalStorage.currentLine){
       let typeOfControll=GlobalStorage.currentLine.node.shortControlName;
-      console.log(typeOfControll);
+      //console.log(typeOfControll);
 
       //console.log(GlobalStorage.currentLine);
       //console.log(GlobalStorage.overMouseSet[typeOfControll]);
 
-console.log(GlobalStorage.overMouseSet);
-    if (GlobalStorage.overMouseSet!==null&&GlobalStorage.currentLine!==null&&GlobalStorage.overMouseSet[typeOfControll]){// in this case the current Line has connection to a destination block
-      console.log(GlobalStorage.currentLine);
+
+    if (GlobalStorage.overMouseSet!==null&&GlobalStorage.currentLine!==null&&GlobalStorage.controlProp.type==GlobalStorage.currentLine.node.shortControlName){// in this case the current Line has connection to a destination block
+      GlobalStorage.controlProp.circle.classList.remove('false');
+      GlobalStorage.controlProp.circle.classList.add('true');
       GlobalStorage.currentLine.attr({stroke:"black"});//add black color for already successfully connected line
       let overMouseSet=GlobalStorage.overMouseSet;
       let effectNameLocal=overMouseSet.setEffectName;
+      let controlPropName=GlobalStorage.controlProp.name;
+      //console.log(GlobalStorage.currentLine.attr("path"));
+      //adjust coords of path to draw line into center of block
+      let PathString=Snap.parsePathString(GlobalStorage.currentLine);
+      let MX=PathString[0][1];//get coords X of the linked CommonControlBlock
+      let MY=PathString[0][2];//get coords Y of the linked CommonControlBlock
+      let LX=overMouseSet[0].getBBox().x;//get coords X of the linked EffectBlock
+      let LY=overMouseSet[0].getBBox().y;//get coords Y of the linked EffectBlock
+      console.log(GlobalStorage.controlProp.coordDif)
+      GlobalStorage.currentLine.attr("path",`M${MX} ${MY}L${LX} ${LY+16+(GlobalStorage.controlProp.coordDif*1)}`);// apply new coords
+      //
       GlobalStorage.currentLine.LineFrom=_this.node.effectName;//add which effect has been connected with this line
       GlobalStorage.currentLine.LineTo=effectNameLocal;
+      GlobalStorage.currentLine.coordDif=GlobalStorage.controlProp.coordDif;
       GlobalStorage.currentLine.baseEffect=overMouseSet.baseEffect;// base name of an effect
-
-
+      GlobalStorage.currentLine.propertyOfEffect=controlPropName;//name of property (for example "Point of Interest", "FOV" etc)
+      //console.log(GlobalStorage.currentLine);
+      //console.log(GlobalStorage.overMouseSet);
       let propName=thisSet.fullCommonContrlName;
       let thisPropName=thisSet.thisCommonContrlName;
       let promise= new Promise((resolve)=>{
-              resolve(overMouseSet.push(GlobalStorage.currentLine).toBack());//Push curent Line into destination set
+              //resolve(overMouseSet.push(GlobalStorage.currentLine).toBack());//Push curent Line into destination set
+              resolve(GlobalStorage.overMouseSet.push(GlobalStorage.currentLine));//Push curent Line into destination set
             }).then((resolve)=>{
               return GlobalStorage.overMouseSet=null;//clear objects in global storage
             }).then((res)=>{
@@ -73,29 +96,31 @@ console.log(GlobalStorage.overMouseSet);
 //console.log(effectNameLocal);
 //console.log(thisPropName);
 let type=thisSet.shortName;
-console.log(overMouseSet);
-console.log(GlobalStorage.overMouseSet);
+//console.log(GlobalStorage.controlProp.type);
+//console.log(GlobalStorage.controlProp.name);
+
+//console.log(overMouseSet[0].getBBox());
                   switch (thisSet.shortName) {
                     case "point":
-                    let pointArr=[];
+                    /*let pointArr=[];
                     for(let key in overMouseSet.point){
                        pointArr.push(key);
-                    }
-                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${pointArr[0]}","${thisPropName}","${type}")`);
+                    }*/
+                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${controlPropName}","${thisPropName}","${type}")`);
                       break;
                     case "angle":
-                    let angleArr=[];
+                    /*let angleArr=[];
                     for(let key in overMouseSet.angle){
                        angleArr.push(key);
-                    }
-                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${angleArr[0]}","${thisPropName}","${type}")`);
+                    }*/
+                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${controlPropName}","${thisPropName}","${type}")`);
                       break;
                     case "slider":
-                    let sliderArr=[];
+                    /*let sliderArr=[];
                     for(let key in overMouseSet.slider){
                        sliderArr.push(key);
-                    }
-                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${sliderArr[0]}","${thisPropName}","${type}")`);
+                    }*/
+                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${controlPropName}","${thisPropName}","${type}")`);
                       break;
                     case "Strength":
                       csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","Strength","${thisPropName}")`);

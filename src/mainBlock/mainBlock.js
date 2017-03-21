@@ -5,6 +5,7 @@ import drawLineFromTo  from "../helperFunctions/drawLineFromTo.js";
 /*import deleteFunctions from "../helperFunctions/deleteFunctions.js"*/
 //import deleteInOneClick from "../helperFunctions/deleteInOneClick.js"
 import activeBlockFunctionsClass from '../helperFunctions/activeBlockFunction';
+import deletePropertyInEffectBlock from '../helperFunctions/deletePropertyInEffectBlock';
 import GlobalStorage from '../storage';
 
 // This class works with mainBlocks (Effects, commonControls, Distributor) and add eventListebers (click,mouseover etc) to them
@@ -17,7 +18,7 @@ class mainBlock{
     //console.log("BOOOOOO");
     //let objectEffect=JSON.parse(obj);
     let blockEffectName=obj.name;
-    let workBlockSet=R.set();
+    let workBlockSet=Snap.set();
     let typeNode="effects";
     workBlockSet.setEffectName=blockEffectName;
     workBlockSet.baseEffect=item.name;
@@ -28,7 +29,9 @@ class mainBlock{
     workBlockSet.fov=item.fov;
     workBlockSet.strength=item.strength;
     workBlockSet.waves=item.waves;*/
-    let dummy=R.rect(x,y, 120, 32,5)
+    let clipR=R.rect(x,y, 180, 32,5);
+    let defEl=clipR.toDefs();
+    let dummy=R.rect(x,y, 180, 32,5)
     .attr({   fill: "rgb(64, 64, 64)",
               "fill-opacity":0,
               stroke: "none",
@@ -36,27 +39,198 @@ class mainBlock{
               cursor: "pointer"
           });
             dummy.node.effectName=blockEffectName;
-            workBlockSet.push(dummy);
+            //workBlockSet.push(dummy);
 
           GlobalStorage.lastEffectBlock.y=y+32;
-    let workBlock=R.rect(x,y, 120, 32,5)
+    let workBlock=R.rect(x,y, 180, 32,5)
     .attr({   fill: "rgb(64, 64, 64)",
               stroke: "none",
-              cursor: "move",
               class:''
           });
-          let title= R.text(x+60, y+15, blockEffectName)
-          .attr({
-            cursor: "move",
-            "font-size": 15
+    let title= R.text(x+60, y+16, blockEffectName)
+    .attr({
+            fontSize: 16,
+            textAnchor: "middle",
+            alignmentBaseline:"middle"
           });
 
                 //title.node.effectName=blockEffectName;
-                workBlockSet.push(title);
+                //workBlockSet.push(title);
 
           //workBlock.node.effectName=blockEffectName;
-          workBlockSet.push(workBlock);
-          dummy.toFront();
+          //let group=R.g(workBlock, title, dummy);
+          //workBlockSet.push(group);
+          //Create options angle, slider, angel
+        let propGroup=CreateProperties([obj.point, obj.slider, obj.angle],y);
+        let mainGroup=R.g(workBlock, title, dummy);
+        let wrapGroup=R.g(propGroup,mainGroup);
+        wrapGroup.attr({ clipPath: clipR});//apply clip-path mask
+        /*wrapGroup.click(()=>{
+          wrapGroup.toogleAttr(wrapGroup,clipR,'clip-path');
+          wrapGroup.toFront();
+        });*/
+        //wrapGroup.mouseover(()=>{console.log(wrapGroup);});
+        wrapGroup.mouseover(()=>{
+          //if(GlobalStorage.currentLine)
+          //{
+            wrapGroup.node.removeAttribute('clip-path');
+            wrapGroup.toFront();//push the current group to the front of SVG composition
+            if(GlobalStorage.currentLine){
+              GlobalStorage.currentLine.toFront();
+            }
+            workBlockSet.forEach((item, i)=> {
+              if (item.node.nodeName == 'path') {
+                let PathString=Snap.parsePathString(item);//get coordunates of line
+                let MX=PathString[0][1];
+                let MY=PathString[0][2];
+                let LX=PathString[1][1];
+                let LY=PathString[1][2];
+                let offset=item.coordDif*1;
+                //console.log(offset);
+                item.attr("path",`M${MX} ${MY}L${LX} ${(LY)+offset}`);//shift the line to the current propertyBlock
+              }
+            });
+
+          //}
+
+        });
+        propGroup.mouseover((event)=>{
+          let target=event.target;
+        if(target.tagName == 'rect'&&target.className!=='prop-wrapper')
+          {
+              GlobalStorage.controlProp={
+                type:target.getAttribute('propDataType'),//type of common control ('point' or 'angle' or 'slider')
+                name:target.getAttribute('propDataName'),// name of commonControls property (for example 'Point of Interest')
+                circle:target.previousElementSibling,// link to the sibling circle to toogle className
+                coordDif:target.getAttribute('coordDif')//different in number between getBBox().y of CommonControlBlock and this property block
+              }
+
+
+              //if(GlobalStorage.currentLine.node.shortControlName==GlobalStorage.controlProp.type){
+                //target.previousElementSibling.classList.toggle('true');
+              //}
+
+          }
+          else{
+            GlobalStorage.controlProp={
+              type:null,
+              name:null,
+              circle:null,
+              coordDif:null
+            };
+          }
+        });
+        wrapGroup.mouseout(()=>{
+          //if(GlobalStorage.currentLine)
+          //{
+          wrapGroup.attr({ clipPath: clipR });
+          GlobalStorage.controlProp={
+            type:null,
+            name:null,
+            circle:null,
+            coordDif:null
+          };
+        //}
+        //console.log(GlobalStorage.currentLine);
+          workBlockSet.forEach((item, i)=> {
+            if (item.node.nodeName == 'path') {
+              let PathString=Snap.parsePathString(item);
+              let MX=PathString[0][1];
+              let MY=PathString[0][2];
+              let LX=PathString[1][1];
+              let LY=PathString[1][2];
+              let offset=item.coordDif*1;
+              //console.log(offset);
+              item.attr("path",`M${MX} ${MY}L${LX} ${(LY)-offset}`);
+            }
+          });
+
+
+        });
+        workBlockSet.push(wrapGroup);
+          //let slider=CreateProperties(obj.slider);
+          //let angle=CreateProperties(obj.angle);
+            //console.log(workBlockSet);
+          function CreateProperties(propertyArr){
+            let propertyBlock;
+            let propertyText;
+            let propertyCircle;
+            let propDataType;
+            let localY=y+32
+            //let f=2;
+            let groupOfProp=R.g();
+            //console.log(propertyArr)
+            //let bacgroundHeight=(item.properties.length*20)+42;
+            let propBackground=R.rect(x,y, 180,0,5)
+            .attr({   fill: "rgb(64, 64, 64)",
+                      stroke: "none",
+                      class:'prop-wrapper'
+                  });
+            groupOfProp.add(propBackground);
+          for(let a=0; a<propertyArr.length;a++)
+          {
+              if(a==0){
+                propDataType='point'
+              }
+              else if(a==1){
+                propDataType='slider'
+              }
+              else if(a==2){
+                propDataType='angle'
+              }
+              for (let key in propertyArr[a]){
+                //y+=10;
+                //f+=6;
+                localY+=20;
+                //console.log(key)
+                propertyText= R.text(x+10,localY, key)
+                .attr({
+                        fontSize: 15,
+                        textAnchor: "start",
+                        alignmentBaseline:"middle"
+                      });
+                propertyCircle=R.circle(x+170, localY, 6).attr({
+                  class:'false'
+                });
+                //console.log(key);
+                //console.log((localY-8)-y);
+                propertyBlock= R.rect(x, localY-8, 180,16)
+                .attr({
+                        "fill-opacity":0,
+                        opacity: 1,
+                        stroke: "none",
+                        class:'prop',
+                        propDataName:key,
+                        propDataType:propDataType,
+                        coordDif:(localY-12)-y
+                      });
+                  //console.log(propertyBlock.node.oncontextmenu);
+                  deletePropertyInEffectBlock(propertyBlock, workBlockSet);
+
+                /*propertyBlock.on('contextmenu',(e)=>{
+                  e.preventDefault();
+                  console.log(GlobalStorage.controlProp);
+                  console.log(workBlockSet.setEffectName);
+                });*/
+
+                groupOfProp.add(propertyText,propertyCircle,propertyBlock);
+
+              }
+            }
+              //console.log(groupOfProp.node);
+              //console.log(groupOfProp.node.children);
+              //console.log(groupOfProp.node.children.length);
+              let bacgroundHeight=(((groupOfProp.node.children.length-1)/3)*20)+52;
+              propBackground.attr({
+                height:bacgroundHeight
+              })
+            return groupOfProp;
+
+          }
+
+
+
+          //dummy.toFront();
 
 
     /*let circleLeft=R.circle(x+1, y+15, 6);// If you need left circle for this block uncomment it
@@ -74,11 +248,11 @@ class mainBlock{
     GlobalStorage.historyOfObjects[blockEffectName]=workBlockSet;
     //console.log(GlobalStorage.historyOfObjects);
     workBlockSet.draggableSet(workBlockSet,typeNode);
-    workBlockSet.click(()=>{new activeBlockFunctionsClass().activeEffectBlock(workBlockSet,blockEffectName);});
+    wrapGroup.click(()=>{new activeBlockFunctionsClass().activeEffectBlock(workBlockSet,blockEffectName);});
 
 
 
-    workBlockSet.mouseover(function(){
+    wrapGroup.mouseover(function(){
       GlobalStorage.toDelete=workBlockSet;
       //console.log(GlobalStorage.currentLine);
       //console.log("OVER");
@@ -100,7 +274,7 @@ class mainBlock{
 
       GlobalStorage.overMouseSet=workBlockSet;//Push this set into temporary object for compere reasone
     });
-    workBlockSet.mouseout(function(){
+  wrapGroup.mouseout(function(){
       //console.log("OUT");
         GlobalStorage.toDelete=undefined;
         workBlockSet.attr({cursor: "move"})
@@ -122,7 +296,7 @@ class mainBlock{
     }*/
 
 
-    let workBlockSet=R.set();
+    let workBlockSet=Snap.set();
     let typeNode="commonControls";
     let dummy=R.rect(x,y, 120, 32,5)
     .attr({   fill: "rgb(64, 64, 64)",
@@ -131,7 +305,7 @@ class mainBlock{
               opacity: 1,
               cursor: "pointer"
           });
-          workBlockSet.push(dummy);
+          //workBlockSet.push(dummy);
           //dummy.node.effectName=item.effectName;
 
           let workBlock=R.rect(x,y, 120, 32,5)
@@ -142,10 +316,11 @@ class mainBlock{
                 });
           //workBlock.node.effectName=item.effectName;
 
-    let title= R.text(x+60, y+15, thisItemName)
+    let title= R.text(x+60, y+16, thisItemName)
     .attr({
-      cursor: "move",
-      "font-size": 15
+      fontSize: 15,
+      textAnchor: "middle",
+      alignmentBaseline:"middle"
     });
 
           //title.node.effectName=item.effectName;
@@ -154,33 +329,36 @@ class mainBlock{
           //console.log(item);
           workBlockSet.shortName=item.shortName;
           workBlockSet.currentName=thisItemName;
-          workBlockSet.push(workBlock);
-          workBlockSet.push(title);
+          //workBlockSet.push(workBlock);
 
 
-          dummy.toFront();
+
+          //dummy.toFront();
 
     /*let circleLeft=R.circle(x+1, y+15, 6);// Uncomment if you need Left circle
           circleLeft.node.effectName=item.name;
           workBlockSet.push(circleLeft);
           circleLeft.node.circleName="circleLeft";*/
 
-        if(distributor==false){
-          let circleRight=R.circle(x+120, y+15, 6);
-                circleRight.node.effectName=item.name;
-                workBlockSet.push(circleRight);
-                circleRight.node.circleName="circleRight";
-        }
+        //if(distributor==false){
 
+        //}
+        let group=R.g(workBlock, title, dummy);
+        workBlockSet.push(group);
+        let circleRight=R.circle(x+120, y+15, 6);
+              circleRight.node.effectName=item.name;
+              //workBlockSet.push(circleRight);
+              circleRight.node.circleName="circleRight";
+        workBlockSet.push(circleRight);
     GlobalStorage.historyOfObjects[res]=workBlockSet;
     workBlockSet.fullCommonContrlName=item.fullname;
     workBlockSet.thisCommonContrlName=res;
-    workBlockSet.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(workBlockSet);});
+    group.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(workBlockSet);});
     workBlockSet.draggableSet(workBlockSet,typeNode);
-    workBlockSet.mouseover(function(){
+    group.mouseover(function(){
       GlobalStorage.toDelete=workBlockSet;
     });
-      workBlockSet.mouseout(function(){
+      group.mouseout(function(){
         GlobalStorage.toDelete=undefined;
       });
     return workBlockSet;
@@ -199,7 +377,7 @@ class mainBlock{
     }*/
 
 
-    let workBlockSet=R.set();
+    let workBlockSet=Snap.set();
     let typeNode="commonControls";
     let dummy=R.rect(x,y, 120, 32,5)
     .attr({
@@ -208,21 +386,21 @@ class mainBlock{
               opacity: 1,
               cursor: "pointer"
           });
-          workBlockSet.push(dummy);
+          //workBlockSet.push(dummy);
           //dummy.node.effectName=item.effectName;
 
           let workBlock=R.rect(x,y, 120, 32,5)
           .attr({   //fill: "rgb(64, 64, 64)",
                     stroke: "none",
-                    cursor: "move",
                     class:"multiplier"
                 });
           //workBlock.node.effectName=item.effectName;
 
     let title= R.text(x+60, y+15, thisItemName)
     .attr({
-      cursor: "move",
-      "font-size": 15
+      fontSize: 15,
+      textAnchor: "middle",
+      alignmentBaseline:"middle"
     });
 
           //title.node.effectName=item.effectName;
@@ -231,11 +409,12 @@ class mainBlock{
           //console.log(item);
           workBlockSet.shortName=item.shortName;
           workBlockSet.currentName=thisItemName;
-          workBlockSet.push(workBlock);
-          workBlockSet.push(title);
+          //workBlockSet.push(workBlock);
+          //workBlockSet.push(title);
+          let group=R.g(workBlock, title, dummy);
+          workBlockSet.push(group);
 
-
-          dummy.toFront();
+          //dummy.toFront();
 
     /*let circleLeft=R.circle(x+1, y+15, 6);// Uncomment if you need Left circle
           circleLeft.node.effectName=item.name;
@@ -252,42 +431,18 @@ class mainBlock{
     GlobalStorage.historyOfObjects[res]=workBlockSet;
     workBlockSet.fullCommonContrlName=item.fullname;
     workBlockSet.thisCommonContrlName=res;
-    workBlockSet.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(workBlockSet);});
+    group.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(workBlockSet);});
     workBlockSet.draggableSet(workBlockSet,typeNode);
-    workBlockSet.mouseover(function(){
+    group.mouseover(function(){
       GlobalStorage.toDelete=workBlockSet;
     });
-      workBlockSet.mouseout(function(){
+      group.mouseout(function(){
         GlobalStorage.toDelete=undefined;
       });
     return workBlockSet;
 
   }
-  start(){
 
-
-    this.ox = this.attr("x");
-    this.oy = this.attr("y");
-    this.attr({opacity: 1});
-  }
-  move(dx,dy){
-
-    this.fx=this.ox + dx;
-    this.fy=this.oy + dy;
-    this.attr({x: this.ox + dx, y: this.oy + dy});
-  }
-  end(){
-    /*let context=this.context
-
-    arrButton.forEach((item,i)=>{
-      if(this.node.id==item)
-      createNewBlock(context.fx,context.fy,context,context.node.id);
-
-    });
-
-    context.attr({x: context.ox, y: context.oy});*/
-
-  }
 
 }
 

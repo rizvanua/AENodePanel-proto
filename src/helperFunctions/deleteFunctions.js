@@ -26,7 +26,7 @@ if(GlobalStorage.toDelete!=undefined&&event.keyCode==46)
           let remove=GlobalStorage.toDelete.remove();
           Object.keys(distribitorObject).map((objectKey, index)=> {
             //console.log(objectKey);
-            if(GlobalStorage.historyOfObjects[objectKey]){// check if object wicth this name exists in historyOfObjects (if exist this is EffectObject)
+            if(GlobalStorage.historyOfObjects[objectKey]){// check if object with this name exists in historyOfObjects
               delete GlobalStorage.historyOfObjects[objectKey];//Remove effects from historyOfObjects
               //Call to ExtScript
 

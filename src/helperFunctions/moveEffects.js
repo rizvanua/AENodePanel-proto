@@ -31,7 +31,7 @@ import R from "../raphaelContainer.js";
         else if(GlobalStorage.historyOfObjects[key].thisCommonContrlName) {
           thisBlockEffectName=GlobalStorage.historyOfObjects[key].thisCommonContrlName;
         }
-        let attrY=GlobalStorage.historyOfObjects[key][0].attr("y");
+        let attrY=GlobalStorage.historyOfObjects[key][0].getBBox().y;
         let obj={name:thisBlockEffectName, y:attrY};
         GlobalStorage.historyOfObjects.itemArray.push(obj);
       }
@@ -71,12 +71,12 @@ import R from "../raphaelContainer.js";
                 //console.log(myIndex);
                   //console.log(storageName);
                 csInterface.evalScript(`$._ext.moveEffectIndex("${storageName}","${myIndex}")`,(res)=>{
-                  console.log(GlobalStorage.effectCheckArr);
-                  console.log(GlobalStorage.historyOfObjects.itemArray);
+                  //console.log(GlobalStorage.effectCheckArr);
+                  //console.log(GlobalStorage.historyOfObjects.itemArray);
                   GlobalStorage.effectCheckArr=GlobalStorage.historyOfObjects.itemArray.map((i)=>{
                     return i.name
                   });
-                    console.log(GlobalStorage.effectCheckArr);
+                    //console.log(GlobalStorage.effectCheckArr);
                 });
               });
 

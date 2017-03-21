@@ -2,6 +2,7 @@ import arrButton from "./startArrays/arrButtonMain.js";
 import arrSecondButton from "./startArrays/arrSecondButton.js";
 import mainBlock from "./mainBlock/mainBlock.js";
 //import secondSideBarBlocks from "./secondSideBarBlocks.js";
+import R from "./raphaelContainer.js";
 import GlobalStorage from './storage';
 import csInterface from './csInterface';
 import moveEffects  from "./helperFunctions/moveEffects.js";
@@ -79,6 +80,7 @@ class mainMenu {
         let cordX=250;
         csInterface.evalScript(`$._ext.applyEffect("${item.name}")`,(res)=>{//push data into extend script
           let obj=JSON.parse(res);
+          console.log(obj);
           let workBlock=new mainBlock().createBlockEffects(cordX,GlobalStorage.undermostEffectBlock.y+=50,item,obj);
           moveEffects(workBlock);
           //GlobalStorage.effectCreateDrag.active=false// close ability to add this effect to dispatcher
@@ -115,6 +117,7 @@ class mainMenu {
       commonControlLi.click(()=>{
           let cordX=100;
           csInterface.evalScript(`$._ext.createControl("${item.name}")`,(res)=>{//push data into extend script
+            //console.log(res);
             let workBlock=new mainBlock().createBlockCommonControls(cordX,GlobalStorage.undermostCommonControlBlock.y+=50,item,false, res);
             moveEffects(workBlock);
             //GlobalStorage.effectCreateDrag.active=false// close ability to add this effect to dispatcher

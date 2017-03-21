@@ -24,7 +24,15 @@ circle{
   fill: rgb(255, 102, 102);
   stroke: white;
 }
+circle.false{
+  fill: rgb(64, 64, 64);
+  stroke: white;
+}
 
+circle.true{
+  fill: red;
+  stroke: white;
+}
 
 circle:hover{
   fill: red;
