@@ -12,10 +12,13 @@ import GlobalStorage from '../storage';
 
 class mainBlock{
   constructor(){
-
+    let str_gradientGrayLight = "l(0,0,0,1)rgb(140,149,158):5-rgb(44,53,63):95";
+    let str_gradientGrayDark = "l(0,0,0,1)rgb(140,149,158):5-rgb(44,53,63):95";
+    let gradientGrayLight = R.gradient(str_gradientGrayLight);
+    let gradientGrayDark = R.gradient(str_gradientGrayDark);
   }
   createBlockEffects(x,y,item,obj){
-    //console.log("BOOOOOO");
+    console.log(obj.distrInst);
     //let objectEffect=JSON.parse(obj);
     let blockEffectName=obj.name;
     let workBlockSet=Snap.set();
@@ -29,9 +32,16 @@ class mainBlock{
     workBlockSet.fov=item.fov;
     workBlockSet.strength=item.strength;
     workBlockSet.waves=item.waves;*/
-    let clipR=R.rect(x,y, 180, 32,5);
+
+    //Create Clip Mask
+    let clipR=R.rect(x,y, 200, 32,5);
     let defEl=clipR.toDefs();
-    let dummy=R.rect(x,y, 180, 32,5)
+    //
+    //Create pattern
+    let pattern = R.image("img/effect-background.png",x,y,210,329)
+   .pattern(x,y,210,329);
+    //
+    let dummy=R.rect(x,y, 200, 32,5)
     .attr({   fill: "rgb(64, 64, 64)",
               "fill-opacity":0,
               stroke: "none",
@@ -42,15 +52,31 @@ class mainBlock{
             //workBlockSet.push(dummy);
 
           GlobalStorage.lastEffectBlock.y=y+32;
-    let workBlock=R.rect(x,y, 180, 32,5)
+    /*let workBlock=R.rect(x,y, 180, 32,5)
     .attr({   fill: "rgb(64, 64, 64)",
               stroke: "none",
               class:''
-          });
-    let title= R.text(x+60, y+16, blockEffectName)
+          });*/
+    let distrCount='0';
+
+    let distrCountText= R.text(x+10, y+16, distrCount)
     .attr({
-            fontSize: 16,
-            textAnchor: "middle",
+            fontSize: 15,
+            textAnchor: "start",
+            alignmentBaseline:"middle",
+            opacity: 0
+          });
+          if(obj.distrInst){
+            distrCountText.attr({
+              text:obj.distrInst,
+              opacity: 1,
+            });
+          }
+
+    let title= R.text(x+44, y+16, blockEffectName)
+    .attr({
+            fontSize: 15,
+            textAnchor: "start",
             alignmentBaseline:"middle"
           });
 
@@ -62,7 +88,7 @@ class mainBlock{
           //workBlockSet.push(group);
           //Create options angle, slider, angel
         let propGroup=CreateProperties([obj.point, obj.slider, obj.angle],y);
-        let mainGroup=R.g(workBlock, title, dummy);
+        let mainGroup=R.g(/*workBlock,*/ distrCountText,title, dummy);
         let wrapGroup=R.g(propGroup,mainGroup);
         wrapGroup.attr({ clipPath: clipR});//apply clip-path mask
         /*wrapGroup.click(()=>{
@@ -70,6 +96,15 @@ class mainBlock{
           wrapGroup.toFront();
         });*/
         //wrapGroup.mouseover(()=>{console.log(wrapGroup);});
+        mainGroup.dblclick(()=>{
+          let EffectName=workBlockSet.setEffectName;
+          GlobalStorage.input.css({top:GlobalStorage.historyOfObjects[EffectName][0].getBBox().y, left: GlobalStorage.historyOfObjects[EffectName][0].getBBox().x+35, width:"160px", height: "26px", position:'absolute', display:'block'});
+          //console.log(GlobalStorage.historyOfObjects);
+          //console.log(workBlockSet.setEffectName);
+          let innerHTML=mainGroup[1].node.innerHTML;
+          GlobalStorage.renameObj.oldName=innerHTML;
+          GlobalStorage.input.val(innerHTML);
+        });
         wrapGroup.mouseover(()=>{
           //if(GlobalStorage.currentLine)
           //{
@@ -90,7 +125,11 @@ class mainBlock{
                 item.attr("path",`M${MX} ${MY}L${LX} ${(LY)+offset}`);//shift the line to the current propertyBlock
               }
             });
-
+            for(let key in propGroup){
+              if(GlobalStorage.currentLine&&propGroup[key].type=="rect"&&propGroup[key].attr('class')!=='prop-wrapper'&&propGroup[key].attr("propDataType")!=GlobalStorage.currentLine.node.shortControlName){
+                  propGroup[key].attr({"fill-opacity":0.7, fill:'rgb(95,95,95)'})
+              }
+            }
           //}
 
         });
@@ -112,13 +151,16 @@ class mainBlock{
 
           }
           else{
-            GlobalStorage.controlProp={
+            GlobalStorage.controlProp={//set the object to the initial state
               type:null,
               name:null,
               circle:null,
               coordDif:null
             };
           }
+
+
+
         });
         wrapGroup.mouseout(()=>{
           //if(GlobalStorage.currentLine)
@@ -145,6 +187,11 @@ class mainBlock{
             }
           });
 
+          for(let key in propGroup){
+            if(propGroup[key].type=="rect"&&propGroup[key].attr('class')!=='prop-wrapper'){
+                propGroup[key].attr({"fill-opacity":0})
+            }
+          }
 
         });
         workBlockSet.push(wrapGroup);
@@ -161,12 +208,14 @@ class mainBlock{
             let groupOfProp=R.g();
             //console.log(propertyArr)
             //let bacgroundHeight=(item.properties.length*20)+42;
-            let propBackground=R.rect(x,y, 180,0,5)
-            .attr({   fill: "rgb(64, 64, 64)",
+            let propBackground=R.rect(x,y, 200,0,5)
+            .attr({   //fill: "rgb(64, 64, 64)",
+                      fill:pattern,
                       stroke: "none",
                       class:'prop-wrapper'
                   });
             groupOfProp.add(propBackground);
+            let count=0;
           for(let a=0; a<propertyArr.length;a++)
           {
               if(a==0){
@@ -181,20 +230,30 @@ class mainBlock{
               for (let key in propertyArr[a]){
                 //y+=10;
                 //f+=6;
-                localY+=20;
+                count+=1;
+                console.log(count)
+                if(count>1){
+                  localY+=20;
+                }
+                else{
+                  localY+=10;
+                }
+
+
                 //console.log(key)
-                propertyText= R.text(x+10,localY, key)
+                propertyText= R.text(x+22,localY-5, key)
                 .attr({
-                        fontSize: 15,
+                        fontSize: 14,
                         textAnchor: "start",
-                        alignmentBaseline:"middle"
+                        alignmentBaseline:"hanging"
                       });
-                propertyCircle=R.circle(x+170, localY, 6).attr({
+                propertyCircle=R.circle(x+10, localY, 6).attr({
                   class:'false'
                 });
+                //propertyCircle=GlobalStorage.radioON.use().attr({x:x+10, y:localY, class:'false'});
                 //console.log(key);
                 //console.log((localY-8)-y);
-                propertyBlock= R.rect(x, localY-8, 180,16)
+                propertyBlock= R.rect(x, localY-8, 200,16)
                 .attr({
                         "fill-opacity":0,
                         opacity: 1,
@@ -253,7 +312,7 @@ class mainBlock{
 
 
     wrapGroup.mouseover(function(){
-      GlobalStorage.toDelete=workBlockSet;
+      //GlobalStorage.toDelete=workBlockSet;
       //console.log(GlobalStorage.currentLine);
       //console.log("OVER");
       //console.log(workBlockSet);
@@ -261,8 +320,6 @@ class mainBlock{
         //workBlockSet.deleteInOneClick(workBlockSet);
     if (GlobalStorage.currentLine){
       let typeOfControll=GlobalStorage.currentLine.node.shortControlName;
-
-
           if(GlobalStorage.currentLine&&workBlockSet[typeOfControll]===false){
 
             workBlockSet.attr({cursor: "no-drop"});
@@ -294,10 +351,14 @@ class mainBlock{
       thisItemName=`${item.name} ${number}`;
       }
     }*/
-
+    //Create pattern
+    let pattern = R.image("img/orange-button.png",x,y,180,32)
+   .pattern(x,y,180,32);
+    //
 
     let workBlockSet=Snap.set();
     let typeNode="commonControls";
+
     let dummy=R.rect(x,y, 120, 32,5)
     .attr({   fill: "rgb(64, 64, 64)",
               "fill-opacity":0,
@@ -310,6 +371,7 @@ class mainBlock{
 
           let workBlock=R.rect(x,y, 120, 32,5)
           .attr({   //fill: "rgb(64, 64, 64)",
+                    fill:pattern,
                     stroke: "none",
                     cursor: "move",
                     class:"commonControl"
@@ -343,13 +405,14 @@ class mainBlock{
         //if(distributor==false){
 
         //}
-        let group=R.g(workBlock, title, dummy);
-        workBlockSet.push(group);
         let circleRight=R.circle(x+120, y+15, 6);
+        let group=R.g(workBlock, title, dummy,circleRight);
+        workBlockSet.push(group);
+
               circleRight.node.effectName=item.name;
               //workBlockSet.push(circleRight);
               circleRight.node.circleName="circleRight";
-        workBlockSet.push(circleRight);
+        //workBlockSet.push(circleRight);
     GlobalStorage.historyOfObjects[res]=workBlockSet;
     workBlockSet.fullCommonContrlName=item.fullname;
     workBlockSet.thisCommonContrlName=res;
@@ -358,9 +421,20 @@ class mainBlock{
     group.mouseover(function(){
       GlobalStorage.toDelete=workBlockSet;
     });
-      group.mouseout(function(){
-        GlobalStorage.toDelete=undefined;
-      });
+    group.mouseout(function(){
+      GlobalStorage.toDelete=undefined;
+    });
+    group.dblclick(()=>{
+      let EffectName=workBlockSet.thisCommonContrlName;
+      GlobalStorage.input.css({top:GlobalStorage.historyOfObjects[EffectName][0].getBBox().y, left: GlobalStorage.historyOfObjects[EffectName][0].getBBox().x, width:"115px", height: "26px", position:'absolute', display:'block'});
+      //console.log(GlobalStorage.historyOfObjects);
+      //console.log(workBlockSet.setEffectName);
+      let innerHTML=group[1].node.innerHTML;
+      console.log(innerHTML);
+      GlobalStorage.renameObj.oldName=innerHTML;
+      GlobalStorage.input.val(innerHTML);
+    });
+
     return workBlockSet;
 
   }
@@ -375,7 +449,8 @@ class mainBlock{
       thisItemName=`${item.name} ${number}`;
       }
     }*/
-
+    let pattern = R.image("img/red-button.png",x,y,180,32)
+    .pattern(x,y,180,32);
 
     let workBlockSet=Snap.set();
     let typeNode="commonControls";
@@ -391,6 +466,7 @@ class mainBlock{
 
           let workBlock=R.rect(x,y, 120, 32,5)
           .attr({   //fill: "rgb(64, 64, 64)",
+                    fill:pattern,
                     stroke: "none",
                     class:"multiplier"
                 });

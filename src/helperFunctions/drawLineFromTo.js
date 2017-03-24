@@ -11,8 +11,9 @@ class drawLineFromTo{
 
   startdrawLineFromTo(_this,thisSet){
     //console.log(thisSet);
-    _this.ox=_this.attr("cx");
-    _this.oy=_this.attr("cy");
+    _this.ox=thisSet[0].getBBox().x+120;
+    _this.oy=thisSet[0].getBBox().y+15;
+
     /*let connectPath = R.path( ["M", _this.ox, _this.oy, "L", _this.ox, _this.oy ] )*/
     let connectPath = R.path(`M${_this.ox} ${_this.oy}L${_this.ox} ${_this.oy}`).attr({stroke:"blue"});
     connectPath.node.lineFromCyrcle=_this.node.circleName;//Here we asign from which one circle go the Line (Right cyrcle or LeftCyrcle)
@@ -24,7 +25,7 @@ class drawLineFromTo{
 
   }
 
-  moveLine(_this,dx,dy){
+  moveLine(_this,dx,dy,thisSet){
     //console.log(GlobalStorage.controlProp);
     //console.log(GlobalStorage.overMouseSet);
 //console.log(GlobalStorage.currentLine.node.shortControlName);
@@ -34,6 +35,9 @@ class drawLineFromTo{
 //console.log(_this.oy);
 //console.log(dx);
 //console.log(dy);
+
+_this.ox=thisSet[0].getBBox().x+120;
+_this.oy=thisSet[0].getBBox().y+15;
   GlobalStorage.currentLine.attr({d:`M${_this.ox} ${_this.oy}L${(_this.ox*1+dx)-5} ${(_this.oy*1+dy)-5}`});
   /*var typeOfControll=GlobalStorage.currentLine.node.shortControlName;
 
@@ -60,8 +64,10 @@ class drawLineFromTo{
 
 
     if (GlobalStorage.overMouseSet!==null&&GlobalStorage.currentLine!==null&&GlobalStorage.controlProp.type==GlobalStorage.currentLine.node.shortControlName){// in this case the current Line has connection to a destination block
+
       GlobalStorage.controlProp.circle.classList.remove('false');
       GlobalStorage.controlProp.circle.classList.add('true');
+
       GlobalStorage.currentLine.attr({stroke:"black"});//add black color for already successfully connected line
       let overMouseSet=GlobalStorage.overMouseSet;
       let effectNameLocal=overMouseSet.setEffectName;
@@ -73,7 +79,7 @@ class drawLineFromTo{
       let MY=PathString[0][2];//get coords Y of the linked CommonControlBlock
       let LX=overMouseSet[0].getBBox().x;//get coords X of the linked EffectBlock
       let LY=overMouseSet[0].getBBox().y;//get coords Y of the linked EffectBlock
-      console.log(GlobalStorage.controlProp.coordDif)
+      
       GlobalStorage.currentLine.attr("path",`M${MX} ${MY}L${LX} ${LY+16+(GlobalStorage.controlProp.coordDif*1)}`);// apply new coords
       //
       GlobalStorage.currentLine.LineFrom=_this.node.effectName;//add which effect has been connected with this line

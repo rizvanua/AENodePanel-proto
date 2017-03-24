@@ -5,11 +5,12 @@ import csInterface from './csInterface';
 import forEachInGroup from './snapCustomFunctions/forEachInGroup';
 import toogleAttr from './snapCustomFunctions/toogleAttr';
 import toFrontToBack from './snapCustomFunctions/toFrontToBack';
-//import R from "./raphaelContainer.js";
-import deleteFunctions from "./helperFunctions/deleteFunctions";
+import R from "./raphaelContainer.js";
+import catchPressButtonDelete from "./helperFunctions/catchPressButtonDelete";
 import deleteBlockEvent from "./customEvents/deleteEventListener";
 import GlobalStorage from './storage';
 import checkBackEnd from "./helperFunctions/checkBackEnd";
+import renameBlock from "./helperFunctions/renameBlock";
 import mainMenu from "./mainMenu";
 
 let myReq;
@@ -19,8 +20,48 @@ let AnimationFrame;
 /*window.localStorage.hey="one";*/
 //console.log(window.localStorage);
 let jsonString=`[{"keyCode": 	46},{"keyCode": 46,"ctrlKey": true}]`;
-csInterface.registerKeyEventsInterest(jsonString);
+csInterface.registerKeyEventsInterest(jsonString);//register buttons to use in HTML5 panel
 
+GlobalStorage.input=$("<input type='text' id='input'/>");
+$("#container").append(GlobalStorage.input);
+GlobalStorage.input.keydown((event)=>{
+  console.log(event);
+if(GlobalStorage.renameObj.oldName&&event.keyCode==13){
+  console.log('ENTER');
+  GlobalStorage.renameObj.newName=GlobalStorage.input.val();
+  console.log(GlobalStorage.input.val());
+  if(GlobalStorage.renameObj.oldName!=GlobalStorage.renameObj.newName){
+    renameBlock(GlobalStorage.renameObj.oldName,GlobalStorage.renameObj.newName);
+    csInterface.evalScript(`$._ext.renameEffect("${GlobalStorage.renameObj.oldName}","${GlobalStorage.renameObj.newName}")`, (res)=>{
+
+      GlobalStorage.historyOfObjects[res].forEach((i)=>{//Change CommonContrlName in expressions which are connected with this commonControl
+        if(i.node.nodeName=='path'){
+          let type=GlobalStorage.historyOfObjects[res].shortName;
+          if(type&&GlobalStorage.historyOfObjects[i.LineTo]){
+
+            let effectNameLocal=i.LineTo;
+            let controlPropName=res;
+            let thisPropName=i.propertyOfEffect;
+            console.log(effectNameLocal);
+            console.log(controlPropName);
+            console.log(thisPropName);
+
+            csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${thisPropName}","${controlPropName}","${type}")`);
+          }
+          else if(i.LineTo&&!GlobalStorage.historyOfObjects[i.LineTo]){
+            delete i.LineTo;
+          }
+
+        }
+      });
+
+    });
+  }
+
+  GlobalStorage.input.css({top:0, left:0, position:'absolute', display:'none'});
+}
+});
+GlobalStorage.input.blur(()=>{GlobalStorage.input.css({display:'none'})});
 
 //window.addEventListener('keydown',function(e){
        //alert("window:keydown detected");
@@ -262,6 +303,19 @@ let createMainMenu = new mainMenu();
 //let secondBarInnerBlocksDistributor= new secondSideBarBlocks().createStaticDistributorControls();
 //let secondBarInnerBlocksPresets= new secondSideBarBlocks().createStaticPresets();
 let checkStart=new checkBackEnd();
+
+//pattern for radio buttons
+/*let imageOFF=R.image('img/radio-button-off.png',6,6,12,12).pattern(6,6,12,12);
+GlobalStorage.radioOFF=R.circle(0,0,6).attr({
+  fill:imageOFF
+}).toDefs();
+let imageON=R.image('img/radio-button-on.png',6,6,12,12).pattern(6,6,12,12);
+GlobalStorage.radioON=R.circle(0,0,6).attr({
+  fill:imageON
+}).toDefs();*/
+/*let radioOFF=S.rect(0,0,120,32,5).attr({
+fill:image
+}).toDefs();*/
 
 
 document.getElementsByTagName('svg')[0].addEventListener('click',(e)=>{

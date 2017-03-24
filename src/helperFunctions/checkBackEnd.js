@@ -5,6 +5,7 @@ import mainBlock from "../mainBlock/mainBlock.js";
 import arrSecondButton from "../startArrays/arrSecondButton.js";
 import moveEffects  from "../helperFunctions/moveEffects.js";
 import deleteBlockEvent from "../customEvents/deleteEventListener.js";
+import renameBlock from "../helperFunctions/renameBlock";
 
 class checkBackEnd{
   constructor(){
@@ -69,7 +70,7 @@ class checkBackEnd{
       csInterface.evalScript(`$._ext.checkChangesGlobal()`, (res)=>{
           //console.log(res);
           //console.log(res===undefined);
-          if(res&&res==0){//CHECK if we use went on new Layer
+          if(res&&res==0){//CHECK if we'have gone onto new Layer
             let promise = new Promise(
                         (resolve) => {
                           R.clear();
@@ -110,7 +111,9 @@ class checkBackEnd{
             //GlobalStorage.undermostCommonControlBlock.y=10;
           }
           else if(res&&res!="undefined"){
-            this.effectCheckArr=res.split(',');
+            let resObj=JSON.parse(res);
+            this.effectCheckArr=resObj.effectArray
+            //this.effectCheckArr=res.split(',');
             if(res=="empty"){
               this.effectCheckArr=[];
             }
@@ -160,12 +163,17 @@ class checkBackEnd{
             }
             else {
               //console.log('RENAME');
-              //console.log(GlobalStorage.historyOfObjects);
               //console.log(res);
               //console.log(GlobalStorage.effectCheckArr);
               //console.log(this.effectCheckArr);
-              this.functionRename(this.effectCheckArr,GlobalStorage.effectCheckArr);
-              GlobalStorage.effectCheckArr=this.effectCheckArr;
+              //console.log(resObj);
+              if(this.effectCheckArr.join(';')!==GlobalStorage.effectCheckArr.join(';')){//convert arrays to string and match them if they are not equal it need rename effect
+                this.functionRename(this.effectCheckArr,GlobalStorage.effectCheckArr);
+              }
+              GlobalStorage.effectCheckArr=this.effectCheckArr;// assign current array to previus array
+              if(resObj.selectedEffect.effectName&&GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName]){
+                GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName][0][1][0].attr({text:resObj.selectedEffect.distrInst});//change distributor number in EffectBlock
+              }
               //console.log('Equality')
             }
           }
@@ -201,6 +209,7 @@ class checkBackEnd{
       //console.log(JSON.parse(res));
       let startObject=JSON.parse(res);
       if(startObject.hasVR===true){
+        console.log(startObject);
         this.functionCreateBlocks(startObject,cordX);
       }
 
@@ -217,12 +226,13 @@ class checkBackEnd{
 //console.log(startObject);
     //console.log(startObject);
     startObject.effectsObj.forEach((i, num)=>{// Create EffectBlock
-      let itemArr=arrSecondButton.effects.filter((obj)=>{
+      /*let itemArr=arrSecondButton.effects.filter((obj)=>{
         //console.log(i);
         return obj.name==i.baseEffect;
-      });
+      });*/
       cordX=250;
-      let item=itemArr[0];
+      //let item=itemArr[0];
+      let item={name:i.baseEffect};
       let res=i;
       //cordY+=50;
       let workBlock=new mainBlock().createBlockEffects(cordX,GlobalStorage.undermostEffectBlock.y+=50,item,res);
@@ -339,8 +349,9 @@ class checkBackEnd{
     //console.log(oldName);
     //console.log(GlobalStorage.historyOfObjects[oldName]);
     if(GlobalStorage.historyOfObjects[oldName]){
+      renameBlock(oldName,newName);
       //console.log(GlobalStorage.historyOfObjects[oldName][0]);
-      if(GlobalStorage.historyOfObjects[oldName].setEffectName){//Rename EffectBlock
+      /*if(GlobalStorage.historyOfObjects[oldName].setEffectName){//Rename EffectBlock
       GlobalStorage.historyOfObjects[oldName][0][1][1].attr({text:newName});
       GlobalStorage.historyOfObjects[oldName].setEffectName=newName;
       GlobalStorage.historyOfObjects[newName]=GlobalStorage.historyOfObjects[oldName];
@@ -360,7 +371,7 @@ class checkBackEnd{
       //let thisNewName=newName.replace(" Control", "");
       let thisNewName=newName;
       //console.log(GlobalStorage.historyOfObjects[oldName][2]);
-      GlobalStorage.historyOfObjects[oldName][2].attr({text:thisNewName})
+      //GlobalStorage.historyOfObjects[oldName][2].attr({text:thisNewName})
       GlobalStorage.historyOfObjects[oldName].currentName=thisNewName;
       GlobalStorage.historyOfObjects[thisNewName]=GlobalStorage.historyOfObjects[oldName];
       delete GlobalStorage.historyOfObjects[oldName];
@@ -370,7 +381,7 @@ class checkBackEnd{
           i.LineFrom=thisNewName;
         }
       });
-    }
+    }*/
     }
 
 

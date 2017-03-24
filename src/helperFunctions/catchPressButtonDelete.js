@@ -1,25 +1,38 @@
 import R from "../raphaelContainer.js";
 import csInterface from '../csInterface';
 import GlobalStorage from '../storage';
+import innerDeleteFunction from "./innerDeleteFunction";
 
+//Function which cathc pressing of "Delete" button
 
-//Function which handgle all process with Deleting Blocks
-
-let deleteFunctions = window.addEventListener("keydown",function(event){
-    event.preventDefault();
+let catchPressButtonDelete = window.addEventListener("keydown",function(event){
+    //event.preventDefault();
+    console.log(event.target.nodeName!='INPUT');
+    console.log(GlobalStorage.toDelete);
 //console.log(event);
   //let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 123,     "ctrlKey": true  }];
   //csInterface.registerKeyEventsInterest(keyEventsInterest);
 
 //console.log(GlobalStorage.distribitorObjectsStorage[genId]);
 
-if(GlobalStorage.toDelete!=undefined&&event.keyCode==46)
+if(GlobalStorage.toDelete!=undefined&&event.target.nodeName!='INPUT'&&event.keyCode==46)
   {
+    let nameOfBlock;
+    if(GlobalStorage.toDelete.setEffectName){
+      nameOfBlock=GlobalStorage.toDelete.setEffectName;
+    }
+    else if(GlobalStorage.toDelete.fullCommonContrlName)
+    {
+      nameOfBlock=GlobalStorage.toDelete.thisCommonContrlName;
+    }
+    //let effectName=GlobalStorage.toDelete.setEffectName;
+    innerDeleteFunction(nameOfBlock);
 
-
-
-    let promise= new Promise((resolve)=>{
+}
+    /*let promise= new Promise((resolve)=>{
       GlobalStorage.overMouseSet=null;
+      let effectName=GlobalStorage.toDelete.setEffectName;
+      innerDeleteFunction(effectName);
       if(GlobalStorage.toDelete.genId){ //Remove whole Distributor Blocks with all childs
         let genId=GlobalStorage.toDelete.genId;
           let distribitorObject=GlobalStorage.distribitorObjectsStorage[genId];
@@ -78,13 +91,13 @@ if(GlobalStorage.toDelete!=undefined&&event.keyCode==46)
         });
 
 
-        /*let arrayOfLinkedEffectsFiltered=_.map(arrayOfLinkedEffects,(i)=>{//get array with names of linked to this common control ffects
-            if(i.DistributorEffects){
-              return i.DistributorEffects.join(';')
-            }
-            return i.LineTo;
-
-        });*/
+        //let arrayOfLinkedEffectsFiltered=_.map(arrayOfLinkedEffects,(i)=>{//get array with names of linked to this common control ffects
+        //    if(i.DistributorEffects){
+        //      return i.DistributorEffects.join(';')
+        //    }
+        //    return i.LineTo;
+ //
+        //});
         let arrayOfLinkedEffectsFiltered=_.map(arrayOfLinkedEffects,(i)=>{//get array with names of linked to this common control ffects
               if(i.DistributorEffects){
                 return i.DistributorEffects.join(';')
@@ -137,12 +150,12 @@ console.log(thisCommonContrlName);
 
       });
 }
-  /*workBlockSet.remove()*/
+
+
+});*/
+
+//function deleteEffects(){
 
 });
 
-function deleteEffects(){
-
-}
-
-export default deleteFunctions;
+export default catchPressButtonDelete;

@@ -1,6 +1,7 @@
 ﻿function addPOIFunction(effectName, propName, thisPropName, _this){    
+    if(_this.currentLayer.effect.property(effectName)){       
     _this.currentLayer.effect.property(effectName).property(propName).expression='(thisLayer.effect('+'"'+thisPropName+'"'+').point.value)*(thisLayer.effect("Master").slider.value/100)'; 
-    
+     }
 };
 
 function addFOVFunction(effectName, propName, thisPropName, _this){    
@@ -80,7 +81,7 @@ $._ext = {
   //$.writeln(app.project);
    //$.writeln('app.project.activeItem');
   //$.writeln(app.project.activeItem);
-   if(app.project.activeItem===null){
+   if(app.project.activeItem===null){//check if  at least one item is active
     return 100; // No one Item is active     
       }
   var myLayers = app.project.activeItem.selectedLayers; 
@@ -113,18 +114,35 @@ $._ext = {
       //$.writeln(this.initialProjectTest());
       return 0;
     } else if (this.currentLayer.effect.numProperties) {
-      var effectArray = [];
+      //var effectArray = [];
+      var stateScope={
+                selectedEffect:{
+                    effectName:null,// the name of selected effect
+                    effectIndex:null,// the index of selected effect
+                    distrInst:null //the quantity of distributors
+                },
+                effectArray:[]
+        };
       //this.effectsQuantity=this.currentLayer.effect.numProperties;
-      //$.writeln(this.currentLayer.effect.numProperties);
+      
       this.effectsQuantity = this.currentLayer.effect.numProperties;
 
       for (var i = this.currentLayer.effect.numProperties; i--;) {
         //$.writeln(this.currentLayer.effect(i+1).property(2).propertyType);
-        effectArray.push(this.currentLayer.effect(i + 1).name);
+        if(this.currentLayer.effect(i + 1).selected){
+             stateScope.selectedEffect.effectName=this.currentLayer.effect(i + 1).name;
+            stateScope.selectedEffect.effectIndex=this.currentLayer.effect(i + 1).propertyIndex;
+            }
+        if(this.currentLayer.effect(i + 1).selected&&this.currentLayer.effect(i + 1).property('Number Of Instances')){// check if this effect is selected and this effect has            
+            stateScope.selectedEffect.distrInst=Math.round(this.currentLayer.effect(i + 1).property('Number Of Instances').value); // get value  of property('Number Of Instances')   and assiggn to object  stateScope
+            }        
+        stateScope.effectArray.push(this.currentLayer.effect(i + 1).name);//push current effect name into ffectArray
 
       }
       //$.writeln(effectArray);
-      return effectArray;
+      //return effectArray;
+      
+      return JSON.stringify(stateScope);
     } else if (this.currentLayer.effect.numProperties == 0) {
       return 'empty';
     }
@@ -273,6 +291,9 @@ else {
                               
                                if (layerEffect.property(d + 1).name != 'Frame Layout' && layerEffect.property(d + 1).name != 'Compositing Options') 
                                {
+                                           if(layerEffect.property(d + 1).name=='Number Of Instances'){
+                                      thisEffectObj.distrInst=Math.round(layerEffect.property(d + 1).value);
+                                      }
                                         switch (layerEffect.property(d+ 1).propertyValueType) 
                                         {
                                           case 6415:                                          
@@ -319,7 +340,7 @@ else {
         //$.writeln(JSON.stringify(Obj))
          return JSON.stringify(Obj);
         },
-        applyEffect: function(effectName) {
+        applyEffect: function(effectName) {// function to apply effect from HTML5 panel
             var effectObj={
                 effectsObj:[],
                 point:{},
@@ -333,8 +354,11 @@ else {
 
                 for (var i = layerEffect.numProperties; i--;) {
                   if (layerEffect.property(i + 1).name != 'Frame Layout' && layerEffect.property(i + 1).name != 'Compositing Options') {
-                    switch (layerEffect.property(i + 1).propertyValueType) {
-                      case 6415:
+                      if(layerEffect.property(i + 1).name=='Number Of Instances'){//check is effect has property  'Number Of Instances'
+                              effectObj.distrInst=Math.round(layerEffect.property(i + 1).value);//get  quantity of distributor instances 
+                              }
+                    switch (layerEffect.property(i + 1).propertyValueType) {// get property name of the effect sort  out them(point, slider, angle) and  assign standar value 'false'; Value 'false' means that no one expression has been assigned  to this property yet 
+                      case 6415: 
                         effectObj.point[layerEffect.property(i + 1).name]=false;
                         //$.writeln(layerEffect.property(i + 1).name);
                         //$.writeln('Point');
@@ -426,7 +450,11 @@ else {
                     for (var d = layerEffect.numProperties; d--;) {
 
                       if (layerEffect.property(d + 1).name != 'Frame Layout' && layerEffect.property(d + 1).name != 'Compositing Options') {
-                        switch (layerEffect.property(d + 1).propertyValueType) {
+                          if(layerEffect.property(d + 1).name=='Number Of Instances'){
+                              thisEffectObj.distrInst=Math.round(layerEffect.property(d + 1).value);
+                              }
+                          
+                        switch (layerEffect.property(d + 1).propertyValueType) {// get property name of the effect sort  out them(point, slider, angle) and  assign standar value 'false'; Value 'false' means that no one expression has been assigned  to this property yet 
                           case 6415:
                             thisEffectObj.point[layerEffect.property(d + 1).name] = false;
                           case 6417:
@@ -443,7 +471,7 @@ else {
 
 
                       if (layerEffect.property(d + 1).expressionEnabled) {
-                        var LineTo = layerEffect.name;
+                        var LineTo = layerEffect.name;                       
                         var propertyOfEffect = layerEffect.property(d + 1).name;
                         var LineFrom = layerEffect.property(d + 1).expression.match(/\(\"([^)]+)\"\)/)[1];
                          //$.writeln('LINE');
@@ -475,6 +503,9 @@ else {
           //
           for (var i = layerEffect.numProperties; i--;) {
                   if (layerEffect.property(i + 1).name != 'Frame Layout' && layerEffect.property(i + 1).name != 'Compositing Options') {
+                      if(layerEffect.property(i + 1).name=='Number Of Instances'){
+                              thisEffectObj.distrInst=Math.round(layerEffect.property(i + 1).value);
+                              }
                     switch (layerEffect.property(i + 1).propertyValueType) {
                       case 6415:
                         effectObj.point[layerEffect.property(i + 1).name]=false;
@@ -559,7 +590,7 @@ else {
 },
     applyEffectDistributor: function(effectName, distributorType,index){
                       
-                     
+                    
                         var layerEffect=this.currentLayer.Effects.addProperty(effectName);
                         if(distributorType=="cube"){                          
                             var newValue="["+this.distributorProps.cube[index].toString()+"]";
@@ -599,7 +630,7 @@ else {
         },*/
     addCommonControls: function(effectName,propName,thisPropName,type)
    {       
-       
+         $.writeln(type);
                switch (type) {
                           case "point":
                             addPOIFunction(effectName, propName,thisPropName,this);
@@ -634,8 +665,13 @@ else {
         }
      },
  
-    deleteEffect: function (effectName){
-        if(effectName!="null"){
+    renameEffect: function(oldEffectName, newEffectName){
+         this.currentLayer.effect.property(oldEffectName).name=newEffectName;
+         return newEffectName;
+        },
+ 
+   deleteEffect: function (effectName){
+        if(effectName!="null"&&this.currentLayer.effect.property(effectName)){
             
              //$.writeln(this.currentLayer.effect.property(effectName).propertyIndex);             
             this.currentLayer.effect.property(effectName).remove();
@@ -650,6 +686,7 @@ else {
       //$.writeln(effectName);  
       //$.writeln(propertyName);          
       this.currentLayer.effect.property(effectName).property(propertyName).expressionEnabled = false;
+      this.currentLayer.effect.property(effectName).property(propertyName).expression = "";
       },
   
     deleteCommonControl: function(arrayOfLinkedEffects, thisCommonContrlName){   
@@ -669,6 +706,7 @@ else {
               $.writeln(effectNameArr.Lineto);
               $.writeln(effectNameArr.propertyOfEffect);
              this.currentLayer.effect.property(effectNameArr.Lineto).property(effectNameArr.propertyOfEffect).expressionEnabled = false;
+             this.currentLayer.effect.property(effectNameArr.Lineto).property(effectNameArr.propertyOfEffect).expression="";
             }
          } 
      this.currentLayer.selected=true;
