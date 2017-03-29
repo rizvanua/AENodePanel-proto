@@ -34,8 +34,8 @@ class mainMenu {
 
     let multipliers=$('<li>',{
       id:'multiplier'
-    }).append("<div class='bage-small multipliers disable'><p>M</p></div>");
-    let multiplierUl=multipliers.children().append("<ul class='subs disable'></ul>");
+    }).append("<div class='bage-small multipliers'><p>M</p></div>");
+    let multiplierUl=multipliers.children().append("<ul class='subs'></ul>");
     wrapUl.append(multipliers);
 
     let presets=$('<li>',{
@@ -47,6 +47,9 @@ class mainMenu {
 
 //blocks of second Menue with draggable
     arrSecondButton.effects.forEach((item,i)=>{
+      if(item.name=="Mettle Mantra VR"){
+        return false
+      }
       let effectLi=$('<li>',{
         id:item.name,
         text:item.name,
@@ -157,12 +160,47 @@ class mainMenu {
       $(this).parent().removeAttr('style');//remove style options to rest in into intitial (see css file) style
       $(this).css('left',0).css('top',0);
         //$(this).parent().css('left',-9999);
-      },
+      }
+      });
 
+      presetLi.click(()=>{
+          let cordX=250;
+          let workBlock=new presetsBlocks().createPresetsBlocks(cordX,item);
       });
       presetsUl.children('ul').append(presetLi);
       //console.log(index);
     });
+
+    //multiplier menu
+    arrSecondButton.multiplier.forEach((item,i)=>{
+      let multiplierLi=$('<li>',{
+        id:item.id,
+        text:item.name
+      }).draggable({
+        start:function (event, ui) {
+          $(this).parent().fadeTo(0, 1);// lock opacity in 1 to keep div visible
+          $(this).parent().css('top',0);//lock top coordinate of menu to keep menu visible
+          $(this).parent().css('left',50);//lock left coordinate of menu to keep menu visible
+        },
+        stop:function (event, ui) {
+          let cordX=this.getBoundingClientRect().left;//get real positio of X
+          let cordY=this.getBoundingClientRect().top;//get real positio of Y
+          let controlType=item.name;
+          //csInterface.evalScript(`$._ext.createControl("${controlType}")`,(res)=>{//push data into extend script
+          csInterface.evalScript(`$._ext.createMultiplier()`,(res)=>{//push data into extend script
+            let workBlock=new mainBlock().createBlockMultiplier(cordX,GlobalStorage.undermostCommonControlBlock.y+=50,item,res);
+            moveEffects(workBlock);// range an order of this effect
+          });
+          $(this).parent().fadeTo(0, 0);// unlock opacity and turn it in 0 to hide menu
+          $(this).parent().removeAttr('style');//remove style options to rest in into intitial (see css file) style
+          $(this).css('left',0).css('top',0);
+        }
+      });
+      multiplierUl.children('ul').append(multiplierLi);
+    });
+
+
+
 
     let menuDiv=$('#menu').append(wrapUl);
     }

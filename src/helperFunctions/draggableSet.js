@@ -13,7 +13,7 @@ Snap.plugin((Snap, Element, Paper, global)=>{
   //let bbox=this.getBBox();
   //this.curenLineLocal;
   var moveFnc = function (dx, dy) {
-    
+
     var _this = this;
     if(thisElem){// if circle we drag we run function to create line
         new drawLineFromTo().moveLine(thisElem,dx,dy,thisSet);
@@ -30,8 +30,8 @@ Snap.plugin((Snap, Element, Paper, global)=>{
 //console.log(thisSet);
         EffectMove(thisSet, item, i, _this, dx, dy);
       }
-      else if(type=="commonControls"){
-
+      else if(type=="commonControls"||type=="multiplier"){
+console.log('MOVEEEE');
         CommonControlsMove(thisSet, item, i, _this, dx, dy);
       }
       if(type=="distributor"){
@@ -56,6 +56,7 @@ Snap.plugin((Snap, Element, Paper, global)=>{
   else{
     thisGroupCoord=thisSet[0].getBBox();//get object with central points of this Effect group
   }
+
 console.log('START');
 
     if (event.target.nodeName!='circle'&&!event.target.circleName)
@@ -141,19 +142,21 @@ function CommonControlsMove(thisSet, item, i, _this, dx, dy){
         let groupy=item.attr({transform:_this.origTransform + (_this.origTransform ? "T" : "t") + [dx, dy]})
      }
      else if (item.node.nodeName == 'path') {
-       if(item.node.lineFromCyrcle=="circleRight")//moving line from right circle of common control  to Effect Block
+       console.log(item.LineFrom);
+       console.log(item.LineTo);
+       console.log(thisSet);
+       if(item.node.lineFromCyrcle=="circleRight"||item.LineFrom==thisSet.currentName)//moving line from right circle of common control  to Effect Block
        {
-         //console.log(item.attr().d);
          let PathString=Snap.parsePathString(item);
          let LX=PathString[1][1];//get coords X of the linked EffectBlock
          let LY=PathString[1][2];//get coords X of the linked EffectBlock
          item.attr("path",`M${_this.ox+ dx+120} ${_this.oy+ dy+16}L${LX} ${LY}`);// move path synchronously with commonControl block
        }
-       else if(item.node.lineFromCyrcle=="noCircleDistributor")//moving line from RootDistributorBlock  to common control
-       {
-         let MX=item.attr().path[0][1];
-         let MY=item.attr().path[0][2];
-         item.attr("path",`M${MX} ${MY}L${_this.ox+ dx} ${_this.oy+ dy+15}`);
+       else if(item.LineTo==thisSet.currentName)//moving line from RootDistributorBlock  to common control
+       { let PathString=Snap.parsePathString(item);
+         let MX=PathString[0][1];
+         let MY=PathString[0][2];
+         item.attr("path",`M${MX} ${MY}L${_this.ox+ dx+1} ${_this.oy+ dy+15}`);
        }
 
      }

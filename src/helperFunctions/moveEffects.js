@@ -6,7 +6,7 @@ import R from "../raphaelContainer.js";
 
 
  function moveEffects (thisSet){
-   //console.log(thisSet);
+   console.log(thisSet);
 //console.log(thisSet)
 //console.log(JSON.stringify(R.canvas.innerHTML));
 //console.log(GlobalStorage.historyOfObjects);
@@ -21,6 +21,7 @@ import R from "../raphaelContainer.js";
     storageName=thisSet.thisCommonContrlName;
     //console.log(storageName);
   }
+
     //GlobalStorage.historyOfObjects[storageName]=thisSet;
     for (let key in GlobalStorage.historyOfObjects) {
       if(key!="itemArray"){
@@ -68,8 +69,8 @@ import R from "../raphaelContainer.js";
                 //console.log(mymap)
                 let myIndex=_.indexOf(mymap,storageName);//get index of the curent effect in array. This Index is  the place of effect in order
                 myIndex+=1;
-                //console.log(myIndex);
-                  //console.log(storageName);
+                console.log(myIndex);
+                console.log(storageName);
                 csInterface.evalScript(`$._ext.moveEffectIndex("${storageName}","${myIndex}")`,(res)=>{
                   //console.log(GlobalStorage.effectCheckArr);
                   //console.log(GlobalStorage.historyOfObjects.itemArray);

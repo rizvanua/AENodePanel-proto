@@ -27,7 +27,10 @@
     {name:"Sphere"},
     {name:"Random"}
   ],
-  presets:[]//We push object {name: "SomeName"} from presets folder via window.cep.fs.readdir and window.cep.fs.readFile API
+  presets:[],//We push object {name: "SomeName"} from presets folder via window.cep.fs.readdir and window.cep.fs.readFile API
+  multiplier:[
+    {name:"Multiplier", id:"multiplier-one", shortName:"multiplier"}
+  ]
 
 };
 

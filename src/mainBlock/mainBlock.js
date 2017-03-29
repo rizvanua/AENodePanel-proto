@@ -18,7 +18,7 @@ class mainBlock{
     let gradientGrayDark = R.gradient(str_gradientGrayDark);
   }
   createBlockEffects(x,y,item,obj){
-    console.log(obj.distrInst);
+    //console.log(obj.distrInst);
     //let objectEffect=JSON.parse(obj);
     let blockEffectName=obj.name;
     let workBlockSet=Snap.set();
@@ -231,7 +231,7 @@ class mainBlock{
                 //y+=10;
                 //f+=6;
                 count+=1;
-                console.log(count)
+                //console.log(count)
                 if(count>1){
                   localY+=20;
                 }
@@ -420,9 +420,11 @@ class mainBlock{
     workBlockSet.draggableSet(workBlockSet,typeNode);
     group.mouseover(function(){
       GlobalStorage.toDelete=workBlockSet;
+      GlobalStorage.overMouseSet=workBlockSet;//Push this set into temporary object for compere reasone
     });
     group.mouseout(function(){
       GlobalStorage.toDelete=undefined;
+        GlobalStorage.overMouseSet=null;//Clear interim object if mouse get out
     });
     group.dblclick(()=>{
       let EffectName=workBlockSet.thisCommonContrlName;
@@ -430,7 +432,7 @@ class mainBlock{
       //console.log(GlobalStorage.historyOfObjects);
       //console.log(workBlockSet.setEffectName);
       let innerHTML=group[1].node.innerHTML;
-      console.log(innerHTML);
+      //console.log(innerHTML);
       GlobalStorage.renameObj.oldName=innerHTML;
       GlobalStorage.input.val(innerHTML);
     });
@@ -441,14 +443,6 @@ class mainBlock{
   createBlockMaster(x,y,item,distributor,res){
 
     let thisItemName=res;
-  /*  if(res){
-      let index=res.length-1;
-
-      let number=res.charAt(index)*1;
-      if (number){
-      thisItemName=`${item.name} ${number}`;
-      }
-    }*/
     let pattern = R.image("img/red-button.png",x,y,180,32)
     .pattern(x,y,180,32);
 
@@ -461,8 +455,7 @@ class mainBlock{
               opacity: 1,
               cursor: "pointer"
           });
-          //workBlockSet.push(dummy);
-          //dummy.node.effectName=item.effectName;
+
 
           let workBlock=R.rect(x,y, 120, 32,5)
           .attr({   //fill: "rgb(64, 64, 64)",
@@ -470,7 +463,7 @@ class mainBlock{
                     stroke: "none",
                     class:"multiplier"
                 });
-          //workBlock.node.effectName=item.effectName;
+
 
     let title= R.text(x+60, y+15, thisItemName)
     .attr({
@@ -479,30 +472,12 @@ class mainBlock{
       alignmentBaseline:"middle"
     });
 
-          //title.node.effectName=item.effectName;
 
-
-          //console.log(item);
           workBlockSet.shortName=item.shortName;
           workBlockSet.currentName=thisItemName;
-          //workBlockSet.push(workBlock);
-          //workBlockSet.push(title);
+
           let group=R.g(workBlock, title, dummy);
           workBlockSet.push(group);
-
-          //dummy.toFront();
-
-    /*let circleLeft=R.circle(x+1, y+15, 6);// Uncomment if you need Left circle
-          circleLeft.node.effectName=item.name;
-          workBlockSet.push(circleLeft);
-          circleLeft.node.circleName="circleLeft";*/
-
-        /*if(distributor==false){
-          let circleRight=R.circle(x+120, y+15, 6);
-                circleRight.node.effectName=item.name;
-                workBlockSet.push(circleRight);
-                circleRight.node.circleName="circleRight";
-        }*/
 
     GlobalStorage.historyOfObjects[res]=workBlockSet;
     workBlockSet.fullCommonContrlName=item.fullname;
@@ -518,6 +493,110 @@ class mainBlock{
     return workBlockSet;
 
   }
+
+  //CREATE MultiplierBLOCK
+
+  createBlockMultiplier(x,y,item,res){
+
+    let thisItemName=res;
+  /*  if(res){
+      let index=res.length-1;
+
+      let number=res.charAt(index)*1;
+      if (number){
+      thisItemName=`${item.name} ${number}`;
+      }
+    }*/
+    //Create pattern
+    let pattern = R.image("img/red-button.png",x,y,180,32)
+   .pattern(x,y,180,32);
+    //
+
+    let workBlockSet=Snap.set();
+    let typeNode=item.shortName;
+
+    let dummy=R.rect(x,y, 120, 32,5)
+    .attr({   fill: "rgb(64, 64, 64)",
+              "fill-opacity":0,
+              stroke: "none",
+              opacity: 1,
+              cursor: "pointer"
+          });
+          //workBlockSet.push(dummy);
+          //dummy.node.effectName=item.effectName;
+
+          let workBlock=R.rect(x,y, 120, 32,5)
+          .attr({   //fill: "rgb(64, 64, 64)",
+                    fill:pattern,
+                    stroke: "none",
+                    cursor: "move",
+                    class:"multiplier"
+                });
+          //workBlock.node.effectName=item.effectName;
+
+    let title= R.text(x+60, y+16, thisItemName)
+    .attr({
+      fontSize: 15,
+      textAnchor: "middle",
+      alignmentBaseline:"middle"
+    });
+
+          //title.node.effectName=item.effectName;
+
+
+          //console.log(item);
+          workBlockSet.shortName=item.shortName;
+          workBlockSet.currentName=thisItemName;
+          //workBlockSet.push(workBlock);
+
+
+
+          //dummy.toFront();
+
+    /*let circleLeft=R.circle(x+1, y+15, 6);// Uncomment if you need Left circle
+          circleLeft.node.effectName=item.name;
+          workBlockSet.push(circleLeft);
+          circleLeft.node.circleName="circleLeft";*/
+
+        //if(distributor==false){
+
+        //}
+        let circleRight=R.circle(x+120, y+15, 6);
+        let group=R.g(workBlock, title, dummy,circleRight);
+        workBlockSet.push(group);
+
+              circleRight.node.effectName=item.name;
+              //workBlockSet.push(circleRight);
+              circleRight.node.circleName="circleRightMulti";
+        //workBlockSet.push(circleRight);
+    GlobalStorage.historyOfObjects[res]=workBlockSet;
+    workBlockSet.fullCommonContrlName=item.shortName;
+    workBlockSet.thisCommonContrlName=res;
+    group.click(()=>{new activeBlockFunctionsClass().activeNotEffectBlock(workBlockSet);});
+    workBlockSet.draggableSet(workBlockSet,typeNode);
+    group.mouseover(function(){
+      GlobalStorage.toDelete=workBlockSet;
+      GlobalStorage.overMouseSet=workBlockSet;
+    });
+    group.mouseout(function(){
+      GlobalStorage.toDelete=undefined;
+        GlobalStorage.overMouseSet=null;//Clear interim object if mouse get out
+    });
+    group.dblclick(()=>{
+      let EffectName=workBlockSet.thisCommonContrlName;
+      GlobalStorage.input.css({top:GlobalStorage.historyOfObjects[EffectName][0].getBBox().y, left: GlobalStorage.historyOfObjects[EffectName][0].getBBox().x, width:"115px", height: "26px", position:'absolute', display:'block'});
+      //console.log(GlobalStorage.historyOfObjects);
+      //console.log(workBlockSet.setEffectName);
+      let innerHTML=group[1].node.innerHTML;
+      //console.log(innerHTML);
+      GlobalStorage.renameObj.oldName=innerHTML;
+      GlobalStorage.input.val(innerHTML);
+    });
+
+    return workBlockSet;
+
+  }
+
 
 
 }

@@ -10,7 +10,8 @@ function deletePropertyInEffectBlock(propertyBlock, workBlockSet){
     csInterface.evalScript(`$._ext.deletePropExpression("${effectName}","${propertyName}")`,(res)=>{//Remove property expression from  EffectBlock
       workBlockSet.forEach((item)=>{
         if(item.node.nodeName=="path"&&item.LineTo==effectName&&item.propertyOfEffect==propertyName){
-          console.log(GlobalStorage.historyOfObjects[item.LineFrom]);
+          //console.log(GlobalStorage.historyOfObjects[item.LineTo][GlobalStorage.controlProp.type][GlobalStorage.controlProp.name]);
+          GlobalStorage.historyOfObjects[item.LineTo][GlobalStorage.controlProp.type][GlobalStorage.controlProp.name]=false;
 
           item.remove();
           GlobalStorage.controlProp.circle.classList.remove('true');

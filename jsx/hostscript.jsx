@@ -153,7 +153,8 @@ else {
 
 }, 
      initialProjectTest : function()
-    {    
+    {   
+       this.countM=0; 
        this.state=false;
        this.currentComp = app.project.activeItem;
        //$.writeln(app.project.activeItem)
@@ -178,7 +179,7 @@ else {
                         this.effectsQuantity=this.currentComp.layers[i+1].effect.numProperties;
                         this.currentLayer = this.currentComp.layers[i+1]; 
                         
-                         this.createMasterMultiplier();
+                         //this.createMasterMultiplier();
                         //$.writeln(this.currentComp.layers[i].effect.numProperties);
                         for (var key in this.currentComp.layers[i+1]) {
                             //$.writeln(key);
@@ -236,6 +237,7 @@ else {
                 commonControlObj:[],
                 effectsObj:[],
                 linesObj:[],
+                multiplierObj:[],
                 hasVR: false
             };
        
@@ -254,8 +256,17 @@ else {
                     break;
                   case "ADBE Slider Control":
                     var thisMatchName=this.currentLayer.effect(i+1).matchName;
-                    var thisName=this.currentLayer.effect(i+1).name
-                    Obj.commonControlObj.push({baseEffect:thisMatchName.replace("ADBE ", ""), realName:thisName});
+                    var thisName=this.currentLayer.effect(i+1).name;
+                     if(thisName.search( /Multiplier/i )>-1){
+                         this.countM+=1; 
+                        Obj.multiplierObj.push({
+                            baseEffect: thisMatchName.replace("ADBE ", ""),
+                            realName: thisName
+                    });
+                        }
+                    else{
+                         Obj.commonControlObj.push({baseEffect:thisMatchName.replace("ADBE ", ""), realName:thisName});
+                        }                   
                      //$.writeln(this.currentLayer.effect(i+1).property('Slider').value);
                     break;
                   case "ADBE Point Control":
@@ -265,6 +276,7 @@ else {
                    //$.writeln(this.currentLayer.effect(i+1).property('Point').value);
                     break;
                  case "Mettle Mantra VR":
+                   this.createMasterMultiplier();
                    var thisMatchName=this.currentLayer.effect(i+1).matchName;
                    var thisName=this.currentLayer.effect(i+1).name                  
                    Obj.effectsObj.push({baseEffect:thisMatchName, name:thisName});
@@ -288,7 +300,7 @@ else {
                      {                       
                                  
                           
-                              
+                             
                                if (layerEffect.property(d + 1).name != 'Frame Layout' && layerEffect.property(d + 1).name != 'Compositing Options') 
                                {
                                            if(layerEffect.property(d + 1).name=='Number Of Instances'){
@@ -347,7 +359,7 @@ else {
                 angle:{},
                 slider:{}
                 }
-
+                this.createMasterMultiplier();
               if (this.currentComp) {
                 var layerEffect = this.currentLayer.Effects.addProperty(effectName);
                 effectObj.name=layerEffect.name;
@@ -392,7 +404,8 @@ else {
                 var Obj = {
                   commonControlObj: [],
                   effectsObj: [],
-                  linesObj: []
+                  linesObj: [],
+                  multiplierObj:[]
                 };
 
                 var layerEffect = this.currentLayer.effect.property(effectName);
@@ -410,11 +423,18 @@ else {
                   case "ADBE Slider Control":
                     var thisMatchName = layerEffect.matchName;
                     var thisName = effectName;
-                    Obj.commonControlObj.push({
-                      baseEffect: thisMatchName.replace("ADBE ", ""),
-                      realName: thisName
+                    if(thisName.search( /Multiplier/i )>-1){
+                        Obj.multiplierObj.push({
+                            baseEffect: thisMatchName.replace("ADBE ", ""),
+                            realName: thisName
                     });
-
+                        }
+                    else{
+                         Obj.commonControlObj.push({
+                            baseEffect: thisMatchName.replace("ADBE ", ""),
+                            realName: thisName
+                    });
+                        }
                     break;
                   case "ADBE Point Control":
                     var thisMatchName = layerEffect.matchName;
@@ -426,6 +446,7 @@ else {
 
                     break;
                   case "Mettle Mantra VR":
+                    
                     var thisMatchName = layerEffect.matchName;
                     var thisName = effectName;
                     Obj.effectsObj.push({
@@ -433,7 +454,7 @@ else {
                       name: thisName
                     });
                     Obj.hasVR = true;
-
+                    this.createMasterMultiplier();
                     break;
                   default:
                     var thisEffectObj = {
@@ -588,29 +609,7 @@ else {
             return JSON.stringify(effectObj);
           //return layerEffect.name;
 },
-    applyEffectDistributor: function(effectName, distributorType,index){
-                      
-                    
-                        var layerEffect=this.currentLayer.Effects.addProperty(effectName);
-                        if(distributorType=="cube"){                          
-                            var newValue="["+this.distributorProps.cube[index].toString()+"]";
-                            layerEffect.property("Point of Interest").expression=newValue;
-                            }
-                        else if(distributorType=="sphere"){
-                            var newValue="["+this.distributorProps.sphere[index].toString()+"]";
-                            layerEffect.property("Point of Interest").expression=newValue;
-                            }
-                        else{
-                            layerEffect.property("Point of Interest").expression=generatorPOI();
-                            }                       
-                                                   
-                          return layerEffect.name;                 
-
-               
-            
-           
-        
-     },
+ 
     createControl: function(controlType){
         var Control=this.currentLayer.Effects.addProperty(controlType);        
         return Control.name;
@@ -630,7 +629,7 @@ else {
         },*/
     addCommonControls: function(effectName,propName,thisPropName,type)
    {       
-         $.writeln(type);
+         //$.writeln(type);
                switch (type) {
                           case "point":
                             addPOIFunction(effectName, propName,thisPropName,this);
@@ -653,6 +652,27 @@ else {
        
         
     },
+    createMultiplier: function(){     
+       this.countM+=1;  
+         /* for (var i=0; i<this.currentLayer.effect.numProperties; i++){
+              var str=this.currentLayer.effect(i+1).name;
+              if(str.search( /Multiplier/i )>-1){
+                  this.countM+=1
+                   $.writeln(this.countM);
+                  }
+              }*/
+          if(this.countM>0){
+                var Multiplier=this.currentLayer.Effects.addProperty('Slider Control').name='Multiplier'+(this.countM-1);    
+               
+            return 'Multiplier'+(this.countM-1);             
+              }
+          else{
+             var Multiplier=this.currentLayer.Effects.addProperty('Slider Control').name='Multiplier';   
+            
+            return 'Multiplier';
+              }
+    
+        },
     moveEffectIndex: function(effectName,number)
     {
         //$.writeln(effectName);
@@ -690,25 +710,37 @@ else {
       },
   
     deleteCommonControl: function(arrayOfLinkedEffects, thisCommonContrlName){   
-        $.writeln(arrayOfLinkedEffects);
-        $.writeln(thisCommonContrlName);
+        //$.writeln(arrayOfLinkedEffects);
+        //$.writeln(thisCommonContrlName);
        
         this.effectNameArr = arrayOfLinkedEffects.split(';');  
        
-      if(this.currentLayer.effect.property(thisCommonContrlName)){
+      
+      //
+      function deleteFromEffects(callback){
+         if(this.effectNameArr[0]!=''){
+                      for (var i =0; i<this.effectNameArr.length; i++){            
+                     
+                     var effectNameArr=JSON.parse(this.effectNameArr[i]);
+                      //$.writeln(effectNameArr.Lineto);
+                      //$.writeln(effectNameArr.propertyOfEffect);
+                      if(this.currentLayer.effect.property(effectNameArr.Lineto)){
+                           this.currentLayer.effect.property(effectNameArr.Lineto).property(effectNameArr.propertyOfEffect).expressionEnabled = false;
+                            this.currentLayer.effect.property(effectNameArr.Lineto).property(effectNameArr.propertyOfEffect).expression="";
+                          }
+                    
+                    }
+                 } 
+         callback.call(this);
+        };
+    deleteFromEffects.call(this, function(){
+        if(this.currentLayer.effect.property(thisCommonContrlName)){
           this.currentLayer.effect.property(thisCommonContrlName).remove();
           }
+        });
+      //
        
-         if(this.effectNameArr[0]!=''){
-              for (var i =0; i<this.effectNameArr.length; i++){            
-             
-             var effectNameArr=JSON.parse(this.effectNameArr[i]);
-              $.writeln(effectNameArr.Lineto);
-              $.writeln(effectNameArr.propertyOfEffect);
-             this.currentLayer.effect.property(effectNameArr.Lineto).property(effectNameArr.propertyOfEffect).expressionEnabled = false;
-             this.currentLayer.effect.property(effectNameArr.Lineto).property(effectNameArr.propertyOfEffect).expression="";
-            }
-         } 
+         
      this.currentLayer.selected=true;
     },
     selectEffect: function(effectName){

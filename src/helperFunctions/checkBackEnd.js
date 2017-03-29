@@ -6,6 +6,7 @@ import arrSecondButton from "../startArrays/arrSecondButton.js";
 import moveEffects  from "../helperFunctions/moveEffects.js";
 import deleteBlockEvent from "../customEvents/deleteEventListener.js";
 import renameBlock from "../helperFunctions/renameBlock";
+import activeBlockFunctionsClass from '../helperFunctions/activeBlockFunction';
 
 class checkBackEnd{
   constructor(){
@@ -112,7 +113,7 @@ class checkBackEnd{
           }
           else if(res&&res!="undefined"){
             let resObj=JSON.parse(res);
-            this.effectCheckArr=resObj.effectArray
+            this.effectCheckArr=resObj.effectArray;
             //this.effectCheckArr=res.split(',');
             if(res=="empty"){
               this.effectCheckArr=[];
@@ -166,12 +167,22 @@ class checkBackEnd{
               //console.log(res);
               //console.log(GlobalStorage.effectCheckArr);
               //console.log(this.effectCheckArr);
-              //console.log(resObj);
+              //console.log(resObj.selectedEffect.effectName);
+              //console.log(GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName]);
+              //console.log(GlobalStorage.toDelete);
+              let workBlockSet=GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName];
+              if(workBlockSet&&workBlockSet.setEffectName){
+                new activeBlockFunctionsClass().activeEffectBlock(workBlockSet);
+              }
+              else if(workBlockSet&&workBlockSet.thisCommonContrlName){
+                new activeBlockFunctionsClass().activeNotEffectBlock(workBlockSet);
+              }
+
               if(this.effectCheckArr.join(';')!==GlobalStorage.effectCheckArr.join(';')){//convert arrays to string and match them if they are not equal it need rename effect
                 this.functionRename(this.effectCheckArr,GlobalStorage.effectCheckArr);
               }
               GlobalStorage.effectCheckArr=this.effectCheckArr;// assign current array to previus array
-              if(resObj.selectedEffect.effectName&&GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName]){
+              if(resObj.selectedEffect.effectName&&GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName]&&GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName][0][1][0]){
                 GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName][0][1][0].attr({text:resObj.selectedEffect.distrInst});//change distributor number in EffectBlock
               }
               //console.log('Equality')
@@ -209,7 +220,7 @@ class checkBackEnd{
       //console.log(JSON.parse(res));
       let startObject=JSON.parse(res);
       if(startObject.hasVR===true){
-        console.log(startObject);
+        //console.log(startObject);
         this.functionCreateBlocks(startObject,cordX);
       }
 
@@ -273,6 +284,29 @@ class checkBackEnd{
       //console.log(workBlock);
       GlobalStorage.effectCheckArr.push(res);
     });
+    startObject.multiplierObj.forEach((i, num)=>{//Create commonControlBlock
+      //console.log('Create commonControlBlock');
+      let itemArr=arrSecondButton.commonControls.filter((obj)=>{
+        return obj.fullname==i.baseEffect;
+      });
+      cordX=100;
+      //console.log(i);
+      i.shortName='multiplier';
+      let item=i;
+      //console.log(item);
+      let res=i.realName;
+      //cordY+=50;
+      //console.log('CREATE');
+      //console.log(res);
+
+        let workBlock=new mainBlock().createBlockMultiplier(cordX,GlobalStorage.undermostCommonControlBlock.y+=50,item, res);
+        moveEffects(workBlock);
+
+
+
+      //console.log(workBlock);
+      GlobalStorage.effectCheckArr.push(res);
+    });
     startObject.linesObj.forEach((i, num)=>{//Create lines beetween commonControl Block and Effect Block
       //console.log(i);
       let coordDif;
@@ -280,6 +314,7 @@ class checkBackEnd{
       //console.log(GlobalStorage.historyOfObjects[i.LineTo][0][0]);
       for(let keyP in GlobalStorage.historyOfObjects[i.LineTo][0][0]){
         let objElem=GlobalStorage.historyOfObjects[i.LineTo][0][0][keyP]
+
         if(objElem.node&&objElem.node.nodeName=='rect'&&objElem.attr('coordDif')&&objElem.attr('propDataName')==i.propertyOfEffect){
           objElem.node.previousElementSibling.classList.remove('false');
           objElem.node.previousElementSibling.classList.add('true');
@@ -293,7 +328,21 @@ class checkBackEnd{
           console.log(GlobalStorage.historyOfObjects[i.LineTo][0][0][keyH].attr('propDataName'))
         }
       }*/
-
+      //console.log(GlobalStorage.historyOfObjects[i.LineTo][i.propertyOfEffect]);
+      //console.log(i.propertyOfEffect);
+      //console.log(i);
+      if(GlobalStorage.historyOfObjects[i.LineTo].point.hasOwnProperty(i.propertyOfEffect)){
+        //console.log(GlobalStorage.historyOfObjects[i.LineTo].point[i.propertyOfEffect]);
+      //  GlobalStorage.historyOfObjects[i.LineTo].point[i.propertyOfEffect]=true;
+      }
+      else if(GlobalStorage.historyOfObjects[i.LineTo].slider.hasOwnProperty(i.propertyOfEffect)){
+        //console.log(GlobalStorage.historyOfObjects[i.LineTo].slider[i.propertyOfEffect]);
+        GlobalStorage.historyOfObjects[i.LineTo].slider[i.propertyOfEffect]=true;
+      }
+      else if(GlobalStorage.historyOfObjects[i.LineTo].angle.hasOwnProperty(i.propertyOfEffect)){
+        //console.log(GlobalStorage.historyOfObjects[i.LineTo].angle[i.propertyOfEffect]);
+        //GlobalStorage.historyOfObjects[i.LineTo].angle[i.propertyOfEffect]=true;
+      }
       //console.log(GlobalStorage.historyOfObjects[i.LineTo][0][1].getBBox());
       //console.log(GlobalStorage.historyOfObjects[i.LineFrom][0].attr("x"));
       let LineFromX= GlobalStorage.historyOfObjects[i.LineFrom][0].getBBox().x;
@@ -307,6 +356,7 @@ class checkBackEnd{
       //let connectPath = R.path( ["M", LineFromX+120, LineFromY+16, "L", LineToX, LineToY+15 ] );
       let connectPath = R.path(`M${LineFromX+120} ${LineFromY+16}L${LineToX} ${LineToY+15}`);
       connectPath.attr({stroke:"black"});
+      connectPath.toBack();
 
       connectPath.LineFrom=i.LineFrom;
       connectPath.LineTo=i.LineTo;

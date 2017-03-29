@@ -28,8 +28,9 @@ function innerDeleteFunction(nameOfBlock){
 
       let arrayOfLinkedEffects=_.filter(itemsArray,(i)=>{//filter array to get just paths to linked effects (names of linked effects are stored in property "LineTo" of path )
       if(i.node.nodeName=="path"){
-        console.log(i.LineTo);
-        if(GlobalStorage.historyOfObjects[i.LineTo]){
+        //console.log(i.LineTo);
+        //console.log(GlobalStorage.toDelete.currentName);
+        if(GlobalStorage.historyOfObjects[i.LineTo]&&GlobalStorage.toDelete.currentName!=i.LineTo){
           let elemObj=GlobalStorage.historyOfObjects[i.LineTo][0][0];
           for (let key in elemObj){
             if(elemObj[key].type=='rect'&&elemObj[key].attr('propDataName')==i.propertyOfEffect){
@@ -68,9 +69,9 @@ let arrayOfLinkedEffectsString=arrayOfLinkedEffectsFiltered.join(';');//transfor
                     //console.log(GlobalStorage.toDelete.thisCommonContrlName);
 
 
-console.log(CommonContrlName);
+//console.log(CommonContrlName);
 
-console.log(thisCommonContrlName);
+//console.log(thisCommonContrlName);
 
 csInterface.evalScript(`$._ext.deleteCommonControl('${arrayOfLinkedEffectsString}',"${thisCommonContrlName}")`,(res)=>{
 
@@ -92,6 +93,7 @@ resolve(remove);
     resolve=undefined;
     GlobalStorage.toDelete=undefined;
     GlobalStorage.prevActive=undefined;
+
 
     });
 

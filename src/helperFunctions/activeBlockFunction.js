@@ -56,7 +56,7 @@ class activeBlockFunctionsClass{
   }
 
   activeNotEffectBlock(workBlockSet){
-
+  GlobalStorage.toDelete=workBlockSet;
     //GlobalStorage.toDelete=workBlockSet;
     if(GlobalStorage.prevActive){
       console.log(GlobalStorage.prevActive);
