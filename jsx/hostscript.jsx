@@ -222,7 +222,7 @@ else {
         if(!this.currentLayer.effect('Master')){
             var MasterMultiplier=this.currentLayer.Effects.addProperty('Slider Control');        
                 MasterMultiplier.name='Master';
-                 this.currentLayer.effect('Master').property("Slider").expression='clamp(value, min=0, max=100)';  //set range of value from 0 to 100
+                 //this.currentLayer.effect('Master').property("Slider").expression='clamp(value, min=0, max=100)';  //set range of value from 0 to 100
                   this.currentLayer.effect('Master').property("Slider").setValue(100);// set defaul value 100
             }
         else{
