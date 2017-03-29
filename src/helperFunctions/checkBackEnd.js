@@ -17,6 +17,7 @@ class checkBackEnd{
     this.startCheck();
     this.mouseEnterEvent();
     this.mouseLeaveEvent();
+    this.glassId;
   };
 
   startCheck() {
@@ -38,7 +39,8 @@ class checkBackEnd{
       }
       else// in this case status is true and we can start to build Panel
       {
-            document.getElementById("glass").style.display="none";
+            this.glassId=document.getElementById("glass");
+            this.glassId.style.display="none";
 
             this.createBlock();// get gata about stage from backEnd and create block on Panel
             this.functionCheckAE();
@@ -150,7 +152,11 @@ class checkBackEnd{
               csInterface.evalScript(`$._ext.findEffect("${i}")`, (res)=>{
                 //console.log(res);
                 let startObject=JSON.parse(res);
-                this.functionCreateBlocks(startObject,cordX);
+
+                  this.functionCreateBlocks(startObject,cordX);
+
+
+
               });
 
             });
@@ -219,10 +225,11 @@ class checkBackEnd{
       //console.log('WORK');
       //console.log(JSON.parse(res));
       let startObject=JSON.parse(res);
-      if(startObject.hasVR===true){
-        //console.log(startObject);
+      GlobalStorage.hasVR=startObject.hasVR;
+      if(startObject.hasVR===true){      //console.log(startObject);      
         this.functionCreateBlocks(startObject,cordX);
       }
+
 
     });
 

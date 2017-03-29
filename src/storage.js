@@ -27,6 +27,7 @@ let GlobalStorage={
     distributor:R.set(),
     presets:R.set()
   },*/
+  hasVR:false,
   lastEffectBlock:{
     y:0
   },

@@ -715,6 +715,7 @@
 	    distributor:R.set(),
 	    presets:R.set()
 	  },*/
+	  hasVR: false,
 	  lastEffectBlock: {
 	    y: 0
 	  },
@@ -1146,6 +1147,7 @@
 	    this.startCheck();
 	    this.mouseEnterEvent();
 	    this.mouseLeaveEvent();
+	    this.glassId;
 	  }
 
 	  _createClass(checkBackEnd, [{
@@ -1169,7 +1171,8 @@
 	        }, 1000);
 	      } else // in this case status is true and we can start to build Panel
 	        {
-	          document.getElementById("glass").style.display = "none";
+	          this.glassId = document.getElementById("glass");
+	          this.glassId.style.display = "none";
 
 	          this.createBlock(); // get gata about stage from backEnd and create block on Panel
 	          this.functionCheckAE();
@@ -1264,6 +1267,7 @@
 	                      _csInterfaceJs2["default"].evalScript("$._ext.findEffect(\"" + i + "\")", function (res) {
 	                        //console.log(res);
 	                        var startObject = JSON.parse(res);
+
 	                        _this3.functionCreateBlocks(startObject, cordX);
 	                      });
 	                    });
@@ -1334,8 +1338,9 @@
 	        //console.log('WORK');
 	        //console.log(JSON.parse(res));
 	        var startObject = JSON.parse(res);
+	        _storage2["default"].hasVR = startObject.hasVR;
 	        if (startObject.hasVR === true) {
-	          //console.log(startObject);
+	          //console.log(startObject);     
 	          _this5.functionCreateBlocks(startObject, cordX);
 	        }
 	      });
