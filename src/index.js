@@ -12,6 +12,7 @@ import GlobalStorage from './storage';
 import checkBackEnd from "./helperFunctions/checkBackEnd";
 import renameBlock from "./helperFunctions/renameBlock";
 import mainMenu from "./mainMenu";
+import rightMouseClick from "./helperFunctions/rightMouseClick";
 
 let myReq;
 let status=false;
@@ -21,7 +22,7 @@ let AnimationFrame;
 //console.log(window.localStorage);
 let jsonString=`[{"keyCode": 	46},{"keyCode": 46,"ctrlKey": true}]`;
 csInterface.registerKeyEventsInterest(jsonString);//register buttons to use in HTML5 panel
-
+rightMouseClick();
 GlobalStorage.input=$("<input type='text' id='input'/>");
 $("#container").append(GlobalStorage.input);
 GlobalStorage.input.keydown((event)=>{
@@ -35,10 +36,11 @@ if(GlobalStorage.renameObj.oldName&&event.keyCode==13){
     csInterface.evalScript(`$._ext.renameEffect("${GlobalStorage.renameObj.oldName}","${GlobalStorage.renameObj.newName}")`, (res)=>{
 
       GlobalStorage.historyOfObjects[res].forEach((i)=>{//Change CommonContrlName in expressions which are connected with this commonControl
-        if(i.node.nodeName=='path'){
+        console.log(GlobalStorage.historyOfObjects[res]);
+        let multiplierArr=GlobalStorage.historyOfObjects[res].multiplierArr.join(',');
+        if(i.node.nodeName=='path'&&i.node.lineFromCyrcle=="circleRight"){
           let type=GlobalStorage.historyOfObjects[res].shortName;
           if(type&&GlobalStorage.historyOfObjects[i.LineTo]){
-
             let effectNameLocal=i.LineTo;
             let controlPropName=res;
             let thisPropName=i.propertyOfEffect;
@@ -46,7 +48,8 @@ if(GlobalStorage.renameObj.oldName&&event.keyCode==13){
             console.log(controlPropName);
             console.log(thisPropName);
 
-            csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${thisPropName}","${controlPropName}","${type}")`);
+            csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${thisPropName}","${controlPropName}","${type}","${multiplierArr}")`);
+            //csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${thisPropName}","${controlPropName}","${type}")`);
           }
           else if(i.LineTo&&!GlobalStorage.historyOfObjects[i.LineTo]){
             delete i.LineTo;
@@ -196,7 +199,7 @@ if(readDir.err === 0)
     }
     else
     {
-//console.log("BAD");
+
     }
   });
 
@@ -204,104 +207,13 @@ if(readDir.err === 0)
      //let readDir = window.cep.fs.readFile(path);
 } else
 {
-       //console.log('FUCK')
+
 }
 
 /**/
 
-/*var event = new CSEvent("dispatchEvent", "APPLICATION", function (e) {
-console.log(e);
-}); event.data = "This is a test!";
-csInterface.dispatchEvent(event);
-csInterface.addEventListener("applicationBeforeQuit", closePanel);
-function closePanel(evt) {
-    console.dir(evt);
-}*/
-/*var appName = csInterface.hostEnvironment.appName;
-setTimeout(()=>{console.log(csInterface.getExtensionID())}, 10000)
-let event = new CSEvent("com.adobe.csxs.events.AppOffline", "APPLICATION");
-event.appId=csInterface.getApplicationID();
-event.extensionId=csInterface.getExtensionID();*/
-
-//csInterface.dispatchEvent(event);
-//console.log(appName);
-//console.log(appID);
-//var eventObj = new CSXSEvent();  eventObj.type="documentCreated";  eventObj.data="blahblah";
-
-     /*window.addEventListener("contextmenu",function(e){
-        e.preventDefault();
-       console.log(e);
-       alert("keydown detected");
-});*/
-/*csInterface.prototype.registerKeyEventsInterest = function Prevent (){
-
-};*/
-/*let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 46,     "ctrlKey": true  }];
-csInterface.registerKeyEventsInterest(keyEventsInterest);
-console.log(csInterface.addEventListener('mouseover',function(e){
-       alert("keydown detected");
-}));*
-
-
-/*csInterface.addEventListener(CSInterface.THEME_COLOR_CHANGED_EVENT,function(e){
-       alert("keydown detected");
-});*/
-
-/*function start(){
-  console.log('start');
-  csInterface.evalScript(`$._ext. initialProjectTest()`, (res)=>{
-  console.log(res=='false');
-    if(res=='false'){
-      myReq =window.requestAnimationFrame(start);
-    }
-    else{
-      document.getElementById("glass").style.display="none";
-        window.cancelAnimationFrame(myReq);
-    }
-
-  });
-}
-myReq = window.requestAnimationFrame(start);*/
-
-/**/
-/*function startCheck() {
-
-  if(status!='true'){
-    setTimeout(function() {
-
-      csInterface.evalScript(`$._ext. initialProjectTest()`, (res)=>{
-
-        status=res;
-
-      });
-            requestAnimationFrame(startCheck);
-
-        }, 1000);
-
-  }
-  else{
-
-
-  document.getElementById("glass").style.display="none";
-  }
-
-}
-startCheck();*/
-/**/
 let createMainMenu = new mainMenu();
-//let sideBarFraime= new SideBar().createBar();
-/*let promise= new Promise((resolve)=>{
-	let sideBarInnerBlocks= new SideBar().createInnerBlocks();
-        resolve(sideBarInnerBlocks);
-      }).then((resolve)=>{
-				let secondBarInnerBlocks= new secondSideBarBlocks().createStaticEffects();
-			});*/
 
-//let sideBarInnerBlocks= new SideBar().createInnerBlocks();
-//let secondBarInnerBlocksEffects= new secondSideBarBlocks().createStaticEffects();
-//let secondBarInnerBlocksControls= new secondSideBarBlocks().createStaticCommonControls();
-//let secondBarInnerBlocksDistributor= new secondSideBarBlocks().createStaticDistributorControls();
-//let secondBarInnerBlocksPresets= new secondSideBarBlocks().createStaticPresets();
 let checkStart=new checkBackEnd();
 
 //pattern for radio buttons
@@ -322,7 +234,7 @@ document.getElementsByTagName('svg')[0].addEventListener('click',(e)=>{
 
   if(e.target.nodeName==='svg'){
 
-    if(GlobalStorage.toDelete!=undefined){
+    if(GlobalStorage.toDelete!=undefined&&GlobalStorage.toDelete[1]){
       GlobalStorage.toDelete[1].attr(
         {stroke: "none"}
       );
@@ -341,9 +253,3 @@ document.getElementsByTagName('svg')[0].addEventListener('click',(e)=>{
   }
 
 });
-
-
-/*csInterface.addEventListener("hover",
-  function (event)     {
-    console.log("type=" + event.type + ", data=" + event.data);
-  } ); // Anonymous function is the second parameter*/

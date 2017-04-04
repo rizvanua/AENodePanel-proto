@@ -8,7 +8,9 @@ import innerDeleteFunction from "./innerDeleteFunction";
 let catchPressButtonDelete = window.addEventListener("keydown",function(event){
     //event.preventDefault();
     console.log(event.target.nodeName!='INPUT');
-    console.log(GlobalStorage.toDelete);
+    if(GlobalStorage.toDelete.currentName=="Master"){
+      return false;
+    }
 //console.log(event);
   //let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 123,     "ctrlKey": true  }];
   //csInterface.registerKeyEventsInterest(keyEventsInterest);

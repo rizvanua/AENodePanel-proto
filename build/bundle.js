@@ -92,13 +92,17 @@
 
 	var _helperFunctionsCheckBackEnd2 = _interopRequireDefault(_helperFunctionsCheckBackEnd);
 
-	var _helperFunctionsRenameBlock = __webpack_require__(18);
+	var _helperFunctionsRenameBlock = __webpack_require__(19);
 
 	var _helperFunctionsRenameBlock2 = _interopRequireDefault(_helperFunctionsRenameBlock);
 
-	var _mainMenu = __webpack_require__(19);
+	var _mainMenu = __webpack_require__(21);
 
 	var _mainMenu2 = _interopRequireDefault(_mainMenu);
+
+	var _helperFunctionsRightMouseClick = __webpack_require__(23);
+
+	var _helperFunctionsRightMouseClick2 = _interopRequireDefault(_helperFunctionsRightMouseClick);
 
 	var myReq = undefined;
 	var status = false;
@@ -108,7 +112,7 @@
 	//console.log(window.localStorage);
 	var jsonString = '[{"keyCode": \t46},{"keyCode": 46,"ctrlKey": true}]';
 	_csInterface2['default'].registerKeyEventsInterest(jsonString); //register buttons to use in HTML5 panel
-
+	(0, _helperFunctionsRightMouseClick2['default'])();
 	_storage2['default'].input = $("<input type='text' id='input'/>");
 	$("#container").append(_storage2['default'].input);
 	_storage2['default'].input.keydown(function (event) {
@@ -123,10 +127,11 @@
 
 	        _storage2['default'].historyOfObjects[res].forEach(function (i) {
 	          //Change CommonContrlName in expressions which are connected with this commonControl
-	          if (i.node.nodeName == 'path') {
+	          console.log(_storage2['default'].historyOfObjects[res]);
+	          var multiplierArr = _storage2['default'].historyOfObjects[res].multiplierArr.join(',');
+	          if (i.node.nodeName == 'path' && i.node.lineFromCyrcle == "circleRight") {
 	            var type = _storage2['default'].historyOfObjects[res].shortName;
 	            if (type && _storage2['default'].historyOfObjects[i.LineTo]) {
-
 	              var effectNameLocal = i.LineTo;
 	              var controlPropName = res;
 	              var thisPropName = i.propertyOfEffect;
@@ -134,10 +139,11 @@
 	              console.log(controlPropName);
 	              console.log(thisPropName);
 
-	              _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + thisPropName + '","' + controlPropName + '","' + type + '")');
+	              _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + thisPropName + '","' + controlPropName + '","' + type + '","' + multiplierArr + '")');
+	              //csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${thisPropName}","${controlPropName}","${type}")`);
 	            } else if (i.LineTo && !_storage2['default'].historyOfObjects[i.LineTo]) {
-	              delete i.LineTo;
-	            }
+	                delete i.LineTo;
+	              }
 	          }
 	        });
 	      });
@@ -273,111 +279,17 @@
 	          }*/
 	        });
 	      })();
-	    } else {
-	        //console.log("BAD");
-	      }
+	    } else {}
 	  });
 
 	  //console.log(readDir.data);
 	  //let readDir = window.cep.fs.readFile(path);
 	} else {}
-	  //console.log('FUCK')
 
-	  /**/
+	/**/
 
-	  /*var event = new CSEvent("dispatchEvent", "APPLICATION", function (e) {
-	  console.log(e);
-	  }); event.data = "This is a test!";
-	  csInterface.dispatchEvent(event);
-	  csInterface.addEventListener("applicationBeforeQuit", closePanel);
-	  function closePanel(evt) {
-	      console.dir(evt);
-	  }*/
-	  /*var appName = csInterface.hostEnvironment.appName;
-	  setTimeout(()=>{console.log(csInterface.getExtensionID())}, 10000)
-	  let event = new CSEvent("com.adobe.csxs.events.AppOffline", "APPLICATION");
-	  event.appId=csInterface.getApplicationID();
-	  event.extensionId=csInterface.getExtensionID();*/
-
-	  //csInterface.dispatchEvent(event);
-	  //console.log(appName);
-	  //console.log(appID);
-	  //var eventObj = new CSXSEvent();  eventObj.type="documentCreated";  eventObj.data="blahblah";
-
-	  /*window.addEventListener("contextmenu",function(e){
-	     e.preventDefault();
-	    console.log(e);
-	    alert("keydown detected");
-	  });*/
-	  /*csInterface.prototype.registerKeyEventsInterest = function Prevent (){
-	  
-	  };*/
-	  /*let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 46,     "ctrlKey": true  }];
-	  csInterface.registerKeyEventsInterest(keyEventsInterest);
-	  console.log(csInterface.addEventListener('mouseover',function(e){
-	         alert("keydown detected");
-	  }));*
-	  
-	  
-	  /*csInterface.addEventListener(CSInterface.THEME_COLOR_CHANGED_EVENT,function(e){
-	         alert("keydown detected");
-	  });*/
-
-	  /*function start(){
-	    console.log('start');
-	    csInterface.evalScript(`$._ext. initialProjectTest()`, (res)=>{
-	    console.log(res=='false');
-	      if(res=='false'){
-	        myReq =window.requestAnimationFrame(start);
-	      }
-	      else{
-	        document.getElementById("glass").style.display="none";
-	          window.cancelAnimationFrame(myReq);
-	      }
-	  
-	    });
-	  }
-	  myReq = window.requestAnimationFrame(start);*/
-
-	  /**/
-	  /*function startCheck() {
-	  
-	    if(status!='true'){
-	      setTimeout(function() {
-	  
-	        csInterface.evalScript(`$._ext. initialProjectTest()`, (res)=>{
-	  
-	          status=res;
-	  
-	        });
-	              requestAnimationFrame(startCheck);
-	  
-	          }, 1000);
-	  
-	    }
-	    else{
-	  
-	  
-	    document.getElementById("glass").style.display="none";
-	    }
-	  
-	  }
-	  startCheck();*/
-	  /**/
 	var createMainMenu = new _mainMenu2['default']();
-	//let sideBarFraime= new SideBar().createBar();
-	/*let promise= new Promise((resolve)=>{
-		let sideBarInnerBlocks= new SideBar().createInnerBlocks();
-	        resolve(sideBarInnerBlocks);
-	      }).then((resolve)=>{
-					let secondBarInnerBlocks= new secondSideBarBlocks().createStaticEffects();
-				});*/
 
-	//let sideBarInnerBlocks= new SideBar().createInnerBlocks();
-	//let secondBarInnerBlocksEffects= new secondSideBarBlocks().createStaticEffects();
-	//let secondBarInnerBlocksControls= new secondSideBarBlocks().createStaticCommonControls();
-	//let secondBarInnerBlocksDistributor= new secondSideBarBlocks().createStaticDistributorControls();
-	//let secondBarInnerBlocksPresets= new secondSideBarBlocks().createStaticPresets();
 	var checkStart = new _helperFunctionsCheckBackEnd2['default']();
 
 	//pattern for radio buttons
@@ -397,7 +309,7 @@
 
 	  if (e.target.nodeName === 'svg') {
 
-	    if (_storage2['default'].toDelete != undefined) {
+	    if (_storage2['default'].toDelete != undefined && _storage2['default'].toDelete[1]) {
 	      _storage2['default'].toDelete[1].attr({ stroke: "none" });
 	    }
 
@@ -410,11 +322,6 @@
 	  }
 	});
 
-	/*csInterface.addEventListener("hover",
-	  function (event)     {
-	    console.log("type=" + event.type + ", data=" + event.data);
-	  } ); // Anonymous function is the second parameter*/
-
 /***/ },
 /* 1 */
 /***/ function(module, exports) {
@@ -426,7 +333,7 @@
 	});
 	var SecondButton = {
 	  effects: [{ name: "Stretcher" }, //if you add new control (poi, fov, waves etc) don't forget add this into pages src\sideBar\secondSideBarBlocks.js into "dummy.node" propety and page src\mainBlock\mainBlock.js  createBlockEffects "workBlockSet" property
-	  { name: "Repeater" }, { name: "Spiraler" }, { name: "Circular Waves" }, { name: "Meridian Waves" }, { name: "Flat Mirror" }, { name: "Curved Mirror" }, { name: "Magnifying Glass" }, { name: "Mobius Raw" }, { name: "Mobius Rotate" }, { name: "Mobius Zoom" }, { name: "Escher Droste" }, { name: "Rotator" }, { name: "Project 2D" }, { name: "Blur" }, { name: "Mettle Mantra VR" }],
+	  { name: "Repeater" }, { name: "Spiraler" }, { name: "Circular Waves" }, { name: "Meridian Waves" }, { name: "Flat Mirror" }, { name: "Curved Mirror" }, { name: "Magnifying Glass" }, { name: "Mobius Raw" }, { name: "Mobius Rotate" }, { name: "Mobius Zoom" }, { name: "Escher Droste" }, { name: "Rotator" }, { name: "Project 2D" }, { name: "Blur" }, { name: "Mettle Mantra VR" }, { name: "Chromatic Aberrations" }, { name: "Color Gradients" }, { name: "Denoise" }, { name: "Digital Glitch" }, { name: "Fractal Noise" }, { name: "Glow" }, { name: "Sharpen" }, { name: "Hyperbolic Tiler" }],
 	  commonControls: [{ name: "Point Control", effectName: "Point Control", fullname: "Point Control", shortName: "point" }, { name: "Angle Control", effectName: "Angle Control", fullname: "Angle Control", shortName: "angle" }, { name: "Slider Control", effectName: "Slider Control", fullname: "Slider Control", shortName: "slider" }],
 	  distributor: [{ name: "Cube" }, { name: "Sphere" }, { name: "Random" }],
 	  presets: [], //We push object {name: "SomeName"} from presets folder via window.cep.fs.readdir and window.cep.fs.readFile API
@@ -554,7 +461,9 @@
 	var catchPressButtonDelete = window.addEventListener("keydown", function (event) {
 	  //event.preventDefault();
 	  console.log(event.target.nodeName != 'INPUT');
-	  console.log(_storage2['default'].toDelete);
+	  if (_storage2['default'].toDelete.currentName == "Master") {
+	    return false;
+	  }
 	  //console.log(event);
 	  //let keyEventsInterest=[{     "keyCode": 46  },  {     "keyCode": 123,     "ctrlKey": true  }];
 	  //csInterface.registerKeyEventsInterest(keyEventsInterest);
@@ -691,6 +600,7 @@
 	// Global storage for ever functions. It uses to keep objects and variables which use as global.
 
 	var GlobalStorage = {
+	  glassId: {},
 	  input: {}, //link to the HTML input element
 	  initial: false,
 	  renameObj: {
@@ -757,13 +667,13 @@
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _storage = __webpack_require__(8);
 
@@ -777,37 +687,41 @@
 
 	function innerDeleteFunction(nameOfBlock) {
 	  var promise = new Promise(function (resolve) {
-	    _storage2["default"].overMouseSet = null;
+	    _storage2['default'].overMouseSet = null;
 	    //let effectName=GlobalStorage.toDelete.setEffectName;
-	    if (_storage2["default"].toDelete && _storage2["default"].toDelete.setEffectName && _storage2["default"].historyOfObjects[nameOfBlock]) {
-	      //Remove ordinar effects (not chained with Distributor)
-	      var effectName = _storage2["default"].toDelete.setEffectName;
-	      delete _storage2["default"].historyOfObjects[effectName];
+	    if (_storage2['default'].toDelete && _storage2['default'].toDelete.setEffectName && _storage2['default'].historyOfObjects[nameOfBlock]) {
+	      //Remove EffectBlock
+	      var effectName = _storage2['default'].toDelete.setEffectName;
+	      delete _storage2['default'].historyOfObjects[effectName];
 
 	      //Call to ExtScript
-
-	      _csInterfaceJs2["default"].evalScript("$._ext.deleteEffect(\"" + effectName + "\")", function (res) {
+	      _csInterfaceJs2['default'].evalScript('$._ext.deleteEffect("' + effectName + '")', function (res) {
 	        //Remove effects from After Effects
-	        var remove = _storage2["default"].toDelete.remove();
+	        console.log(res);
+	        if (res == 'Mantra VR') {
+	          var glassId = document.getElementById("glass");
+	          glassId.style.display = "block";
+	          _storage2['default'].hasVR = false;
+	        }
+	        var remove = _storage2['default'].toDelete.remove();
 	        resolve(remove);
 	      });
-
 	      //
-	    } else if (_storage2["default"].toDelete && _storage2["default"].toDelete.thisCommonContrlName && _storage2["default"].historyOfObjects[nameOfBlock]) {
+	    } else if (_storage2['default'].toDelete && _storage2['default'].toDelete.thisCommonContrlName && _storage2['default'].historyOfObjects[nameOfBlock] && _storage2['default'].toDelete.fullCommonContrlName != "multiplier") {
 	        //Remove CommonControls
-	        var CommonContrlName = _storage2["default"].toDelete.fullCommonContrlName;
-	        var thisCommonContrlName = _storage2["default"].toDelete.thisCommonContrlName;
-	        var itemsArray = _storage2["default"].toDelete.items;
+	        console.log(_storage2['default'].historyOfObjects[nameOfBlock]);
+	        var CommonContrlName = _storage2['default'].toDelete.fullCommonContrlName;
+	        var thisCommonContrlName = _storage2['default'].toDelete.thisCommonContrlName;
+	        var itemsArray = _storage2['default'].toDelete.items;
 
 	        var arrayOfLinkedEffects = _.filter(itemsArray, function (i) {
 	          //filter array to get just paths to linked effects (names of linked effects are stored in property "LineTo" of path )
 	          if (i.node.nodeName == "path") {
-	            //console.log(i.LineTo);
-	            //console.log(GlobalStorage.toDelete.currentName);
-	            if (_storage2["default"].historyOfObjects[i.LineTo] && _storage2["default"].toDelete.currentName != i.LineTo) {
-	              var elemObj = _storage2["default"].historyOfObjects[i.LineTo][0][0];
+	            if (_storage2['default'].historyOfObjects[i.LineTo] && _storage2['default'].toDelete.currentName != i.LineTo) {
+	              var elemObj = _storage2['default'].historyOfObjects[i.LineTo][0][0];
 	              for (var key in elemObj) {
 	                if (elemObj[key].type == 'rect' && elemObj[key].attr('propDataName') == i.propertyOfEffect) {
+	                  //Here we change class of circle from 'red' to 'grey'
 	                  elemObj[key].node.previousElementSibling.classList.remove('true');
 	                  elemObj[key].node.previousElementSibling.classList.add('false');
 	                }
@@ -817,50 +731,112 @@
 	          }
 	        });
 
-	        //let arrayOfLinkedEffectsFiltered=_.map(arrayOfLinkedEffects,(i)=>{//get array with names of linked to this common control ffects
-	        //    if(i.DistributorEffects){
-	        //      return i.DistributorEffects.join(';')
-	        //    }
-	        //    return i.LineTo;
-	        //
-	        //});
 	        var arrayOfLinkedEffectsFiltered = _.map(arrayOfLinkedEffects, function (i) {
 	          //get array with names of linked to this common control ffects
-
 	          var jsonObject = undefined;
 	          jsonObject = '{"Lineto":"' + i.LineTo + '","propertyOfEffect":"' + i.propertyOfEffect + '"}';
 	          return jsonObject;
 	        });
 
 	        var arrayOfLinkedEffectsString = arrayOfLinkedEffectsFiltered.join(';'); //transform array to string to pass in into "ext.deleteCommonControl" function
-	        //Call to ExtScript
-	        //console.log(arrayOfLinkedEffectsString);
-	        //console.log(GlobalStorage.toDelete.thisCommonContrlName);
-
-	        //console.log(CommonContrlName);
-
-	        //console.log(thisCommonContrlName);
-
-	        _csInterfaceJs2["default"].evalScript("$._ext.deleteCommonControl('" + arrayOfLinkedEffectsString + "',\"" + thisCommonContrlName + "\")", function (res) {
-
-	          var remove = _storage2["default"].toDelete.remove();
-	          delete _storage2["default"].historyOfObjects[nameOfBlock];
+	        _csInterfaceJs2['default'].evalScript('$._ext.deleteCommonControl(\'' + arrayOfLinkedEffectsString + '\',"' + thisCommonContrlName + '")', function (res) {
+	          var remove = _storage2['default'].toDelete.remove();
+	          delete _storage2['default'].historyOfObjects[nameOfBlock];
 	          resolve(remove);
 	        });
+	      } else if (_storage2['default'].toDelete && _storage2['default'].toDelete.thisCommonContrlName && _storage2['default'].historyOfObjects[nameOfBlock] && _storage2['default'].toDelete.fullCommonContrlName == "multiplier") {
+	        (function () {
+	          //Remove Multiplier block
+	          //console.log(GlobalStorage.historyOfObjects[nameOfBlock]);
 
-	        //
+	          var multiplierName = _storage2['default'].toDelete.thisCommonContrlName;
+	          _storage2['default'].toDelete.forEach(function (item) {
+	            if (item.type == "path") {
+	              (function () {
+	                var preMultiplierArr = [];
+	                console.log(preMultiplierArr);
+	                var type = _storage2['default'].historyOfObjects[item.LineTo].shortName;
+	                var thisPropName = _storage2['default'].historyOfObjects[item.LineTo].thisCommonContrlName;
+	                _storage2['default'].historyOfObjects[item.LineTo].forEach(function (i, num) {
+	                  //console.log(i);
+	                  if (i.type == "path" && i.LineFrom == multiplierName) {
+	                    //console.log(i);
+	                    i.remove();
+	                    delete _storage2['default'].historyOfObjects[item.LineTo][num];
+	                    console.log(_storage2['default'].historyOfObjects[item.LineTo]);
+	                  } else if (i.type == 'path' && i.LineFrom != multiplierName && i.node.lineFromCyrcle != "circleRight" && typeof _storage2['default'].historyOfObjects[item.LineTo][num] !== "undefined") {
+	                    //console.log(typeof GlobalStorage.historyOfObjects[item.LineTo][num] );
+	                    preMultiplierArr.push(i.LineFrom);
+	                  }
+	                });
+	                _storage2['default'].historyOfObjects[item.LineTo].forEach(function (i) {
+	                  if (i.type == "path" && i.node.lineFromCyrcle == "circleRight") {
+	                    var controlPropName = i.propertyOfEffect;
+	                    var effectNameLocal = i.LineTo;
+	                    console.log(preMultiplierArr);
+	                    console.log('RESULT');
+	                    _csInterfaceJs2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + controlPropName + '","' + thisPropName + '","' + type + '","' + preMultiplierArr.join(',') + '")', function () {
+	                      preMultiplierArr.length = 0;
+	                    });
+	                  }
+	                });
+	                //console.log(preMultiplierArr);
+	              })();
+	            }
+	          });
+
+	          var thisCommonContrlName = _storage2['default'].toDelete.thisCommonContrlName;
+	          //let itemsArray=GlobalStorage.toDelete.items;
+	          console.log(thisCommonContrlName);
+
+	          _csInterfaceJs2['default'].evalScript('$._ext.deleteEffect("' + multiplierName + '")', function (res) {
+	            //Remove effects from After Effects
+	            console.log('REMOVE');
+	            var remove = _storage2['default'].toDelete.remove();
+	            delete _storage2['default'].historyOfObjects[nameOfBlock];
+	            //preMultiplierArr=[];
+	            resolve();
+	          });
+
+	          /*let arrayOfLinkedEffects=_.filter(itemsArray,(i)=>{//filter array to get just paths to linked effects (names of linked effects are stored in property "LineTo" of path )
+	            if(i.node.nodeName=="path"){
+	              if(GlobalStorage.historyOfObjects[i.LineTo]&&GlobalStorage.toDelete.currentName!=i.LineTo){
+	                let elemObj=GlobalStorage.historyOfObjects[i.LineTo][0][0];
+	                for (let key in elemObj){
+	                  if(elemObj[key].type=='rect'&&elemObj[key].attr('propDataName')==i.propertyOfEffect){
+	                    elemObj[key].node.previousElementSibling.classList.remove('true');
+	                    elemObj[key].node.previousElementSibling.classList.add('false');
+	                  }
+	                }
+	                return i.LineTo;
+	              }
+	            }
+	          });*/
+
+	          /*let arrayOfLinkedEffectsFiltered=_.map(arrayOfLinkedEffects,(i)=>{//get array with names of linked to this common control ffects
+	                let jsonObject;
+	                  jsonObject='{"Lineto":"'+i.LineTo+'","propertyOfEffect":"'+i.propertyOfEffect+'"}';
+	              return jsonObject;
+	              });*/
+
+	          /*  let arrayOfLinkedEffectsString=arrayOfLinkedEffectsFiltered.join(';');//transform array to string to pass in into "ext.deleteCommonControl" function
+	            /*csInterface.evalScript(`$._ext.deleteCommonControl('${arrayOfLinkedEffectsString}',"${thisCommonContrlName}")`,(res)=>{
+	              let remove=GlobalStorage.toDelete.remove()
+	              delete GlobalStorage.historyOfObjects[nameOfBlock];
+	            resolve(remove);
+	            });*/
+	        })();
 	      }
-	    //resolve ()
 	  }).then(function (resolve) {
 
 	    resolve = undefined;
-	    _storage2["default"].toDelete = undefined;
-	    _storage2["default"].prevActive = undefined;
+	    _storage2['default'].toDelete = undefined;
+	    _storage2['default'].prevActive = undefined;
 	  });
 	}
 
-	exports["default"] = innerDeleteFunction;
-	module.exports = exports["default"];
+	exports['default'] = innerDeleteFunction;
+	module.exports = exports['default'];
 
 /***/ },
 /* 10 */
@@ -894,7 +870,7 @@
 	  console.log(GlobalStorage.effectCheckArr);
 	  console.log(this.effectCheckArr);*/
 	  var nameOfBlock = undefined;
-	  _storage2["default"].undermostEffectBlock.y = 10;
+	  //GlobalStorage.undermostEffectBlock.y=10;
 
 	  _storage2["default"].blockToRemove.forEach(function (i, num) {
 
@@ -910,7 +886,10 @@
 	        //Remove ordinar effects (not chained with Distributor)
 	        var effectName = _storage2["default"].toDelete.setEffectName;
 	        delete _storage2["default"].historyOfObjects[effectName];
-
+	        if (effectName == "Mantra VR") {
+	          var glassId = document.getElementById("glass");
+	          glassId.style.display = "block";
+	        }
 	        //Call to ExtScript
 
 	        //csInterface.evalScript(`$._ext.deleteEffect("${effectName}")`,(res)=>{//Remove effects from After Effects
@@ -960,10 +939,15 @@
 
 	          var arrayOfLinkedEffectsString = arrayOfLinkedEffectsFiltered.join(';'); //transform array to string to pass in into "ext.deleteCommonControl" function
 
-	          _csInterface2["default"].evalScript("$._ext.deleteCommonControl('" + arrayOfLinkedEffectsString + "',\"" + thisCommonContrlName + "\")", function (res) {});
-	          var remove = _storage2["default"].toDelete.remove();
-	          delete _storage2["default"].historyOfObjects[nameOfBlock];
-	          resolve(remove);
+	          console.log(thisCommonContrlName);
+	          if (thisCommonContrlName != "Master") {
+	            _csInterface2["default"].evalScript("$._ext.deleteCommonControl('" + arrayOfLinkedEffectsString + "',\"" + thisCommonContrlName + "\")", function (res) {});
+	            var remove = _storage2["default"].toDelete.remove();
+	            delete _storage2["default"].historyOfObjects[nameOfBlock];
+	            resolve(remove);
+	          } else {
+	            _csInterface2["default"].evalScript("$._ext.createMasterMultiplier()");
+	          }
 
 	          //
 	        }
@@ -1120,7 +1104,7 @@
 
 	var _startArraysArrSecondButtonJs2 = _interopRequireDefault(_startArraysArrSecondButtonJs);
 
-	var _helperFunctionsMoveEffectsJs = __webpack_require__(15);
+	var _helperFunctionsMoveEffectsJs = __webpack_require__(16);
 
 	var _helperFunctionsMoveEffectsJs2 = _interopRequireDefault(_helperFunctionsMoveEffectsJs);
 
@@ -1128,13 +1112,21 @@
 
 	var _customEventsDeleteEventListenerJs2 = _interopRequireDefault(_customEventsDeleteEventListenerJs);
 
-	var _helperFunctionsRenameBlock = __webpack_require__(18);
+	var _helperFunctionsRenameBlock = __webpack_require__(19);
 
 	var _helperFunctionsRenameBlock2 = _interopRequireDefault(_helperFunctionsRenameBlock);
 
-	var _helperFunctionsActiveBlockFunction = __webpack_require__(16);
+	var _helperFunctionsActiveBlockFunction = __webpack_require__(17);
 
 	var _helperFunctionsActiveBlockFunction2 = _interopRequireDefault(_helperFunctionsActiveBlockFunction);
+
+	var _bezieLine = __webpack_require__(15);
+
+	var _bezieLine2 = _interopRequireDefault(_bezieLine);
+
+	var _helperFunctionsCheckMantraVR = __webpack_require__(20);
+
+	var _helperFunctionsCheckMantraVR2 = _interopRequireDefault(_helperFunctionsCheckMantraVR);
 
 	var checkBackEnd = (function () {
 	  function checkBackEnd() {
@@ -1147,7 +1139,7 @@
 	    this.startCheck();
 	    this.mouseEnterEvent();
 	    this.mouseLeaveEvent();
-	    this.glassId;
+	    _storage2["default"].glassId = document.getElementById("glass");
 	  }
 
 	  _createClass(checkBackEnd, [{
@@ -1164,6 +1156,10 @@
 	            //console.log('START FUNCTION');
 	            //console.log(res);
 	            _this.status = res; //get value for status from ExtendScript ('true' or 'false')
+	            if (_this.status != 'true' /*&&GlobalStorage.hasVR===false*/) {
+	                (0, _helperFunctionsCheckMantraVR2["default"])();
+	                //GlobalStorage.glassId.style.display="block";
+	              }
 	          });
 
 	          _this.startCheck();
@@ -1171,9 +1167,10 @@
 	        }, 1000);
 	      } else // in this case status is true and we can start to build Panel
 	        {
-	          this.glassId = document.getElementById("glass");
-	          this.glassId.style.display = "none";
-
+	          //this.glassId=document.getElementById("glass");
+	          //GlobalStorage.glassId.style.display="none";
+	          _storage2["default"].hasVR = true;
+	          (0, _helperFunctionsCheckMantraVR2["default"])();
 	          this.createBlock(); // get gata about stage from backEnd and create block on Panel
 	          this.functionCheckAE();
 	        }
@@ -1200,6 +1197,7 @@
 	      this.AnimationFrame = setTimeout(function () {
 
 	        _csInterfaceJs2["default"].evalScript("$._ext.checkChangesGlobal()", function (res) {
+
 	          //console.log(res);
 	          //console.log(res===undefined);
 	          if (res && res == 0) {
@@ -1209,6 +1207,7 @@
 	              _storage2["default"].historyOfObjects = {
 	                itemArray: []
 	              };
+	              console.log('RESET Y COORD');
 	              _storage2["default"].undermostEffectBlock.y = 10; //reset global y coodinate
 	              _storage2["default"].undermostCommonControlBlock.y = 10;
 	              resolve(_raphaelContainerJs2["default"]);
@@ -1219,11 +1218,13 @@
 	            });
 	          } else if (res == 'false' || res === false) {
 	            _this3.status = false;
+	            _storage2["default"].hasVR = false;
 	            clearTimeout(_this3.AnimationFrame);
 	            _raphaelContainerJs2["default"].clear();
 	            _storage2["default"].historyOfObjects = {
 	              itemArray: []
 	            };
+	            console.log('RESET Y COORD');
 	            _storage2["default"].undermostEffectBlock.y = 10; //reset global y coodinate
 	            _storage2["default"].undermostCommonControlBlock.y = 10;
 	            _this3.startCheck();
@@ -1236,13 +1237,35 @@
 	            //GlobalStorage.undermostEffectBlock.y=10; //reset global y coodinate
 	            //GlobalStorage.undermostCommonControlBlock.y=10;
 	          } else if (res && res != "undefined") {
+
+	              if (res == "110" || res === false || res == 'false') {
+	                //empty
+	                _this3.effectCheckArr = [];
+	                _storage2["default"].glassId.style.display = "block";
+	                if (_storage2["default"].historyOfObjects.itemArray.length > 0) {
+	                  _storage2["default"].historyOfObjects.itemArray.forEach(function (item) {
+	                    _storage2["default"].historyOfObjects[item.name].remove();
+	                    //console.log(item);
+	                    //console.log(GlobalStorage.historyOfObjects[item.name]);
+	                  });
+	                }
+	              }
+
+	              console.log(res);
+	              console.log(_storage2["default"].historyOfObjects);
+
 	              var resObj = JSON.parse(res);
+	              _storage2["default"].hasVR = resObj.hasVR;
+	              (0, _helperFunctionsCheckMantraVR2["default"])();
+
 	              _this3.effectCheckArr = resObj.effectArray;
 	              //this.effectCheckArr=res.split(',');
-	              if (res == "empty") {
-	                _this3.effectCheckArr = [];
-	              }
+
 	              //console.log(this.effectCheckArr);
+	              if (!_storage2["default"].effectCheckArr || !_this3.effectCheckArr) {
+	                _storage2["default"].glassId.style.display = "block";
+	                return false;
+	              }
 	              if (_storage2["default"].effectCheckArr.length > _this3.effectCheckArr.length) {
 	                //console.log(GlobalStorage.effectCheckArr);
 	                //console.log(this.effectCheckArr);
@@ -1265,7 +1288,7 @@
 	                    blockToCreate.forEach(function (i) {
 	                      //console.log(i);
 	                      _csInterfaceJs2["default"].evalScript("$._ext.findEffect(\"" + i + "\")", function (res) {
-	                        //console.log(res);
+	                        console.log(res);
 	                        var startObject = JSON.parse(res);
 
 	                        _this3.functionCreateBlocks(startObject, cordX);
@@ -1339,8 +1362,9 @@
 	        //console.log(JSON.parse(res));
 	        var startObject = JSON.parse(res);
 	        _storage2["default"].hasVR = startObject.hasVR;
+	        (0, _helperFunctionsCheckMantraVR2["default"])();
 	        if (startObject.hasVR === true) {
-	          //console.log(startObject);     
+	          //console.log(startObject);
 	          _this5.functionCreateBlocks(startObject, cordX);
 	        }
 	      });
@@ -1471,7 +1495,13 @@
 	        //console.log(GlobalStorage.historyOfObjects[i.LineTo][0].attr("y"));
 	        var LineToY = _storage2["default"].historyOfObjects[i.LineTo][0][1].getBBox().y;
 	        //let connectPath = R.path( ["M", LineFromX+120, LineFromY+16, "L", LineToX, LineToY+15 ] );
-	        var connectPath = _raphaelContainerJs2["default"].path("M" + (LineFromX + 120) + " " + (LineFromY + 16) + "L" + LineToX + " " + (LineToY + 15));
+	        var MX = LineFromX + 120;
+	        var MY = LineFromY + 16;
+	        var LX = LineToX;
+	        var LY = LineToY + 15;
+	        var pathCoords = (0, _bezieLine2["default"])(MX, MY, LX, LY);
+	        //item.attr({d:`M${MX} ${MY}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${LX} ${(LY)+offset}`});
+	        var connectPath = _raphaelContainerJs2["default"].path("M" + MX + " " + MY + "C" + pathCoords.cp1x + " " + pathCoords.cp1y + " " + pathCoords.cp2x + " " + pathCoords.cp2y + " " + LX + " " + LY);
 	        connectPath.attr({ stroke: "black" });
 	        connectPath.toBack();
 
@@ -1592,17 +1622,21 @@
 	/*import deleteFunctions from "../helperFunctions/deleteFunctions.js"*/
 	//import deleteInOneClick from "../helperFunctions/deleteInOneClick.js"
 
-	var _helperFunctionsActiveBlockFunction = __webpack_require__(16);
+	var _helperFunctionsActiveBlockFunction = __webpack_require__(17);
 
 	var _helperFunctionsActiveBlockFunction2 = _interopRequireDefault(_helperFunctionsActiveBlockFunction);
 
-	var _helperFunctionsDeletePropertyInEffectBlock = __webpack_require__(17);
+	var _helperFunctionsDeletePropertyInEffectBlock = __webpack_require__(18);
 
 	var _helperFunctionsDeletePropertyInEffectBlock2 = _interopRequireDefault(_helperFunctionsDeletePropertyInEffectBlock);
 
 	var _storage = __webpack_require__(8);
 
 	var _storage2 = _interopRequireDefault(_storage);
+
+	var _helperFunctionsBezieLine = __webpack_require__(15);
+
+	var _helperFunctionsBezieLine2 = _interopRequireDefault(_helperFunctionsBezieLine);
 
 	// This class works with mainBlocks (Effects, commonControls, Distributor) and add eventListebers (click,mouseover etc) to them
 
@@ -1614,6 +1648,7 @@
 	    var str_gradientGrayDark = "l(0,0,0,1)rgb(140,149,158):5-rgb(44,53,63):95";
 	    var gradientGrayLight = _raphaelContainerJs2["default"].gradient(str_gradientGrayLight);
 	    var gradientGrayDark = _raphaelContainerJs2["default"].gradient(str_gradientGrayDark);
+	    this.pathCoords;
 	  }
 
 	  _createClass(mainBlock, [{
@@ -1621,6 +1656,7 @@
 	    value: function createBlockEffects(x, y, item, obj) {
 	      //console.log(obj.distrInst);
 	      //let objectEffect=JSON.parse(obj);
+	      console.log(obj);
 	      var blockEffectName = obj.name;
 	      var workBlockSet = Snap.set();
 	      var typeNode = "effects";
@@ -1684,7 +1720,9 @@
 	      //let group=R.g(workBlock, title, dummy);
 	      //workBlockSet.push(group);
 	      //Create options angle, slider, angel
-	      var propGroup = CreateProperties([obj.point, obj.slider, obj.angle], y);
+	      console.log(obj.propArray);
+	      var propGroup = CreateProperties(obj.propArray);
+
 	      var mainGroup = _raphaelContainerJs2["default"].g( /*workBlock,*/distrCountText, title, dummy);
 	      var wrapGroup = _raphaelContainerJs2["default"].g(propGroup, mainGroup);
 	      wrapGroup.attr({ clipPath: clipR }); //apply clip-path mask
@@ -1713,13 +1751,18 @@
 	        workBlockSet.forEach(function (item, i) {
 	          if (item.node.nodeName == 'path') {
 	            var PathString = Snap.parsePathString(item); //get coordunates of line
+	            var offset = item.coordDif * 1;
 	            var MX = PathString[0][1];
 	            var MY = PathString[0][2];
-	            var LX = PathString[1][1];
-	            var LY = PathString[1][2];
-	            var offset = item.coordDif * 1;
-	            //console.log(offset);
-	            item.attr("path", "M" + MX + " " + MY + "L" + LX + " " + (LY + offset)); //shift the line to the current propertyBlock
+	            var LX = PathString[1][5];
+	            var LY = PathString[1][6];
+	            LY = LY + offset;
+
+	            console.log(PathString);
+	            var pathCoords = (0, _helperFunctionsBezieLine2["default"])(MX, MY, LX, LY);
+	            //this.pathCoords=bezieLine(this.ox,this.oy,destx,desty);
+	            item.attr({ d: "M" + MX + " " + MY + "C" + pathCoords.cp1x + " " + pathCoords.cp1y + " " + pathCoords.cp2x + " " + pathCoords.cp2y + " " + LX + " " + LY }); //shift the line to the current propertyBlock
+	            //item.attr("path",`M${MX} ${MY}L${LX} ${(LY)+offset}`);//shift the line to the current propertyBlock
 	          }
 	        });
 	        for (var key in propGroup) {
@@ -1766,13 +1809,18 @@
 	        workBlockSet.forEach(function (item, i) {
 	          if (item.node.nodeName == 'path') {
 	            var PathString = Snap.parsePathString(item);
+	            var offset = item.coordDif * 1;
+	            console.log(PathString);
 	            var MX = PathString[0][1];
 	            var MY = PathString[0][2];
-	            var LX = PathString[1][1];
-	            var LY = PathString[1][2];
-	            var offset = item.coordDif * 1;
+	            var LX = PathString[1][5];
+	            var LY = PathString[1][6];
+	            LY = LY - offset;
+
 	            //console.log(offset);
-	            item.attr("path", "M" + MX + " " + MY + "L" + LX + " " + (LY - offset));
+	            var pathCoords = (0, _helperFunctionsBezieLine2["default"])(MX, MY, LX, LY);
+	            item.attr({ d: "M" + MX + " " + MY + "C" + pathCoords.cp1x + " " + pathCoords.cp1y + " " + pathCoords.cp2x + " " + pathCoords.cp2y + " " + LX + " " + LY });
+	            //item.attr("path",`M${MX} ${MY}L${LX} ${(LY)-offset}`);
 	          }
 	        });
 
@@ -1787,6 +1835,7 @@
 	      //let angle=CreateProperties(obj.angle);
 	      //console.log(workBlockSet);
 	      function CreateProperties(propertyArr) {
+	        console.log(propertyArr);
 	        var propertyBlock = undefined;
 	        var propertyText = undefined;
 	        var propertyCircle = undefined;
@@ -1803,65 +1852,58 @@
 	        });
 	        groupOfProp.add(propBackground);
 	        var count = 0;
-	        for (var a = 0; a < propertyArr.length; a++) {
-	          if (a == 0) {
-	            propDataType = 'point';
-	          } else if (a == 1) {
-	            propDataType = 'slider';
-	          } else if (a == 2) {
-	            propDataType = 'angle';
-	          }
-	          for (var key in propertyArr[a]) {
-	            //y+=10;
-	            //f+=6;
-	            count += 1;
-	            //console.log(count)
-	            if (count > 1) {
-	              localY += 20;
-	            } else {
-	              localY += 10;
+	        if (propertyArr != undefined) {
+	          for (var a = 0; a < propertyArr.length; a++) {
+	            if (propertyArr.length != 0) {
+
+	              var _item = propertyArr[a];
+
+	              if (a != 0) {
+	                localY += 20;
+	              } else {
+	                localY += 10;
+	              }
+
+	              propertyText = _raphaelContainerJs2["default"].text(x + 22, localY - 5, _item.name).attr({
+	                fontSize: 14,
+	                textAnchor: "start",
+	                alignmentBaseline: "hanging"
+	              });
+	              propertyCircle = _raphaelContainerJs2["default"].circle(x + 10, localY, 6).attr({
+	                "class": 'false'
+	              });
+
+	              propertyBlock = _raphaelContainerJs2["default"].rect(x, localY - 8, 200, 16).attr({
+	                "fill-opacity": 0,
+	                opacity: 1,
+	                stroke: "none",
+	                "class": 'prop',
+	                propDataName: _item.name,
+	                propDataType: _item.type,
+	                coordDif: localY - 12 - y
+	              });
+	              //console.log(propertyBlock.node.oncontextmenu);
+	              (0, _helperFunctionsDeletePropertyInEffectBlock2["default"])(propertyBlock, workBlockSet);
+	              groupOfProp.add(propertyText, propertyCircle, propertyBlock);
+
+	              groupOfProp.add(propertyText, propertyCircle, propertyBlock);
 	            }
-
-	            //console.log(key)
-	            propertyText = _raphaelContainerJs2["default"].text(x + 22, localY - 5, key).attr({
-	              fontSize: 14,
-	              textAnchor: "start",
-	              alignmentBaseline: "hanging"
-	            });
-	            propertyCircle = _raphaelContainerJs2["default"].circle(x + 10, localY, 6).attr({
-	              "class": 'false'
-	            });
-	            //propertyCircle=GlobalStorage.radioON.use().attr({x:x+10, y:localY, class:'false'});
-	            //console.log(key);
-	            //console.log((localY-8)-y);
-	            propertyBlock = _raphaelContainerJs2["default"].rect(x, localY - 8, 200, 16).attr({
-	              "fill-opacity": 0,
-	              opacity: 1,
-	              stroke: "none",
-	              "class": 'prop',
-	              propDataName: key,
-	              propDataType: propDataType,
-	              coordDif: localY - 12 - y
-	            });
-	            //console.log(propertyBlock.node.oncontextmenu);
-	            (0, _helperFunctionsDeletePropertyInEffectBlock2["default"])(propertyBlock, workBlockSet);
-
-	            /*propertyBlock.on('contextmenu',(e)=>{
-	              e.preventDefault();
-	              console.log(GlobalStorage.controlProp);
-	              console.log(workBlockSet.setEffectName);
-	            });*/
-
-	            groupOfProp.add(propertyText, propertyCircle, propertyBlock);
 	          }
+	          var bacgroundHeight = propertyArr.length * 20 + 52;
+	          propBackground.attr({
+	            height: bacgroundHeight
+	          });
+	        } else {
+	          var bacgroundHeight = 52;
+	          propBackground.attr({
+	            height: bacgroundHeight
+	          });
 	        }
+
 	        //console.log(groupOfProp.node);
 	        //console.log(groupOfProp.node.children);
 	        //console.log(groupOfProp.node.children.length);
-	        var bacgroundHeight = (groupOfProp.node.children.length - 1) / 3 * 20 + 52;
-	        propBackground.attr({
-	          height: bacgroundHeight
-	        });
+
 	        return groupOfProp;
 	      }
 
@@ -1957,6 +1999,7 @@
 	      //console.log(item);
 	      workBlockSet.shortName = item.shortName;
 	      workBlockSet.currentName = thisItemName;
+	      workBlockSet.multiplierArr = [];
 	      //workBlockSet.push(workBlock);
 
 	      //dummy.toFront();
@@ -2176,7 +2219,7 @@
 
 	var _drawLineFromToJs2 = _interopRequireDefault(_drawLineFromToJs);
 
-	var _moveEffectsJs = __webpack_require__(15);
+	var _moveEffectsJs = __webpack_require__(16);
 
 	var _moveEffectsJs2 = _interopRequireDefault(_moveEffectsJs);
 
@@ -2187,6 +2230,10 @@
 	var _csInterface = __webpack_require__(2);
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
+
+	var _bezieLine = __webpack_require__(15);
+
+	var _bezieLine2 = _interopRequireDefault(_bezieLine);
 
 	//Custom Raphael function which one properly handles dragging of Sets and handle all processes have binded with it
 	Snap.plugin(function (Snap, Element, Paper, global) {
@@ -2278,20 +2325,28 @@
 
 	    if (item.node.nodeName == 'path') {
 	      var PathString = Snap.parsePathString(item);
+	      var offset = item.coordDif * 1;
 	      var MX = PathString[0][1];
 	      var MY = PathString[0][2];
+	      var LX = _this.ox + dx;
+	      var LY = _this.oy + dy + 15;
+
 	      if (thisSet[0].attr('clip-path') != 'none') {
-	        item.attr("path", "M" + MX + " " + MY + "L" + (_this.ox + dx) + " " + (_this.oy + dy + 15));
+	        var pathCoords = (0, _bezieLine2["default"])(MX, MY, LX, LY);
+	        item.attr({ d: "M" + MX + " " + MY + "C" + pathCoords.cp1x + " " + pathCoords.cp1y + " " + pathCoords.cp2x + " " + pathCoords.cp2y + " " + LX + " " + LY });
+	        //item.attr("path",`M${MX} ${MY}L${_this.ox+ dx} ${_this.oy+ dy+15}`);
 	      } else if (thisSet[0].attr('clip-path') == 'none') {
-	        var offset = item.coordDif * 1;
-	        item.attr("path", "M" + MX + " " + MY + "L" + (_this.ox + dx) + " " + (_this.oy + dy + 15 + offset));
-	      }
+	          LY = LY + offset;
+	          var pathCoords = (0, _bezieLine2["default"])(MX, MY, LX, LY);
+	          item.attr({ d: "M" + MX + " " + MY + "C" + pathCoords.cp1x + " " + pathCoords.cp1y + " " + pathCoords.cp2x + " " + pathCoords.cp2y + " " + LX + " " + LY });
+	          //item.attr("path",`M${MX} ${MY}L${_this.ox+ dx} ${(_this.oy+ dy+15)+offset}`);
+	        }
 	    } else if (item.node.nodeName == 'g') {
-	      if (!_this.origTransform) {
-	        _this.origTransform = item.transform().local;
+	        if (!_this.origTransform) {
+	          _this.origTransform = item.transform().local;
+	        }
+	        var groupy = item.attr({ transform: _this.origTransform + (_this.origTransform ? "T" : "t") + [dx, dy] });
 	      }
-	      var groupy = item.attr({ transform: _this.origTransform + (_this.origTransform ? "T" : "t") + [dx, dy] });
-	    }
 	  }
 
 	  function CommonControlsMove(thisSet, item, i, _this, dx, dy) {
@@ -2301,50 +2356,32 @@
 	      }
 	      var groupy = item.attr({ transform: _this.origTransform + (_this.origTransform ? "T" : "t") + [dx, dy] });
 	    } else if (item.node.nodeName == 'path') {
-	      console.log(item.LineFrom);
-	      console.log(item.LineTo);
-	      console.log(thisSet);
+	      //console.log(item.LineFrom);
+	      //console.log(item.LineTo);
+	      //console.log(thisSet);
+	      var PathString = Snap.parsePathString(item);
+	      var LX = PathString[1][5]; //get coords X of the linked EffectBlock
+	      var LY = PathString[1][6]; //get coords X of the linked EffectBlock
+	      var MX = PathString[0][1];
+	      var MY = PathString[0][2];
+
 	      if (item.node.lineFromCyrcle == "circleRight" || item.LineFrom == thisSet.currentName) //moving line from right circle of common control  to Effect Block
 	        {
-	          var PathString = Snap.parsePathString(item);
-	          var LX = PathString[1][1]; //get coords X of the linked EffectBlock
-	          var LY = PathString[1][2]; //get coords X of the linked EffectBlock
-	          item.attr("path", "M" + (_this.ox + dx + 120) + " " + (_this.oy + dy + 16) + "L" + LX + " " + LY); // move path synchronously with commonControl block
+	          var ox = _this.ox + dx + 120;
+	          var oy = _this.oy + dy + 16;
+	          var pathCoords = (0, _bezieLine2["default"])(ox, oy, LX, LY);
+	          item.attr({ d: "M" + ox + " " + oy + "C" + pathCoords.cp1x + " " + pathCoords.cp1y + " " + pathCoords.cp2x + " " + pathCoords.cp2y + " " + LX + " " + LY });
+	          //item.attr("path",`M${ox} ${oy}L${LX} ${LY}`);// move path synchronously with commonControl block
 	        } else if (item.LineTo == thisSet.currentName) //moving line from RootDistributorBlock  to common control
 	          {
-	            var PathString = Snap.parsePathString(item);
-	            var MX = PathString[0][1];
-	            var MY = PathString[0][2];
-	            item.attr("path", "M" + MX + " " + MY + "L" + (_this.ox + dx + 1) + " " + (_this.oy + dy + 15));
+	            var destX = _this.ox + dx + 1;
+	            var destY = _this.oy + dy + 15;
+	            var pathCoords = (0, _bezieLine2["default"])(MX, MY, destX, destY);
+	            item.attr({ d: "M" + MX + " " + MY + "C" + pathCoords.cp1x + " " + pathCoords.cp1y + " " + pathCoords.cp2x + " " + pathCoords.cp2y + " " + destX + " " + destY });
+	            //item.attr("path",`M${MX} ${MY}L${_this.ox+ dx+1} ${_this.oy+ dy+15}`);
 	          }
 	    }
 	  }
-
-	  /*function DistributorRootMove (item, i, _this, dx, dy){
-	  
-	      if (item.node.nodeName == 'circle') {
-	        item.attr({ cx: _this.ox + dx+1, cy: _this.oy + dy+16 });
-	      }
-	      else if (item.node.nodeName == 'rect'){
-	        item.attr({ x: _this.ox + dx, y: _this.oy + dy });
-	      }
-	      else if (item.node.nodeName == 'text') {
-	        item.attr({ x: _this.ox + dx+80, y: _this.oy + dy+32 });
-	      }
-	      else if (item.node.nodeName == 'path'&&!item.DistributorEffects) {//moving line from this RootDistributorBlock  to common control
-	        let LX=item.attr().path[1][1];
-	        let LY=item.attr().path[1][2];
-	        item.attr("path",`M${_this.ox+ dx+160} ${_this.oy+ dy+32}L${LX} ${LY}`);
-	  
-	  
-	      }
-	      else if(item.node.nodeName == 'path'&&item.DistributorEffects){
-	        let MX=item.attr().path[0][1];
-	        let MY=item.attr().path[0][2];
-	        item.attr("path",`M${MX} ${MY}L${_this.ox+ dx+160} ${_this.oy+ dy+32}`);
-	  
-	      }
-	    }*/
 	});
 
 /***/ },
@@ -2375,28 +2412,36 @@
 
 	var _storage2 = _interopRequireDefault(_storage);
 
+	var _bezieLine = __webpack_require__(15);
+
+	var _bezieLine2 = _interopRequireDefault(_bezieLine);
+
 	// Class which DRAWS CONNECTIONS line from/to blocks. We use this in files: "draggableSet.js
 
 	var drawLineFromTo = (function () {
 	  function drawLineFromTo() {
 	    _classCallCheck(this, drawLineFromTo);
+
+	    this.ox;
+	    this.oy;
 	  }
 
 	  _createClass(drawLineFromTo, [{
 	    key: 'startdrawLineFromTo',
 	    value: function startdrawLineFromTo(_this, thisSet) {
 	      //console.log(thisSet);
-	      _this.ox = thisSet[0].getBBox().x + 120;
-	      _this.oy = thisSet[0].getBBox().y + 15;
+	      this.ox = thisSet[0].getBBox().x + 120;
+	      this.oy = thisSet[0].getBBox().y + 15;
 
 	      /*let connectPath = R.path( ["M", _this.ox, _this.oy, "L", _this.ox, _this.oy ] )*/
-	      var connectPath = _raphaelContainerJs2['default'].path('M' + _this.ox + ' ' + _this.oy + 'L' + _this.ox + ' ' + _this.oy).attr({ stroke: "blue" });
-	      connectPath.node.lineFromCyrcle = _this.node.circleName; //Here we asign from which one circle go the Line (Right cyrcle or LeftCyrcle)
+	      var connectPath = _raphaelContainerJs2['default'].path('M' + this.ox + ' ' + this.oy + 'L' + this.ox + ' ' + this.oy).attr({ stroke: "blue" });
+	      connectPath.node.lineFromCyrcle = _this.node.circleName; //Here we asign from which one circle goes the Line (Right cyrcle or LeftCyrcle)
 	      connectPath.node.shortControlName = thisSet.shortName;
-	      connectPath.node.displayControlname = thisSet.currentName; //display name of control or Multiplier
-	      connectPath.node.nameOfControl = thisSet.fullCommonContrlName; //name of current commonControls
+	      connectPath.node.displayControlname = thisSet.currentName; //display the name of control or Multiplier
+	      connectPath.node.nameOfControl = thisSet.fullCommonContrlName; //the name of current commonControls
 	      _storage2['default'].currentLine = connectPath; //Send just created Line into GlobalStorage object currentLine
 	      //console.log(GlobalStorage.currentLine);
+	      this.multiplierArr;
 	      thisSet.push(_storage2['default'].currentLine);
 	    }
 	  }, {
@@ -2412,9 +2457,14 @@
 	      //console.log(dx);
 	      //console.log(dy);
 
-	      _this.ox = thisSet[0].getBBox().x + 120;
-	      _this.oy = thisSet[0].getBBox().y + 15;
-	      _storage2['default'].currentLine.attr({ d: 'M' + _this.ox + ' ' + _this.oy + 'L' + (_this.ox * 1 + dx - 5) + ' ' + (_this.oy * 1 + dy - 5) });
+	      this.ox = thisSet[0].getBBox().x + 120;
+	      this.oy = thisSet[0].getBBox().y + 15;
+	      var destx = this.ox * 1 + dx - 5;
+	      var desty = this.oy * 1 + dy - 5;
+
+	      var pathCoords = (0, _bezieLine2['default'])(this.ox, this.oy, destx, desty);
+
+	      _storage2['default'].currentLine.attr({ d: 'M' + this.ox + ' ' + this.oy + 'C' + pathCoords.cp1x + ' ' + pathCoords.cp1y + ' ' + pathCoords.cp2x + ' ' + pathCoords.cp2y + ' ' + destx + ' ' + desty });
 	      /*var typeOfControll=GlobalStorage.currentLine.node.shortControlName;
 	          if(GlobalStorage.overMouseSet&&GlobalStorage.currentLine&&GlobalStorage.overMouseSet[typeOfControll]===true){
 	          console.log(GlobalStorage.overMouseSet[typeOfControll]);
@@ -2427,6 +2477,8 @@
 	  }, {
 	    key: 'endDrawLine',
 	    value: function endDrawLine(_this, thisSet) {
+	      var _this2 = this;
+
 	      //console.log(GlobalStorage.overMouseSet);
 
 	      if (_storage2['default'].currentLine) {
@@ -2438,7 +2490,7 @@
 
 	          if (_storage2['default'].overMouseSet !== null && _storage2['default'].currentLine !== null && !_storage2['default'].overMouseSet.fullCommonContrlName && _storage2['default'].controlProp.type == _storage2['default'].currentLine.node.shortControlName) {
 	            (function () {
-	              // in this case the current Line has connection to a destination block
+	              // in this case the current Line has connection from CommonControl to EffectBlock
 
 	              _storage2['default'].controlProp.circle.classList.remove('false');
 	              _storage2['default'].controlProp.circle.classList.add('true');
@@ -2463,18 +2515,24 @@
 	              _storage2['default'].currentLine.attr({ stroke: "black" }); //add black color for already successfully connected line
 	              var overMouseSet = _storage2['default'].overMouseSet;
 	              var effectNameLocal = overMouseSet.setEffectName;
+	              console.log();
 
 	              //console.log(GlobalStorage.currentLine.attr("path"));
 	              //adjust coords of path to draw line into center of block
 	              var PathString = Snap.parsePathString(_storage2['default'].currentLine);
+	              console.log(PathString);
 	              var MX = PathString[0][1]; //get coords X of the linked CommonControlBlock
 	              var MY = PathString[0][2]; //get coords Y of the linked CommonControlBlock
 	              var LX = overMouseSet[0].getBBox().x; //get coords X of the linked EffectBlock
 	              var LY = overMouseSet[0].getBBox().y; //get coords Y of the linked EffectBlock
-
-	              _storage2['default'].currentLine.attr("path", 'M' + MX + ' ' + MY + 'L' + LX + ' ' + (LY + 16 + _storage2['default'].controlProp.coordDif * 1)); // apply new coords
+	              LY = LY + 16 + _storage2['default'].controlProp.coordDif * 1;
+	              var pathCoords = (0, _bezieLine2['default'])(MX, MY, LX, LY);
+	              console.log(pathCoords);
+	              _storage2['default'].currentLine.attr({ d: 'M' + MX + ' ' + MY + 'C' + pathCoords.cp1x + ' ' + pathCoords.cp1y + ' ' + pathCoords.cp2x + ' ' + pathCoords.cp2y + ' ' + LX + ' ' + LY }); // apply new coords
+	              //GlobalStorage.currentLine.attr("path",`M${MX} ${MY}L${LX} ${LY+16+(GlobalStorage.controlProp.coordDif*1)}`);// apply new coords
 	              //
-	              _storage2['default'].currentLine.LineFrom = _this.node.effectName; //add which effect has been connected with this line
+	              console.log(_this.node.effectName);
+	              _storage2['default'].currentLine.LineFrom = thisSet.thisCommonContrlName; //add which effect has been connected with this line
 	              _storage2['default'].currentLine.LineTo = effectNameLocal;
 	              _storage2['default'].currentLine.coordDif = _storage2['default'].controlProp.coordDif;
 	              _storage2['default'].currentLine.baseEffect = overMouseSet.baseEffect; // base name of an effect
@@ -2488,6 +2546,7 @@
 	                resolve(_storage2['default'].overMouseSet.push(_storage2['default'].currentLine)); //Push curent Line into destination set
 	                //console.log(GlobalStorage.overMouseSet[typeOfControll]);
 	                _storage2['default'].overMouseSet[typeOfControll][controlPropName] = true;
+	                //console.log(thisSet.multiplierArr);
 	              }).then(function (resolve) {
 	                return _storage2['default'].overMouseSet = null; //clear objects in global storage
 	              }).then(function (res) {
@@ -2496,126 +2555,98 @@
 	                //Call to ExtScript
 	                //console.log(effectNameLocal);
 	                //console.log(thisPropName);
+
 	                var type = thisSet.shortName;
+	                var preMultiplierArr = [];
+	                thisSet.forEach(function (item, num) {
+	                  if (item.type == 'path' && item.node.lineFromCyrcle != "circleRight" && typeof thisSet[num] !== "undefined") {
+	                    preMultiplierArr.push(item.LineFrom);
+	                  }
+	                });
+	                _this2.multiplierArr = preMultiplierArr.join(',');
+	                console.log(_this2.multiplierArr);
+	                _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + controlPropName + '","' + thisPropName + '","' + type + '","' + _this2.multiplierArr + '")');
 	                //console.log(GlobalStorage.controlProp.type);
 	                //console.log(GlobalStorage.controlProp.name);
 
-	                //console.log(overMouseSet[0].getBBox());
-	                switch (thisSet.shortName) {
-	                  case "point":
-	                    /*let pointArr=[];
-	                    for(let key in overMouseSet.point){
-	                       pointArr.push(key);
-	                    }*/
-	                    _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + controlPropName + '","' + thisPropName + '","' + type + '")');
-	                    break;
-	                  case "angle":
-	                    /*let angleArr=[];
-	                    for(let key in overMouseSet.angle){
-	                       angleArr.push(key);
-	                    }*/
-	                    _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + controlPropName + '","' + thisPropName + '","' + type + '")');
-	                    break;
-	                  case "slider":
-	                    /*let sliderArr=[];
-	                    for(let key in overMouseSet.slider){
-	                       sliderArr.push(key);
-	                    }*/
-	                    _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + controlPropName + '","' + thisPropName + '","' + type + '")');
-	                    break;
-	                  case "Strength":
-	                    _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","Strength","' + thisPropName + '")');
-	                    break;
-	                  default:
-	                    _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
-	                    thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
-	                    _storage2['default'].currentLine = null; //clear objects in global storage
-	                }
+	                /*//console.log(overMouseSet[0].getBBox());
+	                                  switch (thisSet.shortName) {
+	                                    case "point":
+	                
+	                                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${controlPropName}","${thisPropName}","${type}","${this.multiplierArr}")`);
+	                                      break;
+	                                    case "angle":
+	                
+	                                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${controlPropName}","${thisPropName}","${type}","${this.multiplierArr}")`);
+	                                      break;
+	                                    case "slider":
+	                
+	                                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","${controlPropName}","${thisPropName}","${type}","${this.multiplierArr}")`);
+	                                      break;
+	                                    case "Strength":
+	                                      csInterface.evalScript(`$._ext.addCommonControls("${effectNameLocal}","Strength","${thisPropName}")`);
+	                                      break;
+	                                    default:
+	                                    GlobalStorage.currentLine.remove();//Remove Line when it dosen't has connection with other block
+	                                    thisSet.splice(thisSet.length-1, 1);//Remove last element (path from set)
+	                                    GlobalStorage.currentLine=null;//clear objects in global storage
+	                                  }*/
 
 	                //
 	              });
 	            })();
 	          } else if (_storage2['default'].overMouseSet !== null && _storage2['default'].currentLine !== null && _storage2['default'].overMouseSet.fullCommonContrlName && _storage2['default'].currentLine.node.nameOfControl == 'multiplier' && _storage2['default'].currentLine.node.displayControlname !== _storage2['default'].overMouseSet.currentName) {
-	              //connect line from Multiplier to another Multiplier or CommonContrl
-	              //console.log(GlobalStorage.overMouseSet.currentName);
-	              //console.log(GlobalStorage.currentLine.node.displayControlname);
-	              _storage2['default'].currentLine.toBack();
-	              _storage2['default'].currentLine.LineFrom = _storage2['default'].currentLine.node.displayControlname; //add which effect has been connected with this line
-	              _storage2['default'].currentLine.LineTo = _storage2['default'].overMouseSet.currentName;
-	              _storage2['default'].currentLine.attr({ stroke: "black" }); //add black color for already successfully connected line
-	              _storage2['default'].overMouseSet.push(_storage2['default'].currentLine); //Push curent Line into destination set
-	              _storage2['default'].overMouseSet = null; //clear objects in global storage
-	            } else if (_storage2['default'].currentLine && _storage2['default'].overDistributorMouse) {
-	                var genId = _storage2['default'].overDistributorMouse;
-	                //console.log(GlobalStorage.distribitorObjectsStorage[genId]);
-	                if (_storage2['default'].distribitorObjectsStorage[genId].countTypeOfEffects > 0) {
-	                  (function () {
-	                    var contains = function contains() {
-	                      var flag = false;
-	                      Object.keys(distribitorObject).forEach(function (Object) {
-	                        if (Object != "countTypeOfEffects" && Object != "rootBlockSet" && !distribitorObject[Object].shortName && distribitorObject[Object][thisSet.shortName] === true) {
-	                          //if(distribitorObject[Object][thisSet.shortName]===true){
-	                          flag = true;
-	                          //}
-	                          DistributorEffects.push(Object);
-	                          //console.log(Object);
-	                          //console.log(thisSet.currentName);
-	                          var effectNameLocal = distribitorObject[Object].setEffectName;
-	                          var propName = thisSet.fullCommonContrlName;
-	                          var thisPropName = thisSet.thisCommonContrlName;
-	                          //console.log(thisSet.shortName);
-	                          switch (thisSet.shortName) {
-	                            case 'fov':
-	                              _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + propName + '","' + thisPropName + '")');
-	                              break;
-	                            case 'strength':
-	                              //console.log('strength');
-	                              _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","Strength","' + thisPropName + '")');
-	                              break;
-	                            //default:
-
-	                          }
-	                        }
-	                      });
-	                      return flag;
-	                    };
-
-	                    var distribitorObject = _storage2['default'].distribitorObjectsStorage[genId];
-	                    var DistributorEffects = [];
-
-	                    var checkDistrEffects = contains();
-	                    if (checkDistrEffects === true) {
-
-	                      _storage2['default'].currentLine.DistributorEffects = DistributorEffects;
-	                      _storage2['default'].currentLine.attr({ stroke: "black" }); //add black color for already successfully connected line
-	                      //overMouseSet.push(GlobalStorage.currentLine).toBack()
-	                      _storage2['default'].currentLine.toBack();
-	                      _storage2['default'].distribitorObjectsStorage[genId].rootBlockSet.push(_storage2['default'].currentLine);
-	                      _storage2['default'].currentLine = null;
-	                      _storage2['default'].overDistributorMouse = null;
-	                    } else {
-	                      _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
-	                      thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
-	                      _storage2['default'].currentLine = null;
-	                      //GlobalStorage.overDistributorMouse=null;
+	              (function () {
+	                //connect line from Multiplier to CommonContrl
+	                //console.log(GlobalStorage.overMouseSet.currentName);
+	                //console.log(GlobalStorage.currentLine.node.displayControlname);
+	                //GlobalStorage.currentLine.toBack();
+	                var preMultiplierArr = [];
+	                var promise = new Promise(function (resolve) {
+	                  _storage2['default'].currentLine.LineFrom = _storage2['default'].currentLine.node.displayControlname; //add which CommonContrlol is connected with this line
+	                  _storage2['default'].overMouseSet.push(_storage2['default'].currentLine); //Push curent Line into destination set
+	                  //GlobalStorage.overMouseSet.multiplierArr.push(GlobalStorage.currentLine.LineFrom);
+	                  console.log(_storage2['default'].overMouseSet.shortName);
+	                  _storage2['default'].overMouseSet.forEach(function (item, num) {
+	                    if (item.type == 'path' && item.node.lineFromCyrcle != "circleRight" && typeof _storage2['default'].overMouseSet[num] !== "undefined") {
+	                      preMultiplierArr.push(item.LineFrom);
 	                    }
-	                  })();
-	                } else {
-	                    _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
-	                    thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
-	                    _storage2['default'].currentLine = null;
-	                  }
-	                //console.log(GlobalStorage.distribitorObjectsStorage[genId].countTypeOfEffects);
-	              } else if (_storage2['default'].overMouseSet === null && _storage2['default'].currentLine !== null) {
-	                  //in this case the current Line dosen't has a destination block
+	                  });
+	                  _this2.multiplierArr = preMultiplierArr.join(',');
+	                  console.log();
+	                  //this.multiplierArr=GlobalStorage.overMouseSet.multiplierArr;
+	                  var type = _storage2['default'].overMouseSet.shortName;
+	                  var thisPropName = _storage2['default'].overMouseSet.thisCommonContrlName;
+	                  _storage2['default'].overMouseSet.forEach(function (item) {
+	                    if (item.type == "path" && item.node.lineFromCyrcle == "circleRight") {
+	                      var controlPropName = item.propertyOfEffect;
+	                      console.log(item.propertyOfEffect);
+	                      //let controlPropName=item.LineFrom;
+	                      var effectNameLocal = item.LineTo;
+	                      console.log();
+	                      _csInterface2['default'].evalScript('$._ext.addCommonControls("' + effectNameLocal + '","' + controlPropName + '","' + thisPropName + '","' + type + '","' + _this2.multiplierArr + '")');
+	                    };
+	                  });
+	                  _storage2['default'].currentLine.LineTo = _storage2['default'].overMouseSet.currentName;
+	                  _storage2['default'].currentLine.attr({ stroke: "black" }); //add black color for already successfully connected line
+	                  resolve('set');
+	                });
+	                promise.then(function (resolve) {
+	                  _storage2['default'].overMouseSet = null; //clear objects in global storage
+	                  _storage2['default'].currentLine.toBack(); //send line to back
+	                  _storage2['default'].currentLine = null; //clear objects in global storage
+	                });
+	              })();
+	            } else if (_storage2['default'].overMouseSet === null && _storage2['default'].currentLine !== null) {
+	                //in this case the current Line dosen't has a destination block
+	                _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
+	                thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
+	                _storage2['default'].currentLine = null; //clear objects in global storage
+	              } else if (_storage2['default'].overMouseSet !== null && _storage2['default'].currentLine !== null) {
 	                  _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
 	                  thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
 	                  _storage2['default'].currentLine = null; //clear objects in global storage
-	                } else if (_storage2['default'].overMouseSet !== null && _storage2['default'].currentLine !== null) {
-	                    _storage2['default'].currentLine.remove(); //Remove Line when it dosen't has connection with other block
-	                    thisSet.splice(thisSet.length - 1, 1); //Remove last element (path from set)
-	                    _storage2['default'].currentLine = null; //clear objects in global storage
-	                  }
+	                }
 	        })();
 	      }
 	    }
@@ -2629,6 +2660,36 @@
 
 /***/ },
 /* 15 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function bezieLine(ox, oy, destx, desty) {
+	  var Obj = {
+	    cp1x: 0,
+	    cp1y: 0,
+	    cp2x: 0,
+	    cp2y: 0
+	  };
+	  var distanceX = destx - ox;
+	  var cpOffset = distanceX * 0.2;
+	  Obj.cp1x = ox + cpOffset;
+	  Obj.cp1y = oy;
+	  Obj.cp2x = destx - cpOffset;
+	  Obj.cp2y = desty;
+
+	  return Obj;
+	}
+
+	exports["default"] = bezieLine;
+	module.exports = exports["default"];
+
+/***/ },
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2690,7 +2751,9 @@
 
 	      return i.y; // Y is point relatively which we are sorting our array. So we've sort array of effects by Y coordinate of rectangle.
 	    });
-
+	    var lowestBlock = _.last(test);
+	    console.log('GlobalStorage.undermostEffectBlock=lowestBlock.y');
+	    console.log(_storage2['default'].undermostEffectBlock.y = lowestBlock.y);
 	    //  GlobalStorage.undermostEffectBlock.y=test[test.length-1][1].attr("y");//this is the y coordinate of the lowermost blockEffect
 	    //console.log(test);
 	    resolve(test);
@@ -2726,7 +2789,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2858,7 +2921,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2883,17 +2946,28 @@
 	    e.preventDefault();
 	    var effectName = workBlockSet.setEffectName;
 	    var propertyName = _storage2["default"].controlProp.name;
+	    var itemLineFrom = undefined;
 
 	    _csInterfaceJs2["default"].evalScript("$._ext.deletePropExpression(\"" + effectName + "\",\"" + propertyName + "\")", function (res) {
 	      //Remove property expression from  EffectBlock
-	      workBlockSet.forEach(function (item) {
+	      workBlockSet.forEach(function (item, num) {
 	        if (item.node.nodeName == "path" && item.LineTo == effectName && item.propertyOfEffect == propertyName) {
 	          //console.log(GlobalStorage.historyOfObjects[item.LineTo][GlobalStorage.controlProp.type][GlobalStorage.controlProp.name]);
+	          itemLineFrom = item.LineFrom;
 	          _storage2["default"].historyOfObjects[item.LineTo][_storage2["default"].controlProp.type][_storage2["default"].controlProp.name] = false;
 
 	          item.remove();
+	          delete _storage2["default"].historyOfObjects[item.LineTo][num];
 	          _storage2["default"].controlProp.circle.classList.remove('true');
 	          _storage2["default"].controlProp.circle.classList.add('false');
+	        }
+	      });
+
+	      _storage2["default"].historyOfObjects[itemLineFrom].forEach(function (item, num) {
+	        if (item.type == "path" && item.node.lineFromCyrcle == "circleRight" && item.propertyOfEffect == propertyName && item.LineTo == effectName) {
+	          //console.log(item);
+	          //console.log(GlobalStorage.historyOfObjects[itemLineFrom][num]);
+	          delete _storage2["default"].historyOfObjects[itemLineFrom][num];
 	        }
 	      });
 	    });
@@ -2904,7 +2978,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2948,8 +3022,10 @@
 	      delete _storage2['default'].historyOfObjects[oldName];
 	      //console.log(GlobalStorage.historyOfObjects[thisNewName]);
 	      _storage2['default'].historyOfObjects[thisNewName].forEach(function (i) {
-	        if (i.node.nodeName == 'path') {
+	        if (i.node.nodeName == 'path' && i.node.lineFromCyrcle == "circleRight") {
 	          i.LineFrom = thisNewName;
+	        } else if (i.node.nodeName == 'path' && i.node.lineFromCyrcle != "circleRight") {
+	          i.LineTo = thisNewName;
 	        }
 	      });
 	    })();
@@ -2960,9 +3036,37 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _storage = __webpack_require__(8);
+
+	var _storage2 = _interopRequireDefault(_storage);
+
+	function checkMantraVR() {
+	  if (_storage2["default"].hasVR) {
+	    _storage2["default"].glassId.style.display = "none";
+	  } else {
+	    _storage2["default"].glassId.style.display = "block";
+	  }
+	}
+
+	exports["default"] = checkMantraVR;
+	module.exports = exports["default"];
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//import arrButton from "./startArrays/arrButtonMain.js";
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
@@ -2974,10 +3078,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var _startArraysArrButtonMainJs = __webpack_require__(20);
-
-	var _startArraysArrButtonMainJs2 = _interopRequireDefault(_startArraysArrButtonMainJs);
 
 	var _startArraysArrSecondButtonJs = __webpack_require__(1);
 
@@ -3001,11 +3101,11 @@
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
 
-	var _helperFunctionsMoveEffectsJs = __webpack_require__(15);
+	var _helperFunctionsMoveEffectsJs = __webpack_require__(16);
 
 	var _helperFunctionsMoveEffectsJs2 = _interopRequireDefault(_helperFunctionsMoveEffectsJs);
 
-	var _mainBlockPresetsBlocksJs = __webpack_require__(21);
+	var _mainBlockPresetsBlocksJs = __webpack_require__(22);
 
 	var _mainBlockPresetsBlocksJs2 = _interopRequireDefault(_mainBlockPresetsBlocksJs);
 
@@ -3223,21 +3323,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 20 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	var arrButton = [{ name: 'Effects', systName: 'effects' }, { name: 'Common Controls', systName: 'commonControls' }, { name: 'Distributor', systName: 'distributor' }, { name: 'Presets', systName: 'presets' }]; //Array with buttons
-
-	exports['default'] = arrButton;
-	module.exports = exports['default'];
-
-/***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3272,7 +3358,7 @@
 
 	var _startArraysArrSecondButtonJs2 = _interopRequireDefault(_startArraysArrSecondButtonJs);
 
-	var _helperFunctionsMoveEffectsJs = __webpack_require__(15);
+	var _helperFunctionsMoveEffectsJs = __webpack_require__(16);
 
 	var _helperFunctionsMoveEffectsJs2 = _interopRequireDefault(_helperFunctionsMoveEffectsJs);
 
@@ -3292,7 +3378,7 @@
 	    value: function createPresetsEffects(cordX, presetsType) {
 	      var _this = this;
 
-	      var lowestCoordY = _storage2["default"].undermostEffectBlock.y;
+	      //let lowestCoordY=GlobalStorage.undermostEffectBlock.y;
 	      //console.log(GlobalStorage.arrOfPresetsEffects[presetsType.name]);
 	      //  GlobalStorage.arrOfPresetsEffects[presetsType.name].forEach((itemName)=>{
 	      var effectBlocks = _storage2["default"].arrOfPresetsEffects[presetsType.name].propsArray;
@@ -3311,7 +3397,7 @@
 	        //console.log(propertyOfEffectString);
 	        _csInterfaceJs2["default"].evalScript("$._ext.applyEffectPresets(\"" + item.name + "\"," + propertyOfEffectString + ")", function (res) {
 	          //push data into extend script
-	          lowestCoordY += 40;
+	          var lowestCoordY = _storage2["default"].undermostEffectBlock.y += 50;
 	          var objPreset = JSON.parse(res);
 	          //console.log(objPreset);
 	          var workBlock = new _mainBlockJs2["default"]().createBlockEffects(cordX, lowestCoordY, item, objPreset);
@@ -3378,6 +3464,23 @@
 	;
 
 	exports["default"] = presetsBlocks;
+	module.exports = exports["default"];
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function rightMouseClick() {
+	  window.addEventListener("contextmenu", function (event) {
+	    event.preventDefault();
+	  });
+	}
+	exports["default"] = rightMouseClick;
 	module.exports = exports["default"];
 
 /***/ }

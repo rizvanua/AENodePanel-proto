@@ -3,6 +3,7 @@ import drawLineFromTo  from "./drawLineFromTo.js";
 import moveEffects  from "./moveEffects.js";
 import GlobalStorage from '../storage';
 import csInterface from '../csInterface';
+import bezieLine from './bezieLine';
 
 //Custom Raphael function which one properly handles dragging of Sets and handle all processes have binded with it
 Snap.plugin((Snap, Element, Paper, global)=>{
@@ -111,14 +112,22 @@ function EffectMove (thisSet, item, i, _this, dx, dy){
 
   if (item.node.nodeName == 'path') {
     let PathString=Snap.parsePathString(item);
+    let offset=item.coordDif*1;
     let MX=PathString[0][1];
     let MY=PathString[0][2];
+    let LX=_this.ox+ dx;
+    let LY=_this.oy+ dy+15;
+
     if(thisSet[0].attr('clip-path')!='none'){
-      item.attr("path",`M${MX} ${MY}L${_this.ox+ dx} ${_this.oy+ dy+15}`);
+        let pathCoords=bezieLine(MX,MY,LX,LY);
+      item.attr({d:`M${MX} ${MY}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${LX} ${LY}`});
+      //item.attr("path",`M${MX} ${MY}L${_this.ox+ dx} ${_this.oy+ dy+15}`);
     }
     else if(thisSet[0].attr('clip-path')=='none'){
-      let offset=item.coordDif*1;
-      item.attr("path",`M${MX} ${MY}L${_this.ox+ dx} ${(_this.oy+ dy+15)+offset}`);
+        LY=(LY)+offset
+        let pathCoords=bezieLine(MX,MY,LX,LY);
+      item.attr({d:`M${MX} ${MY}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${LX} ${LY}`});
+      //item.attr("path",`M${MX} ${MY}L${_this.ox+ dx} ${(_this.oy+ dy+15)+offset}`);
     }
 
 
@@ -142,21 +151,30 @@ function CommonControlsMove(thisSet, item, i, _this, dx, dy){
         let groupy=item.attr({transform:_this.origTransform + (_this.origTransform ? "T" : "t") + [dx, dy]})
      }
      else if (item.node.nodeName == 'path') {
-       console.log(item.LineFrom);
-       console.log(item.LineTo);
-       console.log(thisSet);
+       //console.log(item.LineFrom);
+       //console.log(item.LineTo);
+       //console.log(thisSet);
+       let PathString=Snap.parsePathString(item);
+       let LX=PathString[1][5];//get coords X of the linked EffectBlock
+       let LY=PathString[1][6];//get coords X of the linked EffectBlock
+       let MX=PathString[0][1];
+       let MY=PathString[0][2];
+
        if(item.node.lineFromCyrcle=="circleRight"||item.LineFrom==thisSet.currentName)//moving line from right circle of common control  to Effect Block
        {
-         let PathString=Snap.parsePathString(item);
-         let LX=PathString[1][1];//get coords X of the linked EffectBlock
-         let LY=PathString[1][2];//get coords X of the linked EffectBlock
-         item.attr("path",`M${_this.ox+ dx+120} ${_this.oy+ dy+16}L${LX} ${LY}`);// move path synchronously with commonControl block
+         let ox=_this.ox+ dx+120;
+         let oy=_this.oy+ dy+16;
+         let pathCoords=bezieLine(ox,oy,LX,LY);
+         item.attr({d:`M${ox} ${oy}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${LX} ${LY}`});
+         //item.attr("path",`M${ox} ${oy}L${LX} ${LY}`);// move path synchronously with commonControl block
        }
        else if(item.LineTo==thisSet.currentName)//moving line from RootDistributorBlock  to common control
-       { let PathString=Snap.parsePathString(item);
-         let MX=PathString[0][1];
-         let MY=PathString[0][2];
-         item.attr("path",`M${MX} ${MY}L${_this.ox+ dx+1} ${_this.oy+ dy+15}`);
+       {
+         let destX=_this.ox+ dx+1;
+         let destY=_this.oy+ dy+15;
+         let pathCoords=bezieLine(MX,MY,destX,destY);
+         item.attr({d:`M${MX} ${MY}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${destX} ${destY}`});
+         //item.attr("path",`M${MX} ${MY}L${_this.ox+ dx+1} ${_this.oy+ dy+15}`);
        }
 
      }
@@ -164,30 +182,5 @@ function CommonControlsMove(thisSet, item, i, _this, dx, dy){
 
 }
 
-/*function DistributorRootMove (item, i, _this, dx, dy){
-
-    if (item.node.nodeName == 'circle') {
-      item.attr({ cx: _this.ox + dx+1, cy: _this.oy + dy+16 });
-    }
-    else if (item.node.nodeName == 'rect'){
-      item.attr({ x: _this.ox + dx, y: _this.oy + dy });
-    }
-    else if (item.node.nodeName == 'text') {
-      item.attr({ x: _this.ox + dx+80, y: _this.oy + dy+32 });
-    }
-    else if (item.node.nodeName == 'path'&&!item.DistributorEffects) {//moving line from this RootDistributorBlock  to common control
-      let LX=item.attr().path[1][1];
-      let LY=item.attr().path[1][2];
-      item.attr("path",`M${_this.ox+ dx+160} ${_this.oy+ dy+32}L${LX} ${LY}`);
-
-
-    }
-    else if(item.node.nodeName == 'path'&&item.DistributorEffects){
-      let MX=item.attr().path[0][1];
-      let MY=item.attr().path[0][2];
-      item.attr("path",`M${MX} ${MY}L${_this.ox+ dx+160} ${_this.oy+ dy+32}`);
-
-    }
-  }*/
 
 });

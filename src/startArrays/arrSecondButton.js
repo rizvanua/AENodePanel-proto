@@ -15,7 +15,15 @@
     {name:"Rotator"},
     {name:"Project 2D"},
     {name:"Blur"},
-    {name:"Mettle Mantra VR"}
+    {name:"Mettle Mantra VR"},
+    {name:"Chromatic Aberrations"},
+    {name:"Color Gradients"},
+    {name:"Denoise"},
+    {name:"Digital Glitch"},
+    {name:"Fractal Noise"},
+    {name:"Glow"},
+    {name:"Sharpen"},
+    {name:"Hyperbolic Tiler"}
   ],
   commonControls:[
     {name:"Point Control", effectName:"Point Control", fullname:"Point Control", shortName:"point"},

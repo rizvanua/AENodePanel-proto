@@ -1,28 +1,25 @@
-﻿function addPOIFunction(effectName, propName, thisPropName, _this){    
-    if(_this.currentLayer.effect.property(effectName)){       
-    _this.currentLayer.effect.property(effectName).property(propName).expression='(thisLayer.effect('+'"'+thisPropName+'"'+').point.value)*(thisLayer.effect("Master").slider.value/100)'; 
-     }
-};
-
-function addFOVFunction(effectName, propName, thisPropName, _this){    
-    //$.writeln(effectName);
-    //$.writeln(propName);
-    //$.writeln(thisPropName);
-     _this.currentLayer.effect.property(effectName).property(propName).expression='thisLayer.effect('+'"'+thisPropName+'"'+').angle.value*(thisLayer.effect("Master").slider.value/100)';
-  
-};
-
-function addStrengthFunction(effectName, propName, thisPropName, _this){ 
-    _this.currentLayer.effect.property(effectName).property(propName).expression='thisLayer.effect('+'"'+thisPropName+'"'+').slider.value*(thisLayer.effect("Master").slider.value/100)';    
-};
-
-function addWavesFunction(effectName, propName, thisPropName,_this){
-    _this.currentLayer.effect.property(effectName).property("Amplitude").expression= "[300]";
-    _this.currentLayer.effect.property(effectName).property("Wavelength").expression= "[300]";
-    _this.currentLayer.effect.property(effectName).property("Phase").expression= "[50]";
-    _this.currentLayer.effect.property(effectName).property("Max Latitude").expression= "[50]";
-    _this.currentLayer.effect.property(effectName).property("Displacement").expression= "[50]";
-};
+﻿function addExpressionFunction(effectName, propName,thisPropName,_this,multiplierStr,type){
+         var multiplierArrModif=[];        
+        if(multiplierStr&&multiplierStr.length>0){
+          var multiplierArr= multiplierStr.split(',');         
+        //$.writeln(effectName);
+        //$.writeln(propName);
+        //$.writeln(type);
+         for(var i=0;i<multiplierArr.length;i++){
+                 var str='(thisLayer.effect("'+multiplierArr[i]+'").slider.value/100)';
+                // $.writeln(str);
+                 multiplierArrModif.push(str);
+             }
+         
+            var arrStr=multiplierArrModif.join('*');
+            var expressionString='thisLayer.effect('+'"'+thisPropName+'"'+').'+type+'.value*(thisLayer.effect("Master").slider.value/100)'+'*'+arrStr;    
+          _this.currentLayer.effect.property(effectName).property(propName).expression=expressionString;
+        }
+    else{
+            var expressionString='thisLayer.effect('+'"'+thisPropName+'"'+').'+type+'.value*(thisLayer.effect("Master").slider.value/100)'; 
+            _this.currentLayer.effect.property(effectName).property(propName).expression=expressionString;
+        }     
+    };
 
 function addPropertyToEffect(effectName, propName, propValue,_this){
      //$.writeln(_this.currentLayer.effect.property(effectName));
@@ -99,7 +96,15 @@ $._ext = {
     //$.writeln(this.currentLayerIndex);
 
     if (!thisLayerName || !this.currentLayerName || (app.project.activeItem && this.currentComp.name != app.project.activeItem.name) || (thisLayerName != this.currentLayerName) || (thisLayerIndex != this.currentLayerIndex)) { //check if user changes composition or layer
-      //$.writeln('IM WORKING');
+      //$.writeln(this.currentLayer);
+        //$.writeln(thisLayerName);
+     /* for(var key in this.currentLayer){
+            $.writeln(key);
+          }*/
+      if(!thisLayerName){
+          //return '110';//empty layer without effects
+          return false;
+          }
       this.effectsQuantity = this.currentLayer.effect.numProperties;
       this.currentLayerName = thisLayerName;
       this.currentLayerIndex = thisLayerIndex;
@@ -119,12 +124,15 @@ $._ext = {
                 selectedEffect:{
                     effectName:null,// the name of selected effect
                     effectIndex:null,// the index of selected effect
-                    distrInst:null //the quantity of distributors
+                    distrInst:null //the quantity of distributors                    
                 },
-                effectArray:[]
+                effectArray:[],
+                hasVR: false
         };
       //this.effectsQuantity=this.currentLayer.effect.numProperties;
-      
+      if(this.currentLayer.effect('Mantra VR')){// check if  'Mantra VR'  is on this layer 
+            stateScope.hasVR=true;
+            }
       this.effectsQuantity = this.currentLayer.effect.numProperties;
 
       for (var i = this.currentLayer.effect.numProperties; i--;) {
@@ -144,7 +152,7 @@ $._ext = {
       
       return JSON.stringify(stateScope);
     } else if (this.currentLayer.effect.numProperties == 0) {
-      return 'empty';
+      return '110';//empty layer without effects
     }
   }
 else {
@@ -171,6 +179,7 @@ else {
                     if(this.currentComp.layers[i+1]&&this.currentComp.layers[i+1].selected&&this.currentComp.layers[i+1] instanceof AVLayer)
                     {
                        
+                       
                         //$.writeln(this.currentComp.layers[i+1].name);
                          //$.writeln(this.currentComp.layers[i+1].index);
                          this.currentLayerName=this.currentComp.layers[i+1].name;
@@ -193,7 +202,9 @@ else {
                                         cube:[[0.00*this.itemWidth, 0.5*this.itemHight],[0.25*this.itemWidth, 0.5*this.itemHight],[0.50*this.itemWidth, 0.5*this.itemHight],[0.75*this.itemWidth, 0.5*this.itemHight],[0.50*this.itemWidth, 0.0*this.itemHight],[0.50*this.itemWidth, 1.0*this.itemHight]],
                                         sphere:[[0.00*this.itemWidth, 0.5*this.itemHight],[0.25*this.itemWidth, 0.5*this.itemHight],[0.50*this.itemWidth, 0.5*this.itemHight],[0.75*this.itemWidth, 0.5*this.itemHight],[0.10*this.itemWidth, 0.25*this.itemHight],[0.43*this.itemWidth, 0.25*this.itemHight],[0.77*this.itemWidth, 0.25*this.itemHight],[0.10*this.itemWidth, 0.75*this.itemHight],[0.43*this.itemWidth, 0.75*this.itemHight],[0.77*this.itemWidth, 0.75*this.itemHight]]
                                         };
-                       
+                       if(!this.currentComp.layers[i+1].effect('Mettle Mantra VR')){// chesk if 'Mantra VR' is on this layer
+                           return false;
+                           }
                         
                        this.state=true;
 
@@ -242,10 +253,13 @@ else {
             };
        
         //$.writeln(this.currentLayer.effect.numProperties);
+        if(this.currentLayer.effect('Mantra VR')){
+            Obj.hasVR=true;
+            }
         
         for(var i=0; i<this.currentLayer.effect.numProperties; i++){
-           //$.writeln(this.currentLayer.effect(i+1).name);
-            //$.writeln(this.currentLayer.effect(i+1).matchName);
+          //$.writeln('CHECK');
+            //$.writeln(this.currentLayer.effect('Mantra VR').name);
             
             switch (this.currentLayer.effect(i+1).matchName) {
                   case "ADBE Angle Control":
@@ -285,61 +299,27 @@ else {
                     break;
                   default:
                   var thisEffectObj={
-                      point:{},
-                      angle:{},
-                      slider:{}
+                       point:{},
+                        angle:{},
+                        slider:{},
+                      propArray:[]
                       };
-                  
+                   //$.writeln('getData');
                   var thisName=this.currentLayer.effect(i+1).name;
                   var thisMatchName=this.currentLayer.effect(i+1).matchName;
                   var layerEffect=this.currentLayer.effect(i+1);
                   thisEffectObj.baseEffect=thisMatchName.replace("Mettle Mantra ", "");
                     thisEffectObj.name=thisName;                 
                      
-                     for(var d=layerEffect.numProperties; d--;)
-                     {                       
-                                 
-                          
-                             
-                               if (layerEffect.property(d + 1).name != 'Frame Layout' && layerEffect.property(d + 1).name != 'Compositing Options') 
-                               {
-                                           if(layerEffect.property(d + 1).name=='Number Of Instances'){
-                                      thisEffectObj.distrInst=Math.round(layerEffect.property(d + 1).value);
-                                      }
-                                        switch (layerEffect.property(d+ 1).propertyValueType) 
-                                        {
-                                          case 6415:                                          
-                                            thisEffectObj.point[layerEffect.property(d + 1).name] = false;                                             
-                                            //$.writeln(layerEffect.property(d + 1).name);
-                                            //$.writeln('Point');
-                                            break;
-                                          case 6417:
-                                            if (layerEffect.property(d + 1).hasMax) {
-                                              thisEffectObj.slider[layerEffect.property(d + 1).name] = false;                                               
-                                              //$.writeln(layerEffect.property(d + 1).name);
-                                              //$.writeln('Slider');
-                                            } else {
-                                              thisEffectObj.angle[layerEffect.property(d + 1).name] = false;                                               
-                                              //$.writeln(layerEffect.property(d + 1).name);
-                                              //$.writeln('Angle');
-                                            }
-                                            break;
-                                          default:
-                                            break;
-                                        }
-                                   }
-
-                                  
-                                  if(layerEffect.property(d+1).expressionEnabled)
+                     for(var d=0; d<layerEffect.numProperties; d++)
+                     { 
+                         this.functionEffectLoop(layerEffect, d, thisEffectObj);
+                         
+                     if(layerEffect.property(d+1).expressionEnabled)
                             {
                                  var LineTo=layerEffect.name; 
-                                 var propertyOfEffect=layerEffect.property(d+1).name;
-                                 //var LineFrom=layerEffect.property(d+1).expression.match(/\{([^}]+)\}/);
-                                 var LineFrom=layerEffect.property(d+1).expression.match(/\(\"([^)]+)\"\)/)[1];
-                                  //$.writeln('LINE');
-                                 //$.writeln(LineTo);
-                                  //$.writeln(LineFrom);
-                                  //$.writeln(layerEffect.property(d+1).expression);
+                                 var propertyOfEffect=layerEffect.property(d+1).name;                                
+                                 var LineFrom=layerEffect.property(d+1).expression.match(/\(\"([^)]+)\"\)/)[1];                                 
                                  Obj.linesObj.push({"LineFrom":LineFrom, "LineTo":LineTo, "propertyOfEffect":propertyOfEffect});
                                 
                               }
@@ -353,44 +333,22 @@ else {
          return JSON.stringify(Obj);
         },
         applyEffect: function(effectName) {// function to apply effect from HTML5 panel
+            //$.writeln('ApplyEffect');
             var effectObj={
-                effectsObj:[],
+                //effectsObj:[],
                 point:{},
                 angle:{},
-                slider:{}
+                slider:{},
+                propArray:[]
                 }
                 this.createMasterMultiplier();
               if (this.currentComp) {
                 var layerEffect = this.currentLayer.Effects.addProperty(effectName);
                 effectObj.name=layerEffect.name;
 
-                for (var i = layerEffect.numProperties; i--;) {
-                  if (layerEffect.property(i + 1).name != 'Frame Layout' && layerEffect.property(i + 1).name != 'Compositing Options') {
-                      if(layerEffect.property(i + 1).name=='Number Of Instances'){//check is effect has property  'Number Of Instances'
-                              effectObj.distrInst=Math.round(layerEffect.property(i + 1).value);//get  quantity of distributor instances 
-                              }
-                    switch (layerEffect.property(i + 1).propertyValueType) {// get property name of the effect sort  out them(point, slider, angle) and  assign standar value 'false'; Value 'false' means that no one expression has been assigned  to this property yet 
-                      case 6415: 
-                        effectObj.point[layerEffect.property(i + 1).name]=false;
-                        //$.writeln(layerEffect.property(i + 1).name);
-                        //$.writeln('Point');
-                        break;
-                      case 6417 :
-                      if( layerEffect.property(i + 1).hasMax){
-                          effectObj.slider[layerEffect.property(i + 1).name]=false;
-                          //$.writeln(layerEffect.property(i + 1).name);
-                        //$.writeln('Slider');
-                          }
-                      else{
-                           effectObj.angle[layerEffect.property(i + 1).name]=false;
-                          //$.writeln(layerEffect.property(i + 1).name);
-                        //$.writeln('Angle');
-                          }                  
-                        break;                      
-                      default:
-                        break;
-                    }
-                  }
+                for (var i =0; i<layerEffect.numProperties; i++) {
+                    this.functionEffectLoop(layerEffect,i,effectObj);
+               
 
                 }
 
@@ -401,13 +359,14 @@ else {
               }
             },
         findEffect: function(effectName){
+            
                 var Obj = {
                   commonControlObj: [],
                   effectsObj: [],
                   linesObj: [],
                   multiplierObj:[]
                 };
-
+                //$.writeln( this.currentLayer.effect('Mantra VR').name);
                 var layerEffect = this.currentLayer.effect.property(effectName);
                
                 switch (layerEffect.matchName) {
@@ -445,8 +404,7 @@ else {
                     });
 
                     break;
-                  case "Mettle Mantra VR":
-                    
+                  case "Mettle Mantra VR":                    
                     var thisMatchName = layerEffect.matchName;
                     var thisName = effectName;
                     Obj.effectsObj.push({
@@ -454,13 +412,16 @@ else {
                       name: thisName
                     });
                     Obj.hasVR = true;
-                    this.createMasterMultiplier();
+                    if(!this.currentLayer.effect.property("Master")){
+                         this.createMasterMultiplier();
+                        }                   
                     break;
                   default:
                     var thisEffectObj = {
-                      point: {},
-                      angle: {},
-                      slider: {}
+                    point:{},
+                    angle:{},
+                    slider:{},
+                    propArray:[]
                     };
 
                     var thisName = effectName;
@@ -468,33 +429,14 @@ else {
                     thisEffectObj.baseEffect = thisMatchName.replace("Mettle Mantra ", "");
                     thisEffectObj.name = thisName;
 
-                    for (var d = layerEffect.numProperties; d--;) {
-
-                      if (layerEffect.property(d + 1).name != 'Frame Layout' && layerEffect.property(d + 1).name != 'Compositing Options') {
-                          if(layerEffect.property(d + 1).name=='Number Of Instances'){
-                              thisEffectObj.distrInst=Math.round(layerEffect.property(d + 1).value);
-                              }
-                          
-                        switch (layerEffect.property(d + 1).propertyValueType) {// get property name of the effect sort  out them(point, slider, angle) and  assign standar value 'false'; Value 'false' means that no one expression has been assigned  to this property yet 
-                          case 6415:
-                            thisEffectObj.point[layerEffect.property(d + 1).name] = false;
-                          case 6417:
-                            if (layerEffect.property(d + 1).hasMax) {
-                              thisEffectObj.slider[layerEffect.property(d + 1).name] = false;
-                            } else {
-                              thisEffectObj.angle[layerEffect.property(d + 1).name] = false;
-                            }
-                            break;
-                          default:
-                            break;
-                        }
-                      }
-
-
+                    for (var d=0; d<layerEffect.numProperties; d++) {
+                        this.functionEffectLoop(layerEffect,d,thisEffectObj);
+                        
                       if (layerEffect.property(d + 1).expressionEnabled) {
                         var LineTo = layerEffect.name;                       
                         var propertyOfEffect = layerEffect.property(d + 1).name;
                         var LineFrom = layerEffect.property(d + 1).expression.match(/\(\"([^)]+)\"\)/)[1];
+                         var LineFromMult = layerEffect.property(d + 1).expression.match(/\(\"([^)]+)\"\)/)[3];
                          //$.writeln('LINE');
                          //$.writeln(LineFrom);
                         Obj.linesObj.push({
@@ -508,48 +450,23 @@ else {
                     }
                     Obj.effectsObj.push(thisEffectObj);
                 }
-
+                //$.writeln(JSON.stringify(Obj.effectsObj));
                 return JSON.stringify(Obj);
             },
       applyEffectPresets: function(effectName, propertyOfEffect) {
           var effectObj={
                 point:{},
                 angle:{},
-                slider:{}
+                slider:{},
+                 propArray:[]
                 }
             
           var layerEffect = this.currentLayer.Effects.addProperty(effectName);
                  effectObj.name=layerEffect.name;
           
           //
-          for (var i = layerEffect.numProperties; i--;) {
-                  if (layerEffect.property(i + 1).name != 'Frame Layout' && layerEffect.property(i + 1).name != 'Compositing Options') {
-                      if(layerEffect.property(i + 1).name=='Number Of Instances'){
-                              thisEffectObj.distrInst=Math.round(layerEffect.property(i + 1).value);
-                              }
-                    switch (layerEffect.property(i + 1).propertyValueType) {
-                      case 6415:
-                        effectObj.point[layerEffect.property(i + 1).name]=false;
-                        //$.writeln(layerEffect.property(i + 1).name);
-                        //$.writeln('Point');
-                        break;
-                      case 6417 :
-                      if( layerEffect.property(i + 1).hasMax){
-                          effectObj.slider[layerEffect.property(i + 1).name]=false;
-                          //$.writeln(layerEffect.property(i + 1).name);
-                        //$.writeln('Slider');
-                          }
-                      else{
-                           effectObj.angle[layerEffect.property(i + 1).name]=false;
-                          //$.writeln(layerEffect.property(i + 1).name);
-                        //$.writeln('Angle');
-                          }                  
-                        break;                      
-                      default:
-                        break;
-                    }
-                  }
-
+          for (var i=0; i<layerEffect.numProperties; i++) {
+              this.functionEffectLoop(layerEffect,i,effectObj);              
                 }
           //
 
@@ -614,40 +531,11 @@ else {
         var Control=this.currentLayer.Effects.addProperty(controlType);        
         return Control.name;
         },
-   /* createControlPoint: function(){
-       
-        var ControlPoint=this.currentLayer.Effects.addProperty("Point Control");        
-        return ControlPoint.name;
-        },
-    createControlFOV: function(){        
-        var AngleControl=this.currentLayer.Effects.addProperty("Angle Control");
-        return AngleControl.name;
-        },
-    createControlStrength: function(){        
-        var SliderControl=this.currentLayer.Effects.addProperty("Slider Control");
-        return SliderControl.name;
-        },*/
-    addCommonControls: function(effectName,propName,thisPropName,type)
+  
+    addCommonControls: function(effectName,propName,thisPropName,type,multiplierStr)
    {       
          //$.writeln(type);
-               switch (type) {
-                          case "point":
-                            addPOIFunction(effectName, propName,thisPropName,this);
-                            break;
-                          case "angle":
-                            addFOVFunction(effectName, propName,thisPropName,this);
-                            break;
-                        case "Waves":
-                        addWavesFunction(effectName, propName,thisPropName,this);
-                        break;
-                         case "slider":
-                            addStrengthFunction(effectName, propName,thisPropName,this);
-                            break;
-                          default:
-                            alert( "Unrecognized control type" );                           
-                            
-                            }
-               
+         addExpressionFunction(effectName, propName,thisPropName,this,multiplierStr,type);             
       
        
         
@@ -758,6 +646,51 @@ else {
             }
         
         //this.currentLayer.effect.property(effectName).activeViewer=true;
-        }
+        },
+    functionEffectLoop: function(layerEffect, d, Obj) {//this function is used in Loop of effect properties
+     if (layerEffect.property(d + 1).name != 'Frame Layout' && layerEffect.property(d + 1).name != 'Compositing Options') {
+       if (layerEffect.property(d + 1).name == 'Number Of Instances') {
+         Obj.distrInst = Math.round(layerEffect.property(d + 1).value);
+       }
+       switch (layerEffect.property(d + 1).propertyValueType) {
+         case 6415:
+           Obj.propArray.push({
+             name: layerEffect.property(d + 1).name,
+             state: false,
+             index: layerEffect.property(d + 1).propertyIndex,
+             type: 'point'
+           })
+           break;
+         case 6417:
+           if (layerEffect.property(d + 1).hasMax&&layerEffect.property(d + 1).maxValue>1) {              
+             Obj.propArray.push({
+               name: layerEffect.property(d + 1).name,
+               state: false,
+               index: layerEffect.property(d + 1).propertyIndex,
+               type: 'slider'
+             })
+           }else if(layerEffect.property(d + 1).hasMax&&layerEffect.property(d + 1).maxValue<=1){
+               Obj.propArray.push({
+               name: layerEffect.property(d + 1).name,
+               state: false,
+               index: layerEffect.property(d + 1).propertyIndex,
+               type: 'checkbox'
+             })
+               }else {
+             Obj.propArray.push({
+               name: layerEffect.property(d + 1).name,
+               state: false,
+               index: layerEffect.property(d + 1).propertyIndex,
+               type: 'angle'
+             })
+           }
+           break;
+         default:
+           break;
+       }
+     }
+   }
+    
+   
 };
 

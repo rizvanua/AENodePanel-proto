@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ExtensionManifest ExtensionBundleId="com.mettleNodePanel" ExtensionBundleName="Mantra VR" ExtensionBundleVersion="1.0" Version="4.0">
+<ExtensionManifest ExtensionBundleId="com.mettleNodePanel" ExtensionBundleName="Mantra VR Panel" ExtensionBundleVersion="1.0" Version="4.0">
   <ExtensionList>
     <Extension Id="com.mettleNodePanel" Version="1.0"/>
   </ExtensionList>
@@ -27,7 +27,7 @@
         </Lifecycle>
         <UI>
           <Type>Panel</Type>
-          <Menu>Mantra VR</Menu>
+          <Menu>Mantra VR Panel</Menu>
           <Geometry>
             <Size>
               <Height>800</Height>

@@ -16,7 +16,7 @@ class presetsBlocks{
 
 
   createPresetsEffects(cordX,presetsType){
-    let lowestCoordY=GlobalStorage.undermostEffectBlock.y;
+    //let lowestCoordY=GlobalStorage.undermostEffectBlock.y;
     //console.log(GlobalStorage.arrOfPresetsEffects[presetsType.name]);
   //  GlobalStorage.arrOfPresetsEffects[presetsType.name].forEach((itemName)=>{
   let effectBlocks=GlobalStorage.arrOfPresetsEffects[presetsType.name].propsArray;
@@ -34,7 +34,7 @@ class presetsBlocks{
     let propertyOfEffectString =this.innerForEach(obj);
     //console.log(propertyOfEffectString);
     csInterface.evalScript(`$._ext.applyEffectPresets("${item.name}",${propertyOfEffectString})`,(res)=>{//push data into extend script
-    lowestCoordY+=40
+    let lowestCoordY=GlobalStorage.undermostEffectBlock.y+=50;
     let objPreset=JSON.parse(res);
     //console.log(objPreset);
       let workBlock=new mainBlock().createBlockEffects(cordX,lowestCoordY,item,objPreset);

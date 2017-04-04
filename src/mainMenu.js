@@ -1,4 +1,4 @@
-import arrButton from "./startArrays/arrButtonMain.js";
+//import arrButton from "./startArrays/arrButtonMain.js";
 import arrSecondButton from "./startArrays/arrSecondButton.js";
 import mainBlock from "./mainBlock/mainBlock.js";
 //import secondSideBarBlocks from "./secondSideBarBlocks.js";

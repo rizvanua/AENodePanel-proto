@@ -27,8 +27,11 @@ function renameBlock(oldName,newName){
     delete GlobalStorage.historyOfObjects[oldName];
     //console.log(GlobalStorage.historyOfObjects[thisNewName]);
     GlobalStorage.historyOfObjects[thisNewName].forEach((i)=>{
-      if(i.node.nodeName=='path'){
+      if(i.node.nodeName=='path'&&i.node.lineFromCyrcle=="circleRight"){
         i.LineFrom=thisNewName;
+      }
+      else if(i.node.nodeName=='path'&&i.node.lineFromCyrcle!="circleRight"){
+          i.LineTo=thisNewName;
       }
     });
   }

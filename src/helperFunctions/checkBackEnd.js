@@ -7,6 +7,8 @@ import moveEffects  from "../helperFunctions/moveEffects.js";
 import deleteBlockEvent from "../customEvents/deleteEventListener.js";
 import renameBlock from "../helperFunctions/renameBlock";
 import activeBlockFunctionsClass from '../helperFunctions/activeBlockFunction';
+import bezieLine from './bezieLine';
+import checkMantraVR from '../helperFunctions/checkMantraVR';
 
 class checkBackEnd{
   constructor(){
@@ -17,7 +19,7 @@ class checkBackEnd{
     this.startCheck();
     this.mouseEnterEvent();
     this.mouseLeaveEvent();
-    this.glassId;
+    GlobalStorage.glassId=document.getElementById("glass");
   };
 
   startCheck() {
@@ -29,7 +31,10 @@ class checkBackEnd{
             //console.log('START FUNCTION');
 //console.log(res);
             this.status=res;//get value for status from ExtendScript ('true' or 'false')
-
+           if(this.status!='true'/*&&GlobalStorage.hasVR===false*/){
+                  checkMantraVR();
+                 //GlobalStorage.glassId.style.display="block";
+           }
           });
 
                 this.startCheck();
@@ -39,9 +44,10 @@ class checkBackEnd{
       }
       else// in this case status is true and we can start to build Panel
       {
-            this.glassId=document.getElementById("glass");
-            this.glassId.style.display="none";
-
+            //this.glassId=document.getElementById("glass");
+            //GlobalStorage.glassId.style.display="none";
+            GlobalStorage.hasVR=true;
+            checkMantraVR();
             this.createBlock();// get gata about stage from backEnd and create block on Panel
             this.functionCheckAE();
 
@@ -71,6 +77,7 @@ class checkBackEnd{
     this.AnimationFrame=setTimeout(()=> {
 
       csInterface.evalScript(`$._ext.checkChangesGlobal()`, (res)=>{
+
           //console.log(res);
           //console.log(res===undefined);
           if(res&&res==0){//CHECK if we'have gone onto new Layer
@@ -80,6 +87,7 @@ class checkBackEnd{
                           GlobalStorage.historyOfObjects={
                             itemArray:[]
                           }
+                          console.log('RESET Y COORD');
                           GlobalStorage.undermostEffectBlock.y=10; //reset global y coodinate
                           GlobalStorage.undermostCommonControlBlock.y=10;
                           resolve(R);
@@ -95,11 +103,13 @@ class checkBackEnd{
           }
           else if(res=='false'|| res===false){
             this.status=false;
+            GlobalStorage.hasVR=false;
             clearTimeout(this.AnimationFrame);
             R.clear();
             GlobalStorage.historyOfObjects={
               itemArray:[]
             }
+            console.log('RESET Y COORD');
             GlobalStorage.undermostEffectBlock.y=10; //reset global y coodinate
             GlobalStorage.undermostCommonControlBlock.y=10;
             this.startCheck();
@@ -114,13 +124,36 @@ class checkBackEnd{
             //GlobalStorage.undermostCommonControlBlock.y=10;
           }
           else if(res&&res!="undefined"){
+
+
+            if(res=="110"||res===false||res=='false'){//empty
+              this.effectCheckArr=[];
+                GlobalStorage.glassId.style.display="block";
+                if(GlobalStorage.historyOfObjects.itemArray.length>0){
+                  GlobalStorage.historyOfObjects.itemArray.forEach((item)=>{
+                    GlobalStorage.historyOfObjects[item.name].remove();
+                    //console.log(item);
+                    //console.log(GlobalStorage.historyOfObjects[item.name]);
+                  });
+                }
+            }
+
+            console.log(res);
+            console.log(GlobalStorage.historyOfObjects);
+
             let resObj=JSON.parse(res);
+            GlobalStorage.hasVR=resObj.hasVR;
+            checkMantraVR();
+
+
             this.effectCheckArr=resObj.effectArray;
             //this.effectCheckArr=res.split(',');
-            if(res=="empty"){
-              this.effectCheckArr=[];
-            }
+
             //console.log(this.effectCheckArr);
+            if(!GlobalStorage.effectCheckArr||!this.effectCheckArr){
+                GlobalStorage.glassId.style.display="block";
+              return false
+            }
             if(GlobalStorage.effectCheckArr.length>this.effectCheckArr.length){
               //console.log(GlobalStorage.effectCheckArr);
               //console.log(this.effectCheckArr);
@@ -150,7 +183,7 @@ class checkBackEnd{
             blockToCreate.forEach((i)=>{
               //console.log(i);
               csInterface.evalScript(`$._ext.findEffect("${i}")`, (res)=>{
-                //console.log(res);
+                console.log(res);
                 let startObject=JSON.parse(res);
 
                   this.functionCreateBlocks(startObject,cordX);
@@ -226,7 +259,8 @@ class checkBackEnd{
       //console.log(JSON.parse(res));
       let startObject=JSON.parse(res);
       GlobalStorage.hasVR=startObject.hasVR;
-      if(startObject.hasVR===true){      //console.log(startObject);      
+      checkMantraVR();
+      if(startObject.hasVR===true){      //console.log(startObject);
         this.functionCreateBlocks(startObject,cordX);
       }
 
@@ -361,7 +395,13 @@ class checkBackEnd{
       //console.log(GlobalStorage.historyOfObjects[i.LineTo][0].attr("y"));
       let LineToY=GlobalStorage.historyOfObjects[i.LineTo][0][1].getBBox().y;
       //let connectPath = R.path( ["M", LineFromX+120, LineFromY+16, "L", LineToX, LineToY+15 ] );
-      let connectPath = R.path(`M${LineFromX+120} ${LineFromY+16}L${LineToX} ${LineToY+15}`);
+      let MX=LineFromX+120;
+      let MY=LineFromY+16;
+      let LX=LineToX;
+      let LY=LineToY+15;
+      let pathCoords=bezieLine(MX,MY,LX,LY);
+      //item.attr({d:`M${MX} ${MY}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${LX} ${(LY)+offset}`});
+      let connectPath = R.path(`M${MX} ${MY}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${LX} ${LY}`);
       connectPath.attr({stroke:"black"});
       connectPath.toBack();
 

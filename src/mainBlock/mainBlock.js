@@ -7,6 +7,7 @@ import drawLineFromTo  from "../helperFunctions/drawLineFromTo.js";
 import activeBlockFunctionsClass from '../helperFunctions/activeBlockFunction';
 import deletePropertyInEffectBlock from '../helperFunctions/deletePropertyInEffectBlock';
 import GlobalStorage from '../storage';
+import bezieLine from '../helperFunctions/bezieLine';
 
 // This class works with mainBlocks (Effects, commonControls, Distributor) and add eventListebers (click,mouseover etc) to them
 
@@ -16,10 +17,12 @@ class mainBlock{
     let str_gradientGrayDark = "l(0,0,0,1)rgb(140,149,158):5-rgb(44,53,63):95";
     let gradientGrayLight = R.gradient(str_gradientGrayLight);
     let gradientGrayDark = R.gradient(str_gradientGrayDark);
+    this.pathCoords;
   }
   createBlockEffects(x,y,item,obj){
     //console.log(obj.distrInst);
     //let objectEffect=JSON.parse(obj);
+    console.log(obj);
     let blockEffectName=obj.name;
     let workBlockSet=Snap.set();
     let typeNode="effects";
@@ -87,7 +90,10 @@ class mainBlock{
           //let group=R.g(workBlock, title, dummy);
           //workBlockSet.push(group);
           //Create options angle, slider, angel
-        let propGroup=CreateProperties([obj.point, obj.slider, obj.angle],y);
+console.log(obj.propArray);
+            let propGroup=CreateProperties(obj.propArray);
+
+
         let mainGroup=R.g(/*workBlock,*/ distrCountText,title, dummy);
         let wrapGroup=R.g(propGroup,mainGroup);
         wrapGroup.attr({ clipPath: clipR});//apply clip-path mask
@@ -116,13 +122,18 @@ class mainBlock{
             workBlockSet.forEach((item, i)=> {
               if (item.node.nodeName == 'path') {
                 let PathString=Snap.parsePathString(item);//get coordunates of line
+                let offset=item.coordDif*1;
                 let MX=PathString[0][1];
                 let MY=PathString[0][2];
-                let LX=PathString[1][1];
-                let LY=PathString[1][2];
-                let offset=item.coordDif*1;
-                //console.log(offset);
-                item.attr("path",`M${MX} ${MY}L${LX} ${(LY)+offset}`);//shift the line to the current propertyBlock
+                let LX=PathString[1][5];
+                let LY=PathString[1][6];
+                LY=(LY)+offset;
+
+                console.log(PathString);
+                let pathCoords=bezieLine(MX,MY,LX,LY);
+                //this.pathCoords=bezieLine(this.ox,this.oy,destx,desty);
+                item.attr({d:`M${MX} ${MY}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${LX} ${LY}`});//shift the line to the current propertyBlock
+                //item.attr("path",`M${MX} ${MY}L${LX} ${(LY)+offset}`);//shift the line to the current propertyBlock
               }
             });
             for(let key in propGroup){
@@ -177,13 +188,18 @@ class mainBlock{
           workBlockSet.forEach((item, i)=> {
             if (item.node.nodeName == 'path') {
               let PathString=Snap.parsePathString(item);
+              let offset=item.coordDif*1;
+              console.log(PathString);
               let MX=PathString[0][1];
               let MY=PathString[0][2];
-              let LX=PathString[1][1];
-              let LY=PathString[1][2];
-              let offset=item.coordDif*1;
+              let LX=PathString[1][5];
+              let LY=PathString[1][6];
+              LY=(LY)-offset
+
               //console.log(offset);
-              item.attr("path",`M${MX} ${MY}L${LX} ${(LY)-offset}`);
+              let pathCoords=bezieLine(MX,MY,LX,LY);
+              item.attr({d:`M${MX} ${MY}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${LX} ${LY}`});
+              //item.attr("path",`M${MX} ${MY}L${LX} ${(LY)-offset}`);
             }
           });
 
@@ -199,6 +215,7 @@ class mainBlock{
           //let angle=CreateProperties(obj.angle);
             //console.log(workBlockSet);
           function CreateProperties(propertyArr){
+            console.log(propertyArr);
             let propertyBlock;
             let propertyText;
             let propertyCircle;
@@ -216,73 +233,68 @@ class mainBlock{
                   });
             groupOfProp.add(propBackground);
             let count=0;
-          for(let a=0; a<propertyArr.length;a++)
-          {
-              if(a==0){
-                propDataType='point'
-              }
-              else if(a==1){
-                propDataType='slider'
-              }
-              else if(a==2){
-                propDataType='angle'
-              }
-              for (let key in propertyArr[a]){
-                //y+=10;
-                //f+=6;
-                count+=1;
-                //console.log(count)
-                if(count>1){
-                  localY+=20;
+            if(propertyArr!=undefined){
+              for(let a=0; a<propertyArr.length;a++)
+              {
+                if(propertyArr.length!=0){
+
+
+
+                let item=propertyArr[a];
+
+
+                  if(a!=0){
+                    localY+=20;
+                  }
+                  else{
+                    localY+=10;
+                  }
+
+                  propertyText= R.text(x+22,localY-5, item.name)
+                  .attr({
+                          fontSize: 14,
+                          textAnchor: "start",
+                          alignmentBaseline:"hanging"
+                        });
+                  propertyCircle=R.circle(x+10, localY, 6).attr({
+                    class:'false'
+                  });
+
+                  propertyBlock= R.rect(x, localY-8, 200,16)
+                  .attr({
+                          "fill-opacity":0,
+                          opacity: 1,
+                          stroke: "none",
+                          class:'prop',
+                          propDataName:item.name,
+                          propDataType:item.type,
+                          coordDif:(localY-12)-y
+                        });
+                    //console.log(propertyBlock.node.oncontextmenu);
+                    deletePropertyInEffectBlock(propertyBlock, workBlockSet);
+                    groupOfProp.add(propertyText,propertyCircle,propertyBlock);
+
+                    groupOfProp.add(propertyText,propertyCircle,propertyBlock);
+
+                  
+                  }
                 }
-                else{
-                  localY+=10;
-                }
-
-
-                //console.log(key)
-                propertyText= R.text(x+22,localY-5, key)
-                .attr({
-                        fontSize: 14,
-                        textAnchor: "start",
-                        alignmentBaseline:"hanging"
-                      });
-                propertyCircle=R.circle(x+10, localY, 6).attr({
-                  class:'false'
-                });
-                //propertyCircle=GlobalStorage.radioON.use().attr({x:x+10, y:localY, class:'false'});
-                //console.log(key);
-                //console.log((localY-8)-y);
-                propertyBlock= R.rect(x, localY-8, 200,16)
-                .attr({
-                        "fill-opacity":0,
-                        opacity: 1,
-                        stroke: "none",
-                        class:'prop',
-                        propDataName:key,
-                        propDataType:propDataType,
-                        coordDif:(localY-12)-y
-                      });
-                  //console.log(propertyBlock.node.oncontextmenu);
-                  deletePropertyInEffectBlock(propertyBlock, workBlockSet);
-
-                /*propertyBlock.on('contextmenu',(e)=>{
-                  e.preventDefault();
-                  console.log(GlobalStorage.controlProp);
-                  console.log(workBlockSet.setEffectName);
-                });*/
-
-                groupOfProp.add(propertyText,propertyCircle,propertyBlock);
-
-              }
+                let bacgroundHeight=(propertyArr.length*20)+52;
+                propBackground.attr({
+                  height:bacgroundHeight
+                })
             }
-              //console.log(groupOfProp.node);
-              //console.log(groupOfProp.node.children);
-              //console.log(groupOfProp.node.children.length);
-              let bacgroundHeight=(((groupOfProp.node.children.length-1)/3)*20)+52;
+            else{
+              let bacgroundHeight=52;
               propBackground.attr({
                 height:bacgroundHeight
               })
+            }
+
+              //console.log(groupOfProp.node);
+              //console.log(groupOfProp.node.children);
+              //console.log(groupOfProp.node.children.length);
+
             return groupOfProp;
 
           }
@@ -391,6 +403,7 @@ class mainBlock{
           //console.log(item);
           workBlockSet.shortName=item.shortName;
           workBlockSet.currentName=thisItemName;
+          workBlockSet.multiplierArr=[];
           //workBlockSet.push(workBlock);
 
 

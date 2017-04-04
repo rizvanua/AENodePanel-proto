@@ -3,6 +3,7 @@ import R from "./raphaelContainer.js"
 // Global storage for ever functions. It uses to keep objects and variables which use as global.
 
 let GlobalStorage={
+  glassId:{},
   input:{},//link to the HTML input element
   initial:false,
   renameObj:{

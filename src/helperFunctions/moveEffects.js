@@ -47,7 +47,9 @@ import R from "../raphaelContainer.js";
 
               return i.y;// Y is point relatively which we are sorting our array. So we've sort array of effects by Y coordinate of rectangle.
           });
-
+          let lowestBlock=_.last(test);
+          console.log('GlobalStorage.undermostEffectBlock=lowestBlock.y');
+          console.log(GlobalStorage.undermostEffectBlock.y=lowestBlock.y);
           //  GlobalStorage.undermostEffectBlock.y=test[test.length-1][1].attr("y");//this is the y coordinate of the lowermost blockEffect
 //console.log(test);
                 resolve(test);

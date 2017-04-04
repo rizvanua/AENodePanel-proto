@@ -33,6 +33,10 @@ rect.multiplier{
   /*background:  url(img/gray-button.png);*/
 }
 
+path{
+  fill:transparent;
+}
+
 circle{
   fill: rgb(255, 102, 102);
   stroke: white;

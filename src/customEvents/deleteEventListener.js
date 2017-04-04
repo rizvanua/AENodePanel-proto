@@ -9,7 +9,7 @@ document.addEventListener('deleteBlockEvent', function (e) {
 console.log(GlobalStorage.effectCheckArr);
 console.log(this.effectCheckArr);*/
 let nameOfBlock
-GlobalStorage.undermostEffectBlock.y=10;
+//GlobalStorage.undermostEffectBlock.y=10;
 
 GlobalStorage.blockToRemove.forEach((i, num)=>{
 
@@ -24,7 +24,10 @@ GlobalStorage.blockToRemove.forEach((i, num)=>{
     if(GlobalStorage.toDelete&&GlobalStorage.toDelete.setEffectName&&GlobalStorage.historyOfObjects[nameOfBlock]){//Remove ordinar effects (not chained with Distributor)
       let effectName=GlobalStorage.toDelete.setEffectName;
       delete GlobalStorage.historyOfObjects[effectName];
-
+      if(effectName=="Mantra VR"){
+      let glassId=document.getElementById("glass");
+      glassId.style.display="block";
+    }
       //Call to ExtScript
 
                   //csInterface.evalScript(`$._ext.deleteEffect("${effectName}")`,(res)=>{//Remove effects from After Effects
@@ -79,12 +82,18 @@ GlobalStorage.blockToRemove.forEach((i, num)=>{
 
   let arrayOfLinkedEffectsString=arrayOfLinkedEffectsFiltered.join(';');//transform array to string to pass in into "ext.deleteCommonControl" function
 
-
+console.log(thisCommonContrlName);
+if(thisCommonContrlName!="Master"){
   csInterface.evalScript(`$._ext.deleteCommonControl('${arrayOfLinkedEffectsString}',"${thisCommonContrlName}")`,(res)=>{
   });
   let remove=GlobalStorage.toDelete.remove()
   delete GlobalStorage.historyOfObjects[nameOfBlock];
   resolve(remove);
+}
+else{
+  csInterface.evalScript(`$._ext.createMasterMultiplier()`);
+}
+
 
 
 
