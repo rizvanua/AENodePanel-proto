@@ -138,8 +138,8 @@ class checkBackEnd{
                 }
             }
 
-            console.log(res);
-            console.log(GlobalStorage.historyOfObjects);
+            //console.log(res);
+            //console.log(GlobalStorage.historyOfObjects);
 
             let resObj=JSON.parse(res);
             GlobalStorage.hasVR=resObj.hasVR;
@@ -183,7 +183,7 @@ class checkBackEnd{
             blockToCreate.forEach((i)=>{
               //console.log(i);
               csInterface.evalScript(`$._ext.findEffect("${i}")`, (res)=>{
-                console.log(res);
+                //console.log(res);
                 let startObject=JSON.parse(res);
 
                   this.functionCreateBlocks(startObject,cordX);
@@ -222,7 +222,14 @@ class checkBackEnd{
               }
               GlobalStorage.effectCheckArr=this.effectCheckArr;// assign current array to previus array
               if(resObj.selectedEffect.effectName&&GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName]&&GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName][0][1][0]){
-                GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName][0][1][0].attr({text:resObj.selectedEffect.distrInst});//change distributor number in EffectBlock
+                let distrInst=null;
+                if((resObj.selectedEffect.distrInst*1)<10){
+                  distrInst=`0${resObj.selectedEffect.distrInst}`;
+                }
+                else{
+                  distrInst=resObj.selectedEffect.distrInst
+                }
+                GlobalStorage.historyOfObjects[resObj.selectedEffect.effectName][0][1][0].attr({text:distrInst});//change distributor number in EffectBlock
               }
               //console.log('Equality')
             }
@@ -282,12 +289,12 @@ class checkBackEnd{
         //console.log(i);
         return obj.name==i.baseEffect;
       });*/
-      cordX=250;
+      cordX=190;
       //let item=itemArr[0];
       let item={name:i.baseEffect};
       let res=i;
       //cordY+=50;
-      let workBlock=new mainBlock().createBlockEffects(cordX,GlobalStorage.undermostEffectBlock.y+=50,item,res);
+      let workBlock=new mainBlock().createBlockEffects(cordX,GlobalStorage.undermostEffectBlock.y+=40,item,res);
       moveEffects(workBlock);
       //console.log(workBlock);
       GlobalStorage.effectCheckArr.push(res);
@@ -299,7 +306,7 @@ class checkBackEnd{
       let itemArr=arrSecondButton.commonControls.filter((obj)=>{
         return obj.fullname==i.baseEffect;
       });
-      cordX=100;
+      cordX=40;
       //console.log(i);
       let item=itemArr[0];
       //console.log(item);
@@ -310,14 +317,14 @@ class checkBackEnd{
       let workBlock;
       if(res!='Master')
       {//
-        workBlock=new mainBlock().createBlockCommonControls(cordX,GlobalStorage.undermostCommonControlBlock.y+=50,item,false, res);
+        workBlock=new mainBlock().createBlockCommonControls(cordX,GlobalStorage.undermostCommonControlBlock.y+=40,item,false, res);
         moveEffects(workBlock);
       }
       else{
         //console.log('CREATE MASTER');
-        cordX=100;
+        cordX=40;
         //cordY=5;
-        workBlock=new mainBlock().createBlockMaster(cordX,5,item,false, res);
+        workBlock=new mainBlock().createBlockMaster(cordX,9,item,false, res);
         moveEffects(workBlock);
       }
 
@@ -330,7 +337,7 @@ class checkBackEnd{
       let itemArr=arrSecondButton.commonControls.filter((obj)=>{
         return obj.fullname==i.baseEffect;
       });
-      cordX=100;
+      cordX=40;
       //console.log(i);
       i.shortName='multiplier';
       let item=i;

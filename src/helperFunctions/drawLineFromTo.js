@@ -50,7 +50,7 @@ let desty = (this.oy * 1 + dy - 5);
 
 let pathCoords=bezieLine(this.ox,this.oy,destx,desty);
 
-  GlobalStorage.currentLine.attr({d:`M${this.ox} ${this.oy}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${destx} ${desty}`});
+  GlobalStorage.currentLine.attr({d:`M${this.ox} ${this.oy}C${pathCoords.cp1x} ${pathCoords.cp1y} ${pathCoords.cp2x} ${pathCoords.cp2y} ${destx} ${desty}`});  
   /*var typeOfControll=GlobalStorage.currentLine.node.shortControlName;
 
     if(GlobalStorage.overMouseSet&&GlobalStorage.currentLine&&GlobalStorage.overMouseSet[typeOfControll]===true){

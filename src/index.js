@@ -11,7 +11,8 @@ import deleteBlockEvent from "./customEvents/deleteEventListener";
 import GlobalStorage from './storage';
 import checkBackEnd from "./helperFunctions/checkBackEnd";
 import renameBlock from "./helperFunctions/renameBlock";
-import mainMenu from "./mainMenu";
+import leftMenu from "./menu/leftMenu";
+import topMenu from "./menu/topMenu";
 import rightMouseClick from "./helperFunctions/rightMouseClick";
 
 let myReq;
@@ -211,8 +212,9 @@ if(readDir.err === 0)
 }
 
 /**/
+let createTopMenu = new topMenu();
 
-let createMainMenu = new mainMenu();
+let createLeftMenu = new leftMenu();
 
 let checkStart=new checkBackEnd();
 

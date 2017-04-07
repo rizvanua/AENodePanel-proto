@@ -34,10 +34,10 @@ class presetsBlocks{
     let propertyOfEffectString =this.innerForEach(obj);
     //console.log(propertyOfEffectString);
     csInterface.evalScript(`$._ext.applyEffectPresets("${item.name}",${propertyOfEffectString})`,(res)=>{//push data into extend script
-    let lowestCoordY=GlobalStorage.undermostEffectBlock.y+=50;
+    //let lowestCoordY=GlobalStorage.undermostEffectBlock.y+=40;
     let objPreset=JSON.parse(res);
     //console.log(objPreset);
-      let workBlock=new mainBlock().createBlockEffects(cordX,lowestCoordY,item,objPreset);
+      let workBlock=new mainBlock().createBlockEffects(cordX,GlobalStorage.undermostEffectBlock.y+=40,item,objPreset);
       //console.log(workBlock);
       moveEffects(workBlock);
       GlobalStorage.effectCreateDrag.active=false// close ability to add this effect to dispatcher

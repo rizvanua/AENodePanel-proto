@@ -49,7 +49,7 @@ import R from "../raphaelContainer.js";
           });
           let lowestBlock=_.last(test);
           console.log('GlobalStorage.undermostEffectBlock=lowestBlock.y');
-          console.log(GlobalStorage.undermostEffectBlock.y=lowestBlock.y);
+          GlobalStorage.undermostEffectBlock.y=lowestBlock.y;
           //  GlobalStorage.undermostEffectBlock.y=test[test.length-1][1].attr("y");//this is the y coordinate of the lowermost blockEffect
 //console.log(test);
                 resolve(test);

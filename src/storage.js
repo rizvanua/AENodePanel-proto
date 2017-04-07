@@ -10,24 +10,6 @@ let GlobalStorage={
     oldName:null,
     newName:null
   },
-  /*storageOfSecondMenuSets:{//storage secondMenu items
-    effects: R.set(),
-    commonControls:R.set(),
-    distributor:R.set(),
-    presets:R.set()
-  },
-  Flags:{
-    effects: true,
-    commonControls:true,
-    distributor:true,
-    presets:true
-  },
-  mainMenuSet:{//storage firsts (main) vertical line of menu
-    effects:R.set(),
-    commonControls:R.set(),
-    distributor:R.set(),
-    presets:R.set()
-  },*/
   hasVR:false,
   lastEffectBlock:{
     y:0
@@ -36,6 +18,8 @@ let GlobalStorage={
   historyOfObjects:{
     itemArray:[]
   },
+  effectsCordX:190,
+  controlsCordX:40,
   undermostEffectBlock:{
     y:10 //this is an Y coordinate of the lowermost blockEffect (see "moveEffects.js")
   },

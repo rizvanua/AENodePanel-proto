@@ -573,7 +573,7 @@ else {
         }
      },
  
-    renameEffect: function(oldEffectName, newEffectName){
+    renameEffect: function(oldEffectName, newEffectName){        
          this.currentLayer.effect.property(oldEffectName).name=newEffectName;
          return newEffectName;
         },
@@ -632,7 +632,21 @@ else {
      this.currentLayer.selected=true;
     },
     selectEffect: function(effectName){
-         //$.writeln(effectName);
+        //propertyGroup
+        //app.executeCommand(app.findMenuCommandId('Curved Mirror1'));
+        //app.executeCommand(1);
+        /*$.writeln(app.effects);
+        for(var i=0; i<app.effects.length;i++){
+            $.writeln(JSON.stringify(app.effects[i]));
+            }*/
+         /*for(var key in app ){
+              $.writeln(key);
+             }*/
+        //$.writeln(this.currentLayer.Effects.property('Curved Mirror1').property('Point of Interest').propertyGroup());
+         //$.writeln(this.currentLayer.Effects.property('Curved Mirror1').property('Point of Interest').parentProperty);
+         /*for(var key in this.currentLayer.Effects.property('Curved Mirror1').property('Point of Interest') ){
+              $.writeln(key);
+             }*/
         this.currentLayer.effect.property(effectName).selected=true;
         //this.currentLayer.effect.property(effectName).activeViewer=true;
         },
@@ -646,6 +660,47 @@ else {
             }
         
         //this.currentLayer.effect.property(effectName).activeViewer=true;
+        },
+    resetLayer:function(){
+        var arrObj=[];
+        //var obj={};
+         $.writeln(this.currentLayer.effect.numProperties);
+        for(var i=this.currentLayer.effect.numProperties; i--;){
+            var obj = {};             
+            obj.currentName=this.currentLayer.effect(i+1).name;
+            obj.matchName=this.currentLayer.effect(i+1).matchName            
+            for (var d=0; d<this.currentLayer.effect(obj.currentName).numProperties; d++){
+                if(this.currentLayer.effect(obj.currentName).property(d+1).expressionEnabled){
+                     var propName=this.currentLayer.effect(obj.currentName).property(d+1).name;
+                     obj[propName]=this.currentLayer.effect(obj.currentName).property(d+1).expression;                    
+                    }
+                } 
+            arrObj.push(obj);
+            this.currentLayer.effect(obj.currentName).remove();           
+            }
+         $.writeln(JSON.stringify(arrObj));
+         for(var a=arrObj.length; a--;){
+             var effectHasBeenReseted=this.currentLayer.Effects.addProperty(arrObj[a].matchName);
+             effectHasBeenReseted.name=arrObj[a].currentName;           
+             for(var key in arrObj[a]){
+                 if(key!='matchName'&&key!='currentName'){
+                     effectHasBeenReseted.property(key).expression=arrObj[a][key];
+                     }
+                 }
+             }
+         this.currentLayer.selected=true;
+        //app.executeCommand(app.findMenuCommandId("About"));
+        },
+    clearLayer:function(toClearArr){
+        var effectArr= toClearArr.split(',');
+       // $.writeln(effectArr.length);
+         for(var i=0; i<effectArr.length;i++){
+             $.writeln("'"+effectArr[i]+"'");
+              $.writeln(this.currentLayer.effect(effectArr[i]).name);
+           if(this.currentLayer.effect(effectArr[i])){
+                 this.currentLayer.effect(effectArr[i]).remove();
+                 }
+             }
         },
     functionEffectLoop: function(layerEffect, d, Obj) {//this function is used in Loop of effect properties
      if (layerEffect.property(d + 1).name != 'Frame Layout' && layerEffect.property(d + 1).name != 'Compositing Options') {

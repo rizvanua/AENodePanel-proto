@@ -62,23 +62,30 @@ class mainBlock{
           });*/
     let distrCount='0';
 
-    let distrCountText= R.text(x+10, y+16, distrCount)
+    let distrCountText= R.text(x+11, y+16, distrCount)
     .attr({
-            fontSize: 15,
+            //fontSize: 15,
             textAnchor: "start",
             alignmentBaseline:"middle",
             opacity: 0
           });
           if(obj.distrInst){
+            let distrInst='01';
+            if((obj.distrInst*1)<10){
+              distrInst=`0${obj.distrInst}`;
+            }
+            else{
+              distrInst=obj.distrInst;
+            }
             distrCountText.attr({
-              text:obj.distrInst,
+              text:distrInst,
               opacity: 1,
             });
           }
 
     let title= R.text(x+44, y+16, blockEffectName)
     .attr({
-            fontSize: 15,
+            //fontSize: 15,
             textAnchor: "start",
             alignmentBaseline:"middle"
           });
@@ -104,7 +111,7 @@ console.log(obj.propArray);
         //wrapGroup.mouseover(()=>{console.log(wrapGroup);});
         mainGroup.dblclick(()=>{
           let EffectName=workBlockSet.setEffectName;
-          GlobalStorage.input.css({top:GlobalStorage.historyOfObjects[EffectName][0].getBBox().y, left: GlobalStorage.historyOfObjects[EffectName][0].getBBox().x+35, width:"160px", height: "26px", position:'absolute', display:'block'});
+          GlobalStorage.input.css({top:GlobalStorage.historyOfObjects[EffectName][0].getBBox().y+28, left: GlobalStorage.historyOfObjects[EffectName][0].getBBox().x+35, width:"160px", height: "26px", position:'absolute', display:'block'});
           //console.log(GlobalStorage.historyOfObjects);
           //console.log(workBlockSet.setEffectName);
           let innerHTML=mainGroup[1].node.innerHTML;
@@ -148,6 +155,11 @@ console.log(obj.propArray);
           let target=event.target;
         if(target.tagName == 'rect'&&target.className!=='prop-wrapper')
           {
+            if(target.getAttribute('propDataType')==GlobalStorage.currentLine.node.shortControlName ){//highlight of the current property block
+                            target.style.fillOpacity='0.1';
+                            target.style.fill='rgb(255,255,255)';
+          }
+
               GlobalStorage.controlProp={
                 type:target.getAttribute('propDataType'),//type of common control ('point' or 'angle' or 'slider')
                 name:target.getAttribute('propDataName'),// name of commonControls property (for example 'Point of Interest')
@@ -252,7 +264,7 @@ console.log(obj.propArray);
 
                   propertyText= R.text(x+22,localY-5, item.name)
                   .attr({
-                          fontSize: 14,
+                          //fontSize: 14,
                           textAnchor: "start",
                           alignmentBaseline:"hanging"
                         });
@@ -276,7 +288,7 @@ console.log(obj.propArray);
 
                     groupOfProp.add(propertyText,propertyCircle,propertyBlock);
 
-                  
+
                   }
                 }
                 let bacgroundHeight=(propertyArr.length*20)+52;
@@ -392,7 +404,7 @@ console.log(obj.propArray);
 
     let title= R.text(x+60, y+16, thisItemName)
     .attr({
-      fontSize: 15,
+      //fontSize: 15,
       textAnchor: "middle",
       alignmentBaseline:"middle"
     });
@@ -441,7 +453,7 @@ console.log(obj.propArray);
     });
     group.dblclick(()=>{
       let EffectName=workBlockSet.thisCommonContrlName;
-      GlobalStorage.input.css({top:GlobalStorage.historyOfObjects[EffectName][0].getBBox().y, left: GlobalStorage.historyOfObjects[EffectName][0].getBBox().x, width:"115px", height: "26px", position:'absolute', display:'block'});
+      GlobalStorage.input.css({top:GlobalStorage.historyOfObjects[EffectName][0].getBBox().y+28, left: GlobalStorage.historyOfObjects[EffectName][0].getBBox().x, width:"115px", height: "26px", position:'absolute', display:'block'});
       //console.log(GlobalStorage.historyOfObjects);
       //console.log(workBlockSet.setEffectName);
       let innerHTML=group[1].node.innerHTML;
@@ -480,7 +492,7 @@ console.log(obj.propArray);
 
     let title= R.text(x+60, y+15, thisItemName)
     .attr({
-      fontSize: 15,
+      //fontSize: 15,
       textAnchor: "middle",
       alignmentBaseline:"middle"
     });
@@ -549,7 +561,7 @@ console.log(obj.propArray);
 
     let title= R.text(x+60, y+16, thisItemName)
     .attr({
-      fontSize: 15,
+      //fontSize: 15,
       textAnchor: "middle",
       alignmentBaseline:"middle"
     });

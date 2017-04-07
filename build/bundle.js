@@ -96,11 +96,15 @@
 
 	var _helperFunctionsRenameBlock2 = _interopRequireDefault(_helperFunctionsRenameBlock);
 
-	var _mainMenu = __webpack_require__(21);
+	var _menuLeftMenu = __webpack_require__(21);
 
-	var _mainMenu2 = _interopRequireDefault(_mainMenu);
+	var _menuLeftMenu2 = _interopRequireDefault(_menuLeftMenu);
 
-	var _helperFunctionsRightMouseClick = __webpack_require__(23);
+	var _menuTopMenu = __webpack_require__(23);
+
+	var _menuTopMenu2 = _interopRequireDefault(_menuTopMenu);
+
+	var _helperFunctionsRightMouseClick = __webpack_require__(24);
 
 	var _helperFunctionsRightMouseClick2 = _interopRequireDefault(_helperFunctionsRightMouseClick);
 
@@ -287,8 +291,9 @@
 	} else {}
 
 	/**/
+	var createTopMenu = new _menuTopMenu2['default']();
 
-	var createMainMenu = new _mainMenu2['default']();
+	var createLeftMenu = new _menuLeftMenu2['default']();
 
 	var checkStart = new _helperFunctionsCheckBackEnd2['default']();
 
@@ -607,24 +612,6 @@
 	    oldName: null,
 	    newName: null
 	  },
-	  /*storageOfSecondMenuSets:{//storage secondMenu items
-	    effects: R.set(),
-	    commonControls:R.set(),
-	    distributor:R.set(),
-	    presets:R.set()
-	  },
-	  Flags:{
-	    effects: true,
-	    commonControls:true,
-	    distributor:true,
-	    presets:true
-	  },
-	  mainMenuSet:{//storage firsts (main) vertical line of menu
-	    effects:R.set(),
-	    commonControls:R.set(),
-	    distributor:R.set(),
-	    presets:R.set()
-	  },*/
 	  hasVR: false,
 	  lastEffectBlock: {
 	    y: 0
@@ -633,6 +620,8 @@
 	  historyOfObjects: {
 	    itemArray: []
 	  },
+	  effectsCordX: 190,
+	  controlsCordX: 40,
 	  undermostEffectBlock: {
 	    y: 10 //this is an Y coordinate of the lowermost blockEffect (see "moveEffects.js")
 	  },
@@ -1251,8 +1240,8 @@
 	                }
 	              }
 
-	              console.log(res);
-	              console.log(_storage2["default"].historyOfObjects);
+	              //console.log(res);
+	              //console.log(GlobalStorage.historyOfObjects);
 
 	              var resObj = JSON.parse(res);
 	              _storage2["default"].hasVR = resObj.hasVR;
@@ -1288,7 +1277,7 @@
 	                    blockToCreate.forEach(function (i) {
 	                      //console.log(i);
 	                      _csInterfaceJs2["default"].evalScript("$._ext.findEffect(\"" + i + "\")", function (res) {
-	                        console.log(res);
+	                        //console.log(res);
 	                        var startObject = JSON.parse(res);
 
 	                        _this3.functionCreateBlocks(startObject, cordX);
@@ -1322,7 +1311,13 @@
 	                    }
 	                    _storage2["default"].effectCheckArr = _this3.effectCheckArr; // assign current array to previus array
 	                    if (resObj.selectedEffect.effectName && _storage2["default"].historyOfObjects[resObj.selectedEffect.effectName] && _storage2["default"].historyOfObjects[resObj.selectedEffect.effectName][0][1][0]) {
-	                      _storage2["default"].historyOfObjects[resObj.selectedEffect.effectName][0][1][0].attr({ text: resObj.selectedEffect.distrInst }); //change distributor number in EffectBlock
+	                      var distrInst = null;
+	                      if (resObj.selectedEffect.distrInst * 1 < 10) {
+	                        distrInst = "0" + resObj.selectedEffect.distrInst;
+	                      } else {
+	                        distrInst = resObj.selectedEffect.distrInst;
+	                      }
+	                      _storage2["default"].historyOfObjects[resObj.selectedEffect.effectName][0][1][0].attr({ text: distrInst }); //change distributor number in EffectBlock
 	                    }
 	                    //console.log('Equality')
 	                  }
@@ -1385,12 +1380,12 @@
 	          //console.log(i);
 	          return obj.name==i.baseEffect;
 	        });*/
-	        cordX = 250;
+	        cordX = 190;
 	        //let item=itemArr[0];
 	        var item = { name: i.baseEffect };
 	        var res = i;
 	        //cordY+=50;
-	        var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(cordX, _storage2["default"].undermostEffectBlock.y += 50, item, res);
+	        var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(cordX, _storage2["default"].undermostEffectBlock.y += 40, item, res);
 	        (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
 	        //console.log(workBlock);
 	        _storage2["default"].effectCheckArr.push(res);
@@ -1403,7 +1398,7 @@
 	        var itemArr = _startArraysArrSecondButtonJs2["default"].commonControls.filter(function (obj) {
 	          return obj.fullname == i.baseEffect;
 	        });
-	        cordX = 100;
+	        cordX = 40;
 	        //console.log(i);
 	        var item = itemArr[0];
 	        //console.log(item);
@@ -1414,13 +1409,13 @@
 	        var workBlock = undefined;
 	        if (res != 'Master') {
 	          //
-	          workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, _storage2["default"].undermostCommonControlBlock.y += 50, item, false, res);
+	          workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, _storage2["default"].undermostCommonControlBlock.y += 40, item, false, res);
 	          (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
 	        } else {
 	          //console.log('CREATE MASTER');
-	          cordX = 100;
+	          cordX = 40;
 	          //cordY=5;
-	          workBlock = new _mainBlockMainBlockJs2["default"]().createBlockMaster(cordX, 5, item, false, res);
+	          workBlock = new _mainBlockMainBlockJs2["default"]().createBlockMaster(cordX, 9, item, false, res);
 	          (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
 	        }
 
@@ -1433,7 +1428,7 @@
 	        var itemArr = _startArraysArrSecondButtonJs2["default"].commonControls.filter(function (obj) {
 	          return obj.fullname == i.baseEffect;
 	        });
-	        cordX = 100;
+	        cordX = 40;
 	        //console.log(i);
 	        i.shortName = 'multiplier';
 	        var item = i;
@@ -1694,21 +1689,27 @@
 	            });*/
 	      var distrCount = '0';
 
-	      var distrCountText = _raphaelContainerJs2["default"].text(x + 10, y + 16, distrCount).attr({
-	        fontSize: 15,
+	      var distrCountText = _raphaelContainerJs2["default"].text(x + 11, y + 16, distrCount).attr({
+	        //fontSize: 15,
 	        textAnchor: "start",
 	        alignmentBaseline: "middle",
 	        opacity: 0
 	      });
 	      if (obj.distrInst) {
+	        var distrInst = '01';
+	        if (obj.distrInst * 1 < 10) {
+	          distrInst = "0" + obj.distrInst;
+	        } else {
+	          distrInst = obj.distrInst;
+	        }
 	        distrCountText.attr({
-	          text: obj.distrInst,
+	          text: distrInst,
 	          opacity: 1
 	        });
 	      }
 
 	      var title = _raphaelContainerJs2["default"].text(x + 44, y + 16, blockEffectName).attr({
-	        fontSize: 15,
+	        //fontSize: 15,
 	        textAnchor: "start",
 	        alignmentBaseline: "middle"
 	      });
@@ -1733,7 +1734,7 @@
 	      //wrapGroup.mouseover(()=>{console.log(wrapGroup);});
 	      mainGroup.dblclick(function () {
 	        var EffectName = workBlockSet.setEffectName;
-	        _storage2["default"].input.css({ top: _storage2["default"].historyOfObjects[EffectName][0].getBBox().y, left: _storage2["default"].historyOfObjects[EffectName][0].getBBox().x + 35, width: "160px", height: "26px", position: 'absolute', display: 'block' });
+	        _storage2["default"].input.css({ top: _storage2["default"].historyOfObjects[EffectName][0].getBBox().y + 28, left: _storage2["default"].historyOfObjects[EffectName][0].getBBox().x + 35, width: "160px", height: "26px", position: 'absolute', display: 'block' });
 	        //console.log(GlobalStorage.historyOfObjects);
 	        //console.log(workBlockSet.setEffectName);
 	        var innerHTML = mainGroup[1].node.innerHTML;
@@ -1775,6 +1776,12 @@
 	      propGroup.mouseover(function (event) {
 	        var target = event.target;
 	        if (target.tagName == 'rect' && target.className !== 'prop-wrapper') {
+	          if (target.getAttribute('propDataType') == _storage2["default"].currentLine.node.shortControlName) {
+	            //highlight of the current property block
+	            target.style.fillOpacity = '0.1';
+	            target.style.fill = 'rgb(255,255,255)';
+	          }
+
 	          _storage2["default"].controlProp = {
 	            type: target.getAttribute('propDataType'), //type of common control ('point' or 'angle' or 'slider')
 	            name: target.getAttribute('propDataName'), // name of commonControls property (for example 'Point of Interest')
@@ -1865,7 +1872,7 @@
 	              }
 
 	              propertyText = _raphaelContainerJs2["default"].text(x + 22, localY - 5, _item.name).attr({
-	                fontSize: 14,
+	                //fontSize: 14,
 	                textAnchor: "start",
 	                alignmentBaseline: "hanging"
 	              });
@@ -1989,7 +1996,7 @@
 	      //workBlock.node.effectName=item.effectName;
 
 	      var title = _raphaelContainerJs2["default"].text(x + 60, y + 16, thisItemName).attr({
-	        fontSize: 15,
+	        //fontSize: 15,
 	        textAnchor: "middle",
 	        alignmentBaseline: "middle"
 	      });
@@ -2037,7 +2044,7 @@
 	      });
 	      group.dblclick(function () {
 	        var EffectName = workBlockSet.thisCommonContrlName;
-	        _storage2["default"].input.css({ top: _storage2["default"].historyOfObjects[EffectName][0].getBBox().y, left: _storage2["default"].historyOfObjects[EffectName][0].getBBox().x, width: "115px", height: "26px", position: 'absolute', display: 'block' });
+	        _storage2["default"].input.css({ top: _storage2["default"].historyOfObjects[EffectName][0].getBBox().y + 28, left: _storage2["default"].historyOfObjects[EffectName][0].getBBox().x, width: "115px", height: "26px", position: 'absolute', display: 'block' });
 	        //console.log(GlobalStorage.historyOfObjects);
 	        //console.log(workBlockSet.setEffectName);
 	        var innerHTML = group[1].node.innerHTML;
@@ -2071,7 +2078,7 @@
 	      });
 
 	      var title = _raphaelContainerJs2["default"].text(x + 60, y + 15, thisItemName).attr({
-	        fontSize: 15,
+	        //fontSize: 15,
 	        textAnchor: "middle",
 	        alignmentBaseline: "middle"
 	      });
@@ -2137,7 +2144,7 @@
 	      //workBlock.node.effectName=item.effectName;
 
 	      var title = _raphaelContainerJs2["default"].text(x + 60, y + 16, thisItemName).attr({
-	        fontSize: 15,
+	        //fontSize: 15,
 	        textAnchor: "middle",
 	        alignmentBaseline: "middle"
 	      });
@@ -2753,7 +2760,7 @@
 	    });
 	    var lowestBlock = _.last(test);
 	    console.log('GlobalStorage.undermostEffectBlock=lowestBlock.y');
-	    console.log(_storage2['default'].undermostEffectBlock.y = lowestBlock.y);
+	    _storage2['default'].undermostEffectBlock.y = lowestBlock.y;
 	    //  GlobalStorage.undermostEffectBlock.y=test[test.length-1][1].attr("y");//this is the y coordinate of the lowermost blockEffect
 	    //console.log(test);
 	    resolve(test);
@@ -3073,8 +3080,6 @@
 	  value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3109,217 +3114,94 @@
 
 	var _mainBlockPresetsBlocksJs2 = _interopRequireDefault(_mainBlockPresetsBlocksJs);
 
-	var mainMenu = (function () {
-	  function mainMenu() {
-	    _classCallCheck(this, mainMenu);
+	var leftMenu = function leftMenu() {
+	  _classCallCheck(this, leftMenu);
 
-	    var wrapUl = $('<ul>', {
-	      id: "nav"
+	  var wrapUl = $('<ul>', {
+	    id: "nav"
+	  });
+	  //blocks of First Menue
+	  var clearButton = $('<li>', {
+	    id: 'clear'
+	  }).append("<div class='bage-small clear'></div>");
+	  wrapUl.append(clearButton);
+	  clearButton.click(function () {
+	    var toClearArr = _storage2["default"].historyOfObjects.itemArray.map(function (item) {
+	      return item.name;
 	    });
-	    //blocks of First Menue
-	    var effects = $('<li>', {
-	      id: 'effects'
-	    }).append("<div class='bage-small'><p>E</p></div>");
-	    var effectsUl = effects.append("<ul class='subs'></ul>");
-	    wrapUl.append(effects);
+	    toClearArr = _.without(toClearArr, 'Master', 'Mantra VR');
 
-	    var commonControls = $('<li>', {
-	      id: 'commonControls'
-	    }).append("<div class='bage-small'><p>C</p></div>");
-	    var commonControlsUl = commonControls.append("<ul class='subs'></ul>");
-	    wrapUl.append(commonControls);
-
-	    /*let distributors=$('<li>',{
-	      id:'distributor'
-	    }).append("<div class='bage-small disable'><p>D</p></div>");
-	    let distributorsUl=distributors.append("<ul class='subs disable'></ul>");
-	    wrapUl.append(distributors);*/
-
-	    var multipliers = $('<li>', {
-	      id: 'multiplier'
-	    }).append("<div class='bage-small multipliers'><p>M</p></div>");
-	    var multiplierUl = multipliers.children().append("<ul class='subs'></ul>");
-	    wrapUl.append(multipliers);
-
-	    var presets = $('<li>', {
-	      id: 'presets'
-	    }).append("<div class='bage-small presets'><p>P</p></div>");
-	    var presetsUl = presets.children().append("<ul class='subs'></ul>");
-	    wrapUl.append(presets);
-
-	    //blocks of second Menue with draggable
-	    _startArraysArrSecondButtonJs2["default"].effects.forEach(function (item, i) {
-	      if (item.name == "Mettle Mantra VR") {
-	        return false;
-	      }
-	      var effectLi = $('<li>', {
-	        id: item.name,
-	        text: item.name,
-	        dataPoi: item.poi
-	      }).draggable({
-	        start: function start(event, ui) {
-	          _storage2["default"].effectCreateDrag.active = true;
-	          _storage2["default"].effectCreateDrag.effectType = ui.helper.attr("id"); //put Effect Type into GlobalStorage.effectCreateDrag.effectType to add a lot of effects wuth current type into Distributor
-	          _storage2["default"].effectCreateDrag.poi = ui.helper.attr("datapoi"); //crete object with poi value TRUE or FALSE to check if we can add this effect into distributor
-	          $(this).parent().fadeTo(0, 1); // lock opacity in 1 to keep div visible
-	          $(this).parent().css('top', 0); //lock top coordinate of menu to keep menu visible
-	          $(this).parent().css('left', 50); //lock left coordinate of menu to keep menu visible
-	        },
-	        stop: function stop(event, ui) {
-	          var cordX = this.getBoundingClientRect().left; //get real positio of X
-	          var cordY = this.getBoundingClientRect().top; //get real positio of Y
-	          _csInterface2["default"].evalScript("$._ext.applyEffect(\"" + item.name + "\")", function (res) {
-	            //push data into extend script
-	            var obj = JSON.parse(res);
-	            var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(cordX, cordY, item, obj);
-	            (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
-	            _storage2["default"].effectCreateDrag.active = false; // close ability to add this effect to dispatcher
-	          });
-	          $(this).parent().fadeTo(0, 0); // unlock opacity and turn it in 0 to hide menu
-	          $(this).parent().removeAttr('style'); //remove style options to rest in into intitial (see css file) style
-	          $(this).css('left', 0).css('top', 0);
-	          //$(this).parent().css('left',-9999);
+	    if (toClearArr.length > 0) {
+	      //toClearArr=toClearArr.join(';');
+	      //console.log(toClearArr);
+	      toClearArr.forEach(function (item) {
+	        _storage2["default"].historyOfObjects[item].remove();
+	        delete _storage2["default"].historyOfObjects[item];
+	      });
+	      _csInterface2["default"].evalScript("$._ext.clearLayer(\"" + toClearArr + "\")");
+	      var newItemArr = [];
+	      _storage2["default"].historyOfObjects.itemArray.forEach(function (item) {
+	        if (item.name == "Mantra VR" || item.name == "Master") {
+	          newItemArr.push(item);
 	        }
 	      });
+	      console.log(newItemArr);
+	      _storage2["default"].historyOfObjects.itemArray = newItemArr;
+	      _storage2["default"].historyOfObjects.itemArray = _.sortBy(_storage2["default"].historyOfObjects.itemArray, function (item) {
 
-	      effectLi.click(function () {
-	        var cordX = 250;
-	        _csInterface2["default"].evalScript("$._ext.applyEffect(\"" + item.name + "\")", function (res) {
-	          //push data into extend script
-	          var obj = JSON.parse(res);
-	          console.log(obj);
-	          var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(cordX, _storage2["default"].undermostEffectBlock.y += 50, item, obj);
-	          (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
-	          //GlobalStorage.effectCreateDrag.active=false// close ability to add this effect to dispatcher
-	        });
+	        return item.y; // Y is point relatively which we are sorting our array. So we've sort array of effects by Y coordinate of rectangle.
 	      });
-	      effects.children('ul').append(effectLi);
-	      //console.log(item);
-	    });
-
-	    _startArraysArrSecondButtonJs2["default"].commonControls.forEach(function (item, i) {
-	      var commonControlLi = $('<li>', {
-	        id: item.name,
-	        text: item.name,
-	        "class": 'control'
-	      }).draggable({
-	        start: function start(event, ui) {
-	          $(this).parent().fadeTo(0, 1); // lock opacity in 1 to keep div visible
-	          $(this).parent().css('top', 0); //lock top coordinate of menu to keep menu visible
-	          $(this).parent().css('left', 50); //lock left coordinate of menu to keep menu visible
-	        },
-	        stop: function stop(event, ui) {
-	          var cordX = this.getBoundingClientRect().left; //get real positio of X
-	          var cordY = this.getBoundingClientRect().top; //get real positio of Y
-	          var controlType = item.name;
-	          _csInterface2["default"].evalScript("$._ext.createControl(\"" + controlType + "\")", function (res) {
-	            //push data into extend script
-	            var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, cordY, item, false, res);
-	            (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock); // range an order of this effect
-	          });
-	          $(this).parent().fadeTo(0, 0); // unlock opacity and turn it in 0 to hide menu
-	          $(this).parent().removeAttr('style'); //remove style options to rest in into intitial (see css file) style
-	          $(this).css('left', 0).css('top', 0);
-	        }
-	      });
-	      commonControlLi.click(function () {
-	        var cordX = 100;
-	        _csInterface2["default"].evalScript("$._ext.createControl(\"" + item.name + "\")", function (res) {
-	          //push data into extend script
-	          //console.log(res);
-	          var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(cordX, _storage2["default"].undermostCommonControlBlock.y += 50, item, false, res);
-	          (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
-	          //GlobalStorage.effectCreateDrag.active=false// close ability to add this effect to dispatcher
-	        });
-	      });
-	      commonControlsUl.children('ul').append(commonControlLi);
-	      //console.log(item);
-	    });
-
-	    /*arrSecondButton.distributor.forEach((index,i)=>{
-	      let distributorlLi=$('<li>',{
-	        id:index.name,
-	        text:index.name
-	      });
-	      distributorsUl.children('ul').append(distributorlLi);
-	      //console.log(index);
-	    });*/
-
-	    _startArraysArrSecondButtonJs2["default"].presets.forEach(function (item, i) {
-	      var presetLi = $('<li>', {
-	        id: item.name,
-	        text: item.name
-	      }).draggable({
-	        start: function start(event, ui) {
-	          $(this).parent().fadeTo(0, 1); // lock opacity in 1 to keep div visible
-	          $(this).parent().css('top', 0); //lock top coordinate of menu to keep menu visible
-	          $(this).parent().css('left', 50); //lock left coordinate of menu to keep menu visible
-	        },
-	        stop: function stop(event, ui) {
-	          var cordX = this.getBoundingClientRect().left; //get real positio of X
-	          var cordY = this.getBoundingClientRect().top; //get real positio of Y
-
-	          //let lowestCoordY=GlobalStorage.undermostEffectBlock.y;
-	          new _mainBlockPresetsBlocksJs2["default"]().createPresetsBlocks(cordX, item);
-
-	          $(this).parent().fadeTo(0, 0); // unlock opacity and turn it in 0 to hide menu
-	          $(this).parent().removeAttr('style'); //remove style options to rest in into intitial (see css file) style
-	          $(this).css('left', 0).css('top', 0);
-	          //$(this).parent().css('left',-9999);
-	        }
-	      });
-
-	      presetLi.click(function () {
-	        var cordX = 250;
-	        var workBlock = new _mainBlockPresetsBlocksJs2["default"]().createPresetsBlocks(cordX, item);
-	      });
-	      presetsUl.children('ul').append(presetLi);
-	      //console.log(index);
-	    });
-
-	    //multiplier menu
-	    _startArraysArrSecondButtonJs2["default"].multiplier.forEach(function (item, i) {
-	      var multiplierLi = $('<li>', {
-	        id: item.id,
-	        text: item.name
-	      }).draggable({
-	        start: function start(event, ui) {
-	          $(this).parent().fadeTo(0, 1); // lock opacity in 1 to keep div visible
-	          $(this).parent().css('top', 0); //lock top coordinate of menu to keep menu visible
-	          $(this).parent().css('left', 50); //lock left coordinate of menu to keep menu visible
-	        },
-	        stop: function stop(event, ui) {
-	          var cordX = this.getBoundingClientRect().left; //get real positio of X
-	          var cordY = this.getBoundingClientRect().top; //get real positio of Y
-	          var controlType = item.name;
-	          //csInterface.evalScript(`$._ext.createControl("${controlType}")`,(res)=>{//push data into extend script
-	          _csInterface2["default"].evalScript("$._ext.createMultiplier()", function (res) {
-	            //push data into extend script
-	            var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockMultiplier(cordX, _storage2["default"].undermostCommonControlBlock.y += 50, item, res);
-	            (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock); // range an order of this effect
-	          });
-	          $(this).parent().fadeTo(0, 0); // unlock opacity and turn it in 0 to hide menu
-	          $(this).parent().removeAttr('style'); //remove style options to rest in into intitial (see css file) style
-	          $(this).css('left', 0).css('top', 0);
-	        }
-	      });
-	      multiplierUl.children('ul').append(multiplierLi);
-	    });
-
-	    var menuDiv = $('#menu').append(wrapUl);
-	  }
-
-	  _createClass(mainMenu, [{
-	    key: "start",
-	    value: function start(event) {
-	      //console.log(event);
+	      var lastObj = _.last(_storage2["default"].historyOfObjects.itemArray);
+	      _storage2["default"].undermostEffectBlock.y = lastObj.y;
+	      _storage2["default"].undermostCommonControlBlock.y = 10 + 32;
 	    }
-	  }]);
+	  });
 
-	  return mainMenu;
-	})();
+	  var resetButton = $('<li>', {
+	    id: 'reset'
+	  }).append("<div class='bage-small reset'></div>");
+	  wrapUl.append(resetButton);
+	  resetButton.click(function () {
+	    var resetArr = [];
+	    var obj = {};
+	    console.log(_storage2["default"].historyOfObjects);
+	    for (var key in _storage2["default"].historyOfObjects) {
+	      if (key != "itemArray") {
+	        obj.name = key;
+	        if (_storage2["default"].historyOfObjects[key].fullCommonContrlName) {
+	          obj.blockType = _storage2["default"].historyOfObjects[key].fullCommonContrlName;
+	        } else {
+	          obj.blockType = _storage2["default"].historyOfObjects[key].baseEffect;
+	        }
+	      }
+	    }
+	    _csInterface2["default"].evalScript("$._ext.resetLayer()");
+	  });
 
-	exports["default"] = mainMenu;
+	  var presets = $('<li>', {
+	    id: 'presets'
+	  }).append("<div class='bage-small presets'></div>");
+	  var presetsUl = presets.children().append("<ul class='subs'></ul>");
+	  wrapUl.append(presets);
+
+	  _startArraysArrSecondButtonJs2["default"].presets.forEach(function (item, i) {
+	    var presetLi = $('<li>', {
+	      id: item.name,
+	      text: item.name
+	    });
+
+	    presetLi.click(function () {
+	      //let cordX=250;
+	      var workBlock = new _mainBlockPresetsBlocksJs2["default"]().createPresetsBlocks(_storage2["default"].effectsCordX, item);
+	    });
+	    presetsUl.children('ul').append(presetLi);
+	    //console.log(index);
+	  });
+
+	  var menuDiv = $('#menuleft').append(wrapUl);
+	};
+
+	exports["default"] = leftMenu;
 	module.exports = exports["default"];
 
 /***/ },
@@ -3397,10 +3279,10 @@
 	        //console.log(propertyOfEffectString);
 	        _csInterfaceJs2["default"].evalScript("$._ext.applyEffectPresets(\"" + item.name + "\"," + propertyOfEffectString + ")", function (res) {
 	          //push data into extend script
-	          var lowestCoordY = _storage2["default"].undermostEffectBlock.y += 50;
+	          //let lowestCoordY=GlobalStorage.undermostEffectBlock.y+=40;
 	          var objPreset = JSON.parse(res);
 	          //console.log(objPreset);
-	          var workBlock = new _mainBlockJs2["default"]().createBlockEffects(cordX, lowestCoordY, item, objPreset);
+	          var workBlock = new _mainBlockJs2["default"]().createBlockEffects(cordX, _storage2["default"].undermostEffectBlock.y += 40, item, objPreset);
 	          //console.log(workBlock);
 	          (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
 	          _storage2["default"].effectCreateDrag.active = false; // close ability to add this effect to dispatcher
@@ -3468,6 +3350,122 @@
 
 /***/ },
 /* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//import arrButton from "./startArrays/arrButtonMain.js";
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var _startArraysArrSecondButtonJs = __webpack_require__(1);
+
+	var _startArraysArrSecondButtonJs2 = _interopRequireDefault(_startArraysArrSecondButtonJs);
+
+	var _mainBlockMainBlockJs = __webpack_require__(12);
+
+	var _mainBlockMainBlockJs2 = _interopRequireDefault(_mainBlockMainBlockJs);
+
+	//import secondSideBarBlocks from "./secondSideBarBlocks.js";
+
+	var _raphaelContainerJs = __webpack_require__(6);
+
+	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
+
+	var _storage = __webpack_require__(8);
+
+	var _storage2 = _interopRequireDefault(_storage);
+
+	var _csInterface = __webpack_require__(2);
+
+	var _csInterface2 = _interopRequireDefault(_csInterface);
+
+	var _helperFunctionsMoveEffectsJs = __webpack_require__(16);
+
+	var _helperFunctionsMoveEffectsJs2 = _interopRequireDefault(_helperFunctionsMoveEffectsJs);
+
+	var _mainBlockPresetsBlocksJs = __webpack_require__(22);
+
+	var _mainBlockPresetsBlocksJs2 = _interopRequireDefault(_mainBlockPresetsBlocksJs);
+
+	var topMenu = function topMenu() {
+	  _classCallCheck(this, topMenu);
+
+	  var wrapUl = $('<ul>', {
+	    id: "nav"
+	  });
+	  //blocks of First Menue
+	  var commonControls = $('<li>', {
+	    id: 'commonControls'
+	  }).append("<div class='bage-small'>Controls</div>");
+	  var commonControlsUl = commonControls.append("<ul class='subs'></ul>");
+	  wrapUl.append(commonControls);
+
+	  var effects = $('<li>', {
+	    id: 'effects'
+	  }).append("<div class='bage-small'>Effects</div>");
+	  var effectsUl = effects.append("<ul class='subs'></ul>");
+	  wrapUl.append(effects);
+
+	  //blocks of second Menue with draggable
+	  _startArraysArrSecondButtonJs2["default"].effects.forEach(function (item, i) {
+	    if (item.name == "Mettle Mantra VR") {
+	      return false;
+	    }
+	    var effectLi = $('<li>', {
+	      id: item.name,
+	      text: item.name,
+	      dataPoi: item.poi,
+	      "class": 'effects'
+	    });
+
+	    effectLi.click(function () {
+	      //let cordX=250;
+	      _csInterface2["default"].evalScript("$._ext.applyEffect(\"" + item.name + "\")", function (res) {
+	        //push data into extend script
+	        var obj = JSON.parse(res);
+	        console.log(obj);
+	        var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockEffects(_storage2["default"].effectsCordX, _storage2["default"].undermostEffectBlock.y += 40, item, obj);
+	        (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
+	        //GlobalStorage.effectCreateDrag.active=false// close ability to add this effect to dispatcher
+	      });
+	    });
+	    effects.children('ul').append(effectLi);
+	    //console.log(item);
+	  });
+
+	  _startArraysArrSecondButtonJs2["default"].commonControls.forEach(function (item, i) {
+	    var commonControlLi = $('<li>', {
+	      id: item.name,
+	      text: item.name
+	    });
+	    commonControlLi.click(function () {
+	      //let cordX=100;
+	      _csInterface2["default"].evalScript("$._ext.createControl(\"" + item.name + "\")", function (res) {
+	        //push data into extend script
+	        //console.log(res);
+	        var workBlock = new _mainBlockMainBlockJs2["default"]().createBlockCommonControls(_storage2["default"].controlsCordX, _storage2["default"].undermostCommonControlBlock.y += 40, item, false, res);
+	        (0, _helperFunctionsMoveEffectsJs2["default"])(workBlock);
+	        //GlobalStorage.effectCreateDrag.active=false// close ability to add this effect to dispatcher
+	      });
+	    });
+	    commonControlsUl.children('ul').append(commonControlLi);
+	    //console.log(item);
+	  });
+
+	  var menuDiv = $('#menutop').append(wrapUl);
+	};
+
+	exports["default"] = topMenu;
+	module.exports = exports["default"];
+
+/***/ },
+/* 24 */
 /***/ function(module, exports) {
 
 	"use strict";
