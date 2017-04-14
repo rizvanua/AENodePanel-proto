@@ -52,7 +52,11 @@
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-	var _startArraysArrSecondButton = __webpack_require__(1);
+	var _controlsPointCoordsDragJs = __webpack_require__(1);
+
+	var _controlsPointCoordsDragJs2 = _interopRequireDefault(_controlsPointCoordsDragJs);
+
+	var _startArraysArrSecondButton = __webpack_require__(3);
 
 	var _startArraysArrSecondButton2 = _interopRequireDefault(_startArraysArrSecondButton);
 
@@ -60,53 +64,57 @@
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
 
-	var _snapCustomFunctionsForEachInGroup = __webpack_require__(3);
+	var _snapCustomFunctionsForEachInGroup = __webpack_require__(4);
 
 	var _snapCustomFunctionsForEachInGroup2 = _interopRequireDefault(_snapCustomFunctionsForEachInGroup);
 
-	var _snapCustomFunctionsToogleAttr = __webpack_require__(4);
+	var _snapCustomFunctionsToogleAttr = __webpack_require__(5);
 
 	var _snapCustomFunctionsToogleAttr2 = _interopRequireDefault(_snapCustomFunctionsToogleAttr);
 
-	var _snapCustomFunctionsToFrontToBack = __webpack_require__(5);
+	var _snapCustomFunctionsToFrontToBack = __webpack_require__(6);
 
 	var _snapCustomFunctionsToFrontToBack2 = _interopRequireDefault(_snapCustomFunctionsToFrontToBack);
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
-	var _helperFunctionsCatchPressButtonDelete = __webpack_require__(7);
+	var _helperFunctionsCatchPressButtonDelete = __webpack_require__(8);
 
 	var _helperFunctionsCatchPressButtonDelete2 = _interopRequireDefault(_helperFunctionsCatchPressButtonDelete);
 
-	var _customEventsDeleteEventListener = __webpack_require__(10);
+	var _customEventsDeleteEventListener = __webpack_require__(11);
 
 	var _customEventsDeleteEventListener2 = _interopRequireDefault(_customEventsDeleteEventListener);
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
-	var _helperFunctionsCheckBackEnd = __webpack_require__(11);
+	var _helperFunctionsCheckBackEnd = __webpack_require__(12);
 
 	var _helperFunctionsCheckBackEnd2 = _interopRequireDefault(_helperFunctionsCheckBackEnd);
 
-	var _helperFunctionsRenameBlock = __webpack_require__(19);
+	var _helperFunctionsRenameBlock = __webpack_require__(21);
 
 	var _helperFunctionsRenameBlock2 = _interopRequireDefault(_helperFunctionsRenameBlock);
 
-	var _menuLeftMenu = __webpack_require__(21);
+	var _menuLeftMenu = __webpack_require__(23);
 
 	var _menuLeftMenu2 = _interopRequireDefault(_menuLeftMenu);
 
-	var _menuTopMenu = __webpack_require__(23);
+	var _menuTopMenu = __webpack_require__(25);
 
 	var _menuTopMenu2 = _interopRequireDefault(_menuTopMenu);
 
-	var _helperFunctionsRightMouseClick = __webpack_require__(24);
+	var _helperFunctionsRightMouseClick = __webpack_require__(26);
 
 	var _helperFunctionsRightMouseClick2 = _interopRequireDefault(_helperFunctionsRightMouseClick);
+
+	var _controlsCreateControlsWindowsJs = __webpack_require__(20);
+
+	var _controlsCreateControlsWindowsJs2 = _interopRequireDefault(_controlsCreateControlsWindowsJs);
 
 	var myReq = undefined;
 	var status = false;
@@ -117,8 +125,10 @@
 	var jsonString = '[{"keyCode": \t46},{"keyCode": 46,"ctrlKey": true}]';
 	_csInterface2['default'].registerKeyEventsInterest(jsonString); //register buttons to use in HTML5 panel
 	(0, _helperFunctionsRightMouseClick2['default'])();
+	_storage2['default'].container = $("#container");
 	_storage2['default'].input = $("<input type='text' id='input'/>");
-	$("#container").append(_storage2['default'].input);
+	_storage2['default'].container.append(_storage2['default'].input);
+	new _controlsCreateControlsWindowsJs2['default']().createGround();
 	_storage2['default'].input.keydown(function (event) {
 	  console.log(event);
 	  if (_storage2['default'].renameObj.oldName && event.keyCode == 13) {
@@ -329,6 +339,132 @@
 
 /***/ },
 /* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _csInterfaceJs = __webpack_require__(2);
+
+	var _csInterfaceJs2 = _interopRequireDefault(_csInterfaceJs);
+
+	/*$.fn.pointCoordsDrag= function () {
+
+	};*/
+
+	(function ($) {
+	  $.fn.pointCoordsDrag = function (coords, pointName, pointInputX, pointInputY) {
+	    var _this = this;
+
+	    var width = $(this).parent().width();
+	    var height = $(this).parent().height();
+	    var coordsArr = coords.split(',');
+	    var currentWidth = coordsArr[0];
+	    var currentHight = coordsArr[1];
+	    var compositionWidth = coordsArr[2];
+	    var compositionHight = coordsArr[3];
+	    //let parentElem=parentElem.position()
+	    pointInputX.on("keypress", function (e) {
+	      //console.log(pointInputX.val());
+	      if (e.which == 13) {
+	        //point.css({'top'});
+	        //let thisPointY=`${(currentHight*height)/compositionHight}px`;
+	        var thisPointX = pointInputX.val() * width / compositionWidth + "px";
+	        //$(this).css({'top':thisPointY});
+	        $(_this).css({ 'left': thisPointX });
+	        var yValue = parseInt($(_this).css('top')) * compositionHight / height;
+	        var setValue = [pointInputX.val(), yValue];
+	        _csInterfaceJs2["default"].evalScript("$._ext.setPointControlValue(\"" + pointName + "\",\"" + setValue + "\")");
+	      }
+	    });
+
+	    pointInputY.on("keypress", function (e) {
+	      //console.log(pointInputX.val());
+	      if (e.which == 13) {
+	        //console.log(point.css('top'));
+	        var thisPointY = pointInputY.val() * height / compositionHight + "px";
+	        $(_this).css({ 'top': thisPointY });
+	        var xValue = parseInt($(_this).css('left')) * compositionWidth / width;
+	        var setValue = [xValue, pointInputY.val()];
+	        _csInterfaceJs2["default"].evalScript("$._ext.setPointControlValue(\"" + pointName + "\",\"" + setValue + "\")");
+	      }
+	    });
+	    //
+	    $(this).draggable({
+	      create: function create(event, ui) {
+
+	        //if(coords&&coords!='undefined'){
+	        console.log('create', coords);
+	        var coordsArr = coords.split(',');
+	        //}
+	        var currentWidth = coordsArr[0];
+	        var currentHight = coordsArr[1];
+	        var compositionWidth = coordsArr[2];
+	        var compositionHight = coordsArr[3];
+	        //$(this).position.top=(750/2);
+	        pointInputX.val(currentWidth);
+	        pointInputY.val(currentHight);
+	        var thisPointY = currentHight * height / compositionHight + "px";
+	        var thisPointX = currentWidth * width / compositionWidth + "px";
+	        $(this).css({ 'top': thisPointY });
+	        $(this).css({ 'left': thisPointX });
+	        //$(this).position.left=(1500/2);
+	      },
+	      drag: function drag(event, ui) {
+	        /*let offset=$(this).position();
+	        console.log(offset);*/
+	        var coordY = parseInt($(this).css('top'), 10);
+	        var coordX = parseInt($(this).css('left'), 10);
+	        console.log(coordY, coordX);
+	        if (ui.position.top > 200) {
+	          ui.position.top = 200;
+	          $(this).css({ 'top': '200px' });
+	          //return false;
+	        } else if (ui.position.top < 0) {
+	            ui.position.top = 0;
+	            $(this).css({ 'top': '0px' });
+	            //return false;
+	          }
+	        if (ui.position.left > 400) {
+	          ui.position.left = 400;
+	          $(this).css({ 'left': '400px' });
+	          //return false;
+	        } else if (ui.position.left < 0) {
+	            ui.position.left = 0;
+	            $(this).css({ 'left': '0px' });
+	            //return false;
+	          }
+	        var yValue = ui.position.top * compositionHight / height;
+	        var xValue = ui.position.left * compositionWidth / width;
+	        pointInputX.val(xValue);
+	        pointInputY.val(yValue);
+	        var setValue = [xValue, yValue];
+	        _csInterfaceJs2["default"].evalScript("$._ext.setPointControlValue(\"" + pointName + "\",\"" + setValue + "\")");
+	        //console.log(((ui.position.top)*compositionHight)/height);
+	        //console.log(((ui.position.left)*compositionWidth)/width);
+	      }
+	    });
+	    return this;
+	  };
+	})(jQuery);
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var csInterface = new CSInterface();
+
+	exports["default"] = csInterface;
+	module.exports = exports["default"];
+
+/***/ },
+/* 3 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -350,21 +486,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var csInterface = new CSInterface();
-
-	exports["default"] = csInterface;
-	module.exports = exports["default"];
-
-/***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	//Custom function to hangle ellements in group
@@ -383,7 +505,7 @@
 	});
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	//Custom function to toogle Attribute clipPath
@@ -403,7 +525,7 @@
 	});
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -419,7 +541,7 @@
 	});
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	//const R = Raphael("container", '100%', '100%' );
@@ -434,7 +556,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -445,7 +567,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
@@ -453,11 +575,11 @@
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
-	var _innerDeleteFunction = __webpack_require__(9);
+	var _innerDeleteFunction = __webpack_require__(10);
 
 	var _innerDeleteFunction2 = _interopRequireDefault(_innerDeleteFunction);
 
@@ -587,7 +709,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -598,7 +720,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
@@ -606,7 +728,12 @@
 
 	var GlobalStorage = {
 	  glassId: {},
+	  container: {}, //link to the 'div#container' element
 	  input: {}, //link to the HTML input element
+	  clickTime: {
+	    downTime: 0,
+	    upTime: 0
+	  },
 	  initial: false,
 	  renameObj: {
 	    oldName: null,
@@ -653,7 +780,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -664,7 +791,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -828,7 +955,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//import csInterface from '../csInterface';
@@ -840,7 +967,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -848,7 +975,7 @@
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
 
-	var _helperFunctionsInnerDeleteFunction = __webpack_require__(9);
+	var _helperFunctionsInnerDeleteFunction = __webpack_require__(10);
 
 	var _helperFunctionsInnerDeleteFunction2 = _interopRequireDefault(_helperFunctionsInnerDeleteFunction);
 
@@ -1058,7 +1185,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1073,11 +1200,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -1085,35 +1212,35 @@
 
 	var _csInterfaceJs2 = _interopRequireDefault(_csInterfaceJs);
 
-	var _mainBlockMainBlockJs = __webpack_require__(12);
+	var _mainBlockMainBlockJs = __webpack_require__(13);
 
 	var _mainBlockMainBlockJs2 = _interopRequireDefault(_mainBlockMainBlockJs);
 
-	var _startArraysArrSecondButtonJs = __webpack_require__(1);
+	var _startArraysArrSecondButtonJs = __webpack_require__(3);
 
 	var _startArraysArrSecondButtonJs2 = _interopRequireDefault(_startArraysArrSecondButtonJs);
 
-	var _helperFunctionsMoveEffectsJs = __webpack_require__(16);
+	var _helperFunctionsMoveEffectsJs = __webpack_require__(17);
 
 	var _helperFunctionsMoveEffectsJs2 = _interopRequireDefault(_helperFunctionsMoveEffectsJs);
 
-	var _customEventsDeleteEventListenerJs = __webpack_require__(10);
+	var _customEventsDeleteEventListenerJs = __webpack_require__(11);
 
 	var _customEventsDeleteEventListenerJs2 = _interopRequireDefault(_customEventsDeleteEventListenerJs);
 
-	var _helperFunctionsRenameBlock = __webpack_require__(19);
+	var _helperFunctionsRenameBlock = __webpack_require__(21);
 
 	var _helperFunctionsRenameBlock2 = _interopRequireDefault(_helperFunctionsRenameBlock);
 
-	var _helperFunctionsActiveBlockFunction = __webpack_require__(17);
+	var _helperFunctionsActiveBlockFunction = __webpack_require__(18);
 
 	var _helperFunctionsActiveBlockFunction2 = _interopRequireDefault(_helperFunctionsActiveBlockFunction);
 
-	var _bezieLine = __webpack_require__(15);
+	var _bezieLine = __webpack_require__(16);
 
 	var _bezieLine2 = _interopRequireDefault(_bezieLine);
 
-	var _helperFunctionsCheckMantraVR = __webpack_require__(20);
+	var _helperFunctionsCheckMantraVR = __webpack_require__(22);
 
 	var _helperFunctionsCheckMantraVR2 = _interopRequireDefault(_helperFunctionsCheckMantraVR);
 
@@ -1142,7 +1269,8 @@
 	        this.AnimationFrameStart = setTimeout(function () {
 
 	          _csInterfaceJs2["default"].evalScript("$._ext. initialProjectTest()", function (res) {
-	            //console.log('START FUNCTION');
+	            console.log('START FUNCTION');
+	            console.log(res);
 	            //console.log(res);
 	            _this.status = res; //get value for status from ExtendScript ('true' or 'false')
 	            if (_this.status != 'true' /*&&GlobalStorage.hasVR===false*/) {
@@ -1583,7 +1711,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1598,7 +1726,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
@@ -1606,32 +1734,36 @@
 
 	var _csInterfaceJs2 = _interopRequireDefault(_csInterfaceJs);
 
-	var _helperFunctionsDraggableSetJs = __webpack_require__(13);
+	var _helperFunctionsDraggableSetJs = __webpack_require__(14);
 
 	var _helperFunctionsDraggableSetJs2 = _interopRequireDefault(_helperFunctionsDraggableSetJs);
 
-	var _helperFunctionsDrawLineFromToJs = __webpack_require__(14);
+	var _helperFunctionsDrawLineFromToJs = __webpack_require__(15);
 
 	var _helperFunctionsDrawLineFromToJs2 = _interopRequireDefault(_helperFunctionsDrawLineFromToJs);
 
 	/*import deleteFunctions from "../helperFunctions/deleteFunctions.js"*/
 	//import deleteInOneClick from "../helperFunctions/deleteInOneClick.js"
 
-	var _helperFunctionsActiveBlockFunction = __webpack_require__(17);
+	var _helperFunctionsActiveBlockFunction = __webpack_require__(18);
 
 	var _helperFunctionsActiveBlockFunction2 = _interopRequireDefault(_helperFunctionsActiveBlockFunction);
 
-	var _helperFunctionsDeletePropertyInEffectBlock = __webpack_require__(18);
+	var _helperFunctionsDeletePropertyInEffectBlock = __webpack_require__(19);
 
 	var _helperFunctionsDeletePropertyInEffectBlock2 = _interopRequireDefault(_helperFunctionsDeletePropertyInEffectBlock);
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
-	var _helperFunctionsBezieLine = __webpack_require__(15);
+	var _helperFunctionsBezieLine = __webpack_require__(16);
 
 	var _helperFunctionsBezieLine2 = _interopRequireDefault(_helperFunctionsBezieLine);
+
+	var _controlsCreateControlsWindows = __webpack_require__(20);
+
+	var _controlsCreateControlsWindows2 = _interopRequireDefault(_controlsCreateControlsWindows);
 
 	// This class works with mainBlocks (Effects, commonControls, Distributor) and add eventListebers (click,mouseover etc) to them
 
@@ -1651,7 +1783,7 @@
 	    value: function createBlockEffects(x, y, item, obj) {
 	      //console.log(obj.distrInst);
 	      //let objectEffect=JSON.parse(obj);
-	      console.log(obj);
+	      //console.log(obj);
 	      var blockEffectName = obj.name;
 	      var workBlockSet = Snap.set();
 	      var typeNode = "effects";
@@ -1776,7 +1908,7 @@
 	      propGroup.mouseover(function (event) {
 	        var target = event.target;
 	        if (target.tagName == 'rect' && target.className !== 'prop-wrapper') {
-	          if (target.getAttribute('propDataType') == _storage2["default"].currentLine.node.shortControlName) {
+	          if (_storage2["default"].currentLine && target.getAttribute('propDataType') == _storage2["default"].currentLine.node.shortControlName) {
 	            //highlight of the current property block
 	            target.style.fillOpacity = '0.1';
 	            target.style.fill = 'rgb(255,255,255)';
@@ -1962,7 +2094,7 @@
 	  }, {
 	    key: "createBlockCommonControls",
 	    value: function createBlockCommonControls(x, y, item, distributor, res) {
-
+	      var dblClickCheck = false; //to check where is double click where is alone click
 	      var thisItemName = res;
 	      /*  if(res){
 	          let index=res.length-1;
@@ -2042,8 +2174,11 @@
 	        _storage2["default"].toDelete = undefined;
 	        _storage2["default"].overMouseSet = null; //Clear interim object if mouse get out
 	      });
+
 	      group.dblclick(function () {
+	        dblClickCheck = true;
 	        var EffectName = workBlockSet.thisCommonContrlName;
+	        //console.log('EffectName',EffectName);
 	        _storage2["default"].input.css({ top: _storage2["default"].historyOfObjects[EffectName][0].getBBox().y + 28, left: _storage2["default"].historyOfObjects[EffectName][0].getBBox().x, width: "115px", height: "26px", position: 'absolute', display: 'block' });
 	        //console.log(GlobalStorage.historyOfObjects);
 	        //console.log(workBlockSet.setEffectName);
@@ -2051,6 +2186,31 @@
 	        //console.log(innerHTML);
 	        _storage2["default"].renameObj.oldName = innerHTML;
 	        _storage2["default"].input.val(innerHTML);
+	      });
+
+	      group.click(function (e) {
+	        setTimeout(function () {
+	          var TimeDifferent = _storage2["default"].clickTime.upTime - _storage2["default"].clickTime.downTime;
+	          if (!dblClickCheck && e.detail != 2 && TimeDifferent < 300) {
+	            _storage2["default"].container.children('#grey-ground').show();
+	            switch (item.shortName) {
+	              case 'slider':
+	                new _controlsCreateControlsWindows2["default"]().createSliderWindow(workBlockSet.thisCommonContrlName);
+	                break;
+	              case 'point':
+	                new _controlsCreateControlsWindows2["default"]().createPointsWindow(workBlockSet.thisCommonContrlName);
+	                break;
+	              case 'angle':
+	                new _controlsCreateControlsWindows2["default"]().createAngleWindow(workBlockSet.thisCommonContrlName);
+	                break;
+	              default:
+	            }
+	          } else if (e.detail == 2) {
+	            dblClickCheck = false;
+	          }
+	        }, 300);
+
+	        //console.log('ONE CLICK',item.shortName);
 	      });
 
 	      return workBlockSet;
@@ -2211,26 +2371,26 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
-	var _drawLineFromToJs = __webpack_require__(14);
+	var _drawLineFromToJs = __webpack_require__(15);
 
 	var _drawLineFromToJs2 = _interopRequireDefault(_drawLineFromToJs);
 
-	var _moveEffectsJs = __webpack_require__(16);
+	var _moveEffectsJs = __webpack_require__(17);
 
 	var _moveEffectsJs2 = _interopRequireDefault(_moveEffectsJs);
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -2238,7 +2398,7 @@
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
 
-	var _bezieLine = __webpack_require__(15);
+	var _bezieLine = __webpack_require__(16);
 
 	var _bezieLine2 = _interopRequireDefault(_bezieLine);
 
@@ -2289,6 +2449,8 @@
 	        }
 
 	      console.log('START');
+	      var d = new Date();
+	      _storage2["default"].clickTime.downTime = d.getTime(); //get time of START event in miliseconds and save it in GlobalStorage.clickTime (this data is used in file "MainBlock", function "createBlockCommonControls"  to filter click from mouse event in draggable function)
 
 	      if (event.target.nodeName != 'circle' && !event.target.circleName) {
 	        thisElem = undefined;
@@ -2304,6 +2466,9 @@
 	    },
 	        endFnc = function endFnc() {
 
+	      console.log('END');
+	      var d = new Date();
+	      _storage2["default"].clickTime.upTime = d.getTime(); //get time of EVENT event in miliseconds and save it in GlobalStorage.clickTime (this data is used in file "MainBlock", function "createBlockCommonControls"  to filter click from mouse event in draggable function)
 	      if (thisElem) {
 
 	        new _drawLineFromToJs2["default"]().endDrawLine(thisElem, thisSet);
@@ -2392,7 +2557,7 @@
 	});
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2407,7 +2572,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
@@ -2415,11 +2580,11 @@
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
-	var _bezieLine = __webpack_require__(15);
+	var _bezieLine = __webpack_require__(16);
 
 	var _bezieLine2 = _interopRequireDefault(_bezieLine);
 
@@ -2666,7 +2831,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2696,7 +2861,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2711,11 +2876,11 @@
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
@@ -2796,7 +2961,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2811,7 +2976,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -2928,7 +3093,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2939,7 +3104,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -2954,7 +3119,7 @@
 	    var effectName = workBlockSet.setEffectName;
 	    var propertyName = _storage2["default"].controlProp.name;
 	    var itemLineFrom = undefined;
-
+	    console.log(_storage2["default"].controlProp);
 	    _csInterfaceJs2["default"].evalScript("$._ext.deletePropExpression(\"" + effectName + "\",\"" + propertyName + "\")", function (res) {
 	      //Remove property expression from  EffectBlock
 	      workBlockSet.forEach(function (item, num) {
@@ -2985,7 +3150,277 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 19 */
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _storage = __webpack_require__(9);
+
+	var _storage2 = _interopRequireDefault(_storage);
+
+	var _csInterfaceJs = __webpack_require__(2);
+
+	var _csInterfaceJs2 = _interopRequireDefault(_csInterfaceJs);
+
+	var createControlsWindows = (function () {
+	  function createControlsWindows() {
+	    _classCallCheck(this, createControlsWindows);
+
+	    this.ground;
+	    this.sliderWrap;
+	    this.pointsWrap;
+	  }
+
+	  _createClass(createControlsWindows, [{
+	    key: 'createGround',
+	    value: function createGround() {
+	      var _this = this;
+
+	      this.ground = $('<div>', { id: 'grey-ground' });
+	      this.ground.click(function () {
+	        _this.ground.hide();
+	        _storage2['default'].container.children('#slider-wrap').remove();
+	        _storage2['default'].container.children('#point-wrap').remove();
+	        _storage2['default'].container.children('#angle-wrap').remove();
+	      });
+	      _storage2['default'].container.append(this.ground);
+	    }
+	  }, {
+	    key: 'createSliderWindow',
+	    value: function createSliderWindow(sliderName) {
+	      this.sliderWrap = $('<div>', { id: 'slider-wrap', 'class': 'control-wrap' });
+	      var sliderInput = $('<input>', { id: 'slider-input', 'class': 'control-input', type: 'text' });
+	      this.slider = $('<div>', { id: 'slider' }).append('<div id="custom-handle" class="ui-slider-handle"></div>');
+	      this.sliderFunction(sliderInput, sliderName);
+	      this.sliderWrap.append(this.slider);
+	      this.sliderWrap.append(sliderInput);
+	      _storage2['default'].container.append(this.sliderWrap);
+	    }
+	  }, {
+	    key: 'createAngleWindow',
+	    value: function createAngleWindow(angleName) {
+	      var angleWrap = $('<div>', { id: 'angle-wrap', 'class': 'control-wrap' });
+	      var knobWrap = $('<div>', { id: 'knob-wrap' });
+	      this.angle = $('<div>', { id: 'knob' });
+	      //let angle=$('<div>',{id:'slider'}).append('<div id="custom-handle" class="ui-slider-handle"></div>');
+	      var angleInputSpin = $('<input>', { id: 'angle-input-spin', 'class': 'control-input', type: 'text' });
+	      var angleInputValue = $('<input>', { id: 'angle-input-value', 'class': 'control-input', type: 'text' });
+	      this.angleFunction(angleInputSpin, angleInputValue, angleName);
+	      knobWrap.append(this.angle);
+	      angleWrap.append(knobWrap);
+	      angleWrap.append(angleInputSpin);
+	      angleWrap.append(angleInputValue);
+	      _storage2['default'].container.append(angleWrap);
+	    }
+	  }, {
+	    key: 'createPointsWindow',
+	    value: function createPointsWindow(pointName) {
+	      this.pointsWrap = $('<div>', { id: 'point-wrap', 'class': 'control-wrap' });
+	      var pointCanvas = $('<div>', { id: 'point-canvas' });
+	      var point = $('<div id="point"></div>');
+	      pointCanvas.append(point);
+	      var pointInputX = $('<input>', { id: 'point-inputX', 'class': 'control-input', type: 'text' });
+	      var pointInputY = $('<input>', { id: 'point-inputY', 'class': 'control-input', type: 'text' });
+	      //console.log(point);
+	      //this.pointFunction();
+	      this.pointsWrap.append(pointCanvas);
+	      this.pointsWrap.append(pointInputX);
+	      this.pointsWrap.append(pointInputY);
+	      _storage2['default'].container.append(this.pointsWrap);
+	      _csInterfaceJs2['default'].evalScript('$._ext.getPointControlValue("' + pointName + '")', function (res) {
+	        point.pointCoordsDrag(res, pointName, pointInputX, pointInputY);
+	      });
+
+	      ///
+	      /*pointInputX.on( "keypress", (e)=>{
+	        console.log(pointInputX.val());
+	        if(e.which == 13) {
+	          //console.log(point.css('top'));
+	          let yValue=parseInt(point.css('top'))
+	          let setValue=[pointInputX.val(),yValue];
+	          csInterface.evalScript(`$._ext.setPointControlValue("${pointName}","${setValue}")`);
+	              }
+	      })*/
+	    }
+	  }, {
+	    key: 'sliderFunction',
+	    value: function sliderFunction(sliderInput, sliderName) {
+	      var _this2 = this;
+
+	      _csInterfaceJs2['default'].evalScript('$._ext.getSliderControlValue("' + sliderName + '")', function (res) {
+	        console.log(res);
+	        var value = res * 1;
+	        _this2.slider.slider({
+	          value: value,
+	          min: -100,
+	          max: 100,
+	          create: function create() {
+	            //console.log('sliderInput',)
+	            sliderInput.val($(this).slider("value"));
+	          },
+	          slide: function slide(event, ui) {
+	            _csInterfaceJs2['default'].evalScript('$._ext.setSliderControlValue("' + sliderName + '","' + ui.value + '")');
+	            //console.log(ui.value);
+	            sliderInput.val(ui.value);
+	          }
+	        });
+	      });
+
+	      sliderInput.on("keypress", function (e) {
+	        console.log(sliderInput.val());
+	        if (e.which == 13) {
+	          _csInterfaceJs2['default'].evalScript('$._ext.setSliderControlValue("' + sliderName + '","' + sliderInput.val() + '")');
+	          _this2.slider.slider("value", sliderInput.val());
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'angleFunction',
+	    value: function angleFunction(angleInputSpin, angleInputValue, angleName) {
+	      //let spin=0;
+	      var data = 0;
+	      //let angle=0;
+	      var oldVal = 0;
+	      var countCircle = 0;
+	      var inputData = 0;
+	      var outputData = 0;
+	      //let knobEl=$("#knob");
+	      function calcDataFromInput(e, data) {
+	        if (e.which == 13) {
+	          var value = angleInputValue.val() * 1;
+	          data = angleInputSpin.val() * 360 + value;
+	          inputData = parsRowdata(data);
+	          _csInterfaceJs2['default'].evalScript('$._ext.setAngleControlValue("' + angleName + '","' + data + '")');
+	          var resAngle = (360 + inputData.angle * 1) / 360;
+	          resAngle = Math.round(resAngle % 1 * 360);
+	          $("#knob").roundSlider("setValue", resAngle);
+	          countCircle = inputData.spin;
+	          console.log(inputData.angle);
+	          angleInputValue.val(inputData.angle);
+	          angleInputSpin.val(inputData.spin);
+	          return data;
+	        }
+	      }
+	      angleInputSpin.on("keypress", function (e) {
+	        data = calcDataFromInput(e, data);
+	      });
+
+	      angleInputValue.on("keypress", function (e) {
+	        data = calcDataFromInput(e, data);
+	      });
+
+	      _csInterfaceJs2['default'].evalScript('$._ext.getAngleControlValue("' + angleName + '")', function (res) {
+	        console.log(res);
+
+	        /*let num=(res*1)/360;
+	        if(num<0){
+	          spin=Math.ceil(num)
+	          }
+	          else{
+	          spin=Math.floor(num);
+	          }
+	        angle=((num%1)*360).toFixed(0);*/
+	        //angle=Math.abs(angle);
+	        data = res;
+	        angleInputSpin.on("keypress", function (e) {
+	          data = calcDataFromInput(e, data);
+	        });
+
+	        angleInputValue.on("keypress", function (e) {
+	          data = calcDataFromInput(e, data);
+	        });
+	        inputData = parsRowdata(data);
+	        angleInputSpin.val(inputData.spin);
+	        angleInputValue.val(inputData.angle);
+	        console.log(inputData.angle);
+	        var resAngle = (360 + inputData.angle * 1) / 360;
+	        resAngle = Math.round(resAngle % 1 * 360);
+	        console.log(resAngle);
+	        countCircle = inputData.spin;
+	        $("#knob").roundSlider({
+	          handleShape: "round",
+	          width: 22,
+	          step: '1',
+	          radius: 58,
+	          max: "360",
+	          handleSize: 14,
+	          value: resAngle,
+	          startAngle: 90,
+	          animation: false,
+	          showTooltip: false,
+	          start: function start(args) {
+	            inputData = parsRowdata(data);
+	            angleInputSpin.val(inputData.spin);
+	            angleInputValue.val(inputData.angle);
+	            console.log("START", args.value);
+	          },
+	          drag: function drag(args) {
+	            console.log("DRAG", args.value);
+	            if (args.value > 300 && oldVal < 100) {
+	              oldVal = args.value;
+	              countCircle--;
+	            } else if (oldVal > 300 && args.value < 100) {
+	              oldVal = args.value;
+	              countCircle++;
+	            } else {
+	              oldVal = args.value;
+	            }
+
+	            data = countCircle * 360 + Math.abs(args.value);
+	            outputData = parsRowdata(data);
+	            //
+	            /*let num=(data*1)/360;
+	            if(num<0){
+	              spin=Math.ceil(num)
+	              }
+	              else{
+	              spin=Math.floor(num);
+	              }
+	            angle=((num%1)*360).toFixed(0);*/
+	            //
+
+	            angleInputSpin.val(outputData.spin);
+	            angleInputValue.val(outputData.angle);
+
+	            _csInterfaceJs2['default'].evalScript('$._ext.setAngleControlValue("' + angleName + '","' + data + '")');
+	          }
+	        });
+	      });
+
+	      function parsRowdata(data) {
+	        var obj = {};
+	        var spin = 0;
+	        var num = data * 1 / 360;
+	        if (num < 0) {
+	          obj.spin = Math.ceil(num);
+	        } else {
+	          obj.spin = Math.floor(num);
+	        }
+	        obj.angle = (num % 1 * 360).toFixed(0);
+	        return obj;
+	      };
+	    }
+	  }]);
+
+	  return createControlsWindows;
+	})();
+
+	exports['default'] = createControlsWindows;
+	module.exports = exports['default'];
+
+/***/ },
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2996,7 +3431,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -3043,7 +3478,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3054,7 +3489,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -3070,7 +3505,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//import arrButton from "./startArrays/arrButtonMain.js";
@@ -3084,21 +3519,21 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _startArraysArrSecondButtonJs = __webpack_require__(1);
+	var _startArraysArrSecondButtonJs = __webpack_require__(3);
 
 	var _startArraysArrSecondButtonJs2 = _interopRequireDefault(_startArraysArrSecondButtonJs);
 
-	var _mainBlockMainBlockJs = __webpack_require__(12);
+	var _mainBlockMainBlockJs = __webpack_require__(13);
 
 	var _mainBlockMainBlockJs2 = _interopRequireDefault(_mainBlockMainBlockJs);
 
 	//import secondSideBarBlocks from "./secondSideBarBlocks.js";
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -3106,11 +3541,11 @@
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
 
-	var _helperFunctionsMoveEffectsJs = __webpack_require__(16);
+	var _helperFunctionsMoveEffectsJs = __webpack_require__(17);
 
 	var _helperFunctionsMoveEffectsJs2 = _interopRequireDefault(_helperFunctionsMoveEffectsJs);
 
-	var _mainBlockPresetsBlocksJs = __webpack_require__(22);
+	var _mainBlockPresetsBlocksJs = __webpack_require__(24);
 
 	var _mainBlockPresetsBlocksJs2 = _interopRequireDefault(_mainBlockPresetsBlocksJs);
 
@@ -3145,7 +3580,7 @@
 	          newItemArr.push(item);
 	        }
 	      });
-	      console.log(newItemArr);
+	      //console.log(newItemArr);
 	      _storage2["default"].historyOfObjects.itemArray = newItemArr;
 	      _storage2["default"].historyOfObjects.itemArray = _.sortBy(_storage2["default"].historyOfObjects.itemArray, function (item) {
 
@@ -3205,7 +3640,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3220,15 +3655,15 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
-	var _mainBlockJs = __webpack_require__(12);
+	var _mainBlockJs = __webpack_require__(13);
 
 	var _mainBlockJs2 = _interopRequireDefault(_mainBlockJs);
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -3236,11 +3671,11 @@
 
 	var _csInterfaceJs2 = _interopRequireDefault(_csInterfaceJs);
 
-	var _startArraysArrSecondButtonJs = __webpack_require__(1);
+	var _startArraysArrSecondButtonJs = __webpack_require__(3);
 
 	var _startArraysArrSecondButtonJs2 = _interopRequireDefault(_startArraysArrSecondButtonJs);
 
-	var _helperFunctionsMoveEffectsJs = __webpack_require__(16);
+	var _helperFunctionsMoveEffectsJs = __webpack_require__(17);
 
 	var _helperFunctionsMoveEffectsJs2 = _interopRequireDefault(_helperFunctionsMoveEffectsJs);
 
@@ -3349,7 +3784,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//import arrButton from "./startArrays/arrButtonMain.js";
@@ -3363,21 +3798,21 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _startArraysArrSecondButtonJs = __webpack_require__(1);
+	var _startArraysArrSecondButtonJs = __webpack_require__(3);
 
 	var _startArraysArrSecondButtonJs2 = _interopRequireDefault(_startArraysArrSecondButtonJs);
 
-	var _mainBlockMainBlockJs = __webpack_require__(12);
+	var _mainBlockMainBlockJs = __webpack_require__(13);
 
 	var _mainBlockMainBlockJs2 = _interopRequireDefault(_mainBlockMainBlockJs);
 
 	//import secondSideBarBlocks from "./secondSideBarBlocks.js";
 
-	var _raphaelContainerJs = __webpack_require__(6);
+	var _raphaelContainerJs = __webpack_require__(7);
 
 	var _raphaelContainerJs2 = _interopRequireDefault(_raphaelContainerJs);
 
-	var _storage = __webpack_require__(8);
+	var _storage = __webpack_require__(9);
 
 	var _storage2 = _interopRequireDefault(_storage);
 
@@ -3385,11 +3820,11 @@
 
 	var _csInterface2 = _interopRequireDefault(_csInterface);
 
-	var _helperFunctionsMoveEffectsJs = __webpack_require__(16);
+	var _helperFunctionsMoveEffectsJs = __webpack_require__(17);
 
 	var _helperFunctionsMoveEffectsJs2 = _interopRequireDefault(_helperFunctionsMoveEffectsJs);
 
-	var _mainBlockPresetsBlocksJs = __webpack_require__(22);
+	var _mainBlockPresetsBlocksJs = __webpack_require__(24);
 
 	var _mainBlockPresetsBlocksJs2 = _interopRequireDefault(_mainBlockPresetsBlocksJs);
 
@@ -3465,7 +3900,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports) {
 
 	"use strict";

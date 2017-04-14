@@ -321,3 +321,314 @@ font-size: 15px;*/
   width: 150px;
   /*width:198px;*/
 }
+/*Control Windows Styles*/
+
+#grey-ground{
+  display: none;
+  background: rgba(115, 115, 115, 0.5);
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+}
+.control-wrap{
+  position: absolute;
+  background: red;
+  height: 280px;
+  width: 500px;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: rgb(38, 38, 38);
+  background: url(../img/bg.png);
+  border-radius: 5px;
+}
+/*Slider Window*/
+#slider-wrap {
+  /*display: none;*/
+}
+
+#slider-wrap::before{
+  content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+  background-image: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,0.1) 35%,rgba(255,255,255,0.1) 65%,rgba(255,255,255,0) 100%);
+}
+
+#slider {
+  background: red;
+  height: 16px;
+  width: 90%;
+  margin-top: -5px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  position: absolute;
+  margin-top: 110px;
+  background: url(../img/scrollbar.png) 0px -20px;
+}
+
+#slider::after {
+  content: '';
+  background: url(../img/scrollbar.png) -26px -36px no-repeat;
+  position: absolute;
+  height: 16px;
+  width: 10px;
+  left: 100%;
+}
+
+#slider::before {
+  content: '';
+  background: url(../img/scrollbar.png) -16px -36px no-repeat;
+  position: absolute;
+  height: 16px;
+  width: 10px;
+  left: -6px;
+}
+
+#custom-handle {
+  position: absolute;
+  height: 20px;
+  width: 36px;
+  top: -2px;
+  margin-left: -20px;
+  background: url(../img/scrollbar.png) -6px 0px no-repeat;
+  z-index: 2;
+}
+
+input[type="text"].control-input{
+  border: 1px solid #171d21;
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJod…IgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+  background: -moz-linear-gradient(top, rgba(63,70,78,0.4) 0%, rgba(64,71,79,0.4) 1%, rgba(148,152,158,0.4) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(63,70,78,0.4)), color-stop(1%,rgba(64,71,79,0.4)), color-stop(100%,rgba(148,152,158,0.4)));
+  background: -webkit-linear-gradient(top, rgba(63,70,78,0.4) 0%,rgba(64,71,79,0.4) 1%,rgba(148,152,158,0.4) 100%);
+  background: -o-linear-gradient(top, rgba(63,70,78,0.4) 0%,rgba(64,71,79,0.4) 1%,rgba(148,152,158,0.4) 100%);
+  background: -ms-linear-gradient(top, rgba(63,70,78,0.4) 0%,rgba(64,71,79,0.4) 1%,rgba(148,152,158,0.4) 100%);
+  background: linear-gradient(to bottom, rgba(63,70,78,0.4) 0%,rgba(64,71,79,0.4) 1%,rgba(148,152,158,0.4) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#663f464e', endColorstr='#6694989e',GradientType=0 );
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  padding: 0 16px;
+  font-size: 17px;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 1px rgba(255,255,255,0.1);
+  -webkit-box-shadow: 1px 1px 1px rgba(255,255,255,0.1);
+  -moz-box-shadow: 1px 1px 1px rgba(255,255,255,0.1);
+}
+input#slider-input {
+  height: 32px;
+  width: 72px;
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  top: 150px;
+  text-align: center;
+}
+
+/*Point Window*/
+#point-wrap {
+/*display: none;*/
+
+}
+
+/*#point-wrap::before{
+  content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+  background-image: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 1%,rgba(255,255,255,0.1) 35%,rgba(255,255,255,0.1) 65%,rgba(255,255,255,0) 100%);
+}*/
+
+#point-canvas{
+  height: 200px;
+  width: 400px;
+  margin: 0 auto;
+  margin-top: 10px;
+  border: 1px solid;
+  box-shadow: inset 0px 0px 10px rgba(0,0,0,0.9);
+  padding-right: 10px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+}
+
+
+#point{
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background:red;
+  background: radial-gradient(10px 10px, rgb(255,69,0), #000);
+}
+
+#point-inputX {
+  width: 94px;
+  margin-top: 15px;
+  margin-left: calc(50% - 94px);
+}
+
+#point-inputY {
+  width: 94px;
+  margin-top: 15px;
+}
+#angle-wrap{
+
+}
+#knob-wrap{
+  background: url(../img/knob-volume-bg.png) no-repeat;
+  /*background-position: center;*/
+  height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-position-x: 50%;
+}
+#knob{
+  margin-top: -36px;
+  /*margin-top: -6px;
+  margin-left: -1px;*/
+}
+
+.rs-inner-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+.rs-control *, .rs-control *:before, .rs-control *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.rs-control .rs-handle {
+    background-color: #807171;
+    box-shadow: inset 5px 0 10px rgba(0,0,0,0.5);
+}
+.full .rs-bar, .half.left .rs-bar, .half.right .rs-bar {
+    top: 50%;
+}
+.full .rs-bar, .half .rs-bar {
+    width: 50%;
+}
+
+.rs-bar {
+    position: absolute;
+    height: 0;
+    z-index: 10;
+}
+
+.rs-bar {
+    -webkit-transform-origin: 100% 50%;
+    -moz-transform-origin: 100% 50%;
+    -ms-transform-origin: 100% 50%;
+    -o-transform-origin: 100% 50%;
+    transform-origin: 100% 50%;
+}
+
+.rs-handle {
+    border-radius: 1000px;
+    outline: 0 none;
+    float: left;
+}
+.rs-block {
+    height: 100%;
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 0px;
+    z-index: 3;
+    overflow: hidden;
+}
+.rs-block {
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+    /*background: url(../img/knob-volume-bg.png) no-repeat;
+    background-position: center;*/
+}
+
+.rs-path {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.rs-control .rs-path-color {
+    /*background-color: #d1d1d1;*/
+
+}
+
+.rs-control *, .rs-control ::before, .rs-control ::after {
+    box-sizing: border-box;
+    /*background: url(../img/knob-volume-bg.png) no-repeat;
+    background-position: center;*/
+}
+
+.rs-container {
+    position: relative;
+}
+
+/*span.rs-tooltip.rs-tooltip-text.edit, span.rs-tooltip.rs-tooltip-text.hover {
+  position: absolute;
+  height: 20px;
+  width: 56px;
+  left: 60px;
+  top: 185px;
+  margin-left: -20px;
+  text-align: center;
+  background: url(../img/scrollbar.png) -6px 0px no-repeat;
+  z-index: 2;
+  border: 1px solid #171d21;
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJod…IgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+  background: -moz-linear-gradient(top, rgba(63,70,78,0.4) 0%, rgba(64,71,79,0.4) 1%, rgba(148,152,158,0.4) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(63,70,78,0.4)), color-stop(1%,rgba(64,71,79,0.4)), color-stop(100%,rgba(148,152,158,0.4)));
+  background: -webkit-linear-gradient(top, rgba(63,70,78,0.4) 0%,rgba(64,71,79,0.4) 1%,rgba(148,152,158,0.4) 100%);
+  background: -o-linear-gradient(top, rgba(63,70,78,0.4) 0%,rgba(64,71,79,0.4) 1%,rgba(148,152,158,0.4) 100%);
+  background: -ms-linear-gradient(top, rgba(63,70,78,0.4) 0%,rgba(64,71,79,0.4) 1%,rgba(148,152,158,0.4) 100%);
+  background: linear-gradient(to bottom, rgba(63,70,78,0.4) 0%,rgba(64,71,79,0.4) 1%,rgba(148,152,158,0.4) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#663f464e', endColorstr='#6694989e',GradientType=0 );
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  padding: 0 16px;
+  font-size: 17px;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 1px rgba(255,255,255,0.1);
+  -webkit-box-shadow: 1px 1px 1px rgba(255,255,255,0.1);
+  -moz-box-shadow: 1px 1px 1px rgba(255,255,255,0.1);
+}
+#knob input{
+  background: linear-gradient(to bottom, rgba(63,70,78,0.4) 0%,rgba(64,71,79,0.4) 1%,rgba(148,152,158,0.4) 100%);
+  border: 1px solid #171d21;
+  text-align: center;
+  font-size: 1em;
+}*/
+
+#angle-input-spin {
+  width: 94px;
+  position: absolute;
+  top: 240px;
+  left: calc(50% - 94px);
+}
+
+#angle-input-value {
+  width: 94px;
+  position: absolute;
+  top: 240px;
+  left: 50%;
+}

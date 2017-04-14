@@ -8,6 +8,7 @@ import activeBlockFunctionsClass from '../helperFunctions/activeBlockFunction';
 import deletePropertyInEffectBlock from '../helperFunctions/deletePropertyInEffectBlock';
 import GlobalStorage from '../storage';
 import bezieLine from '../helperFunctions/bezieLine';
+import createControlsWindows from '../controls/createControlsWindows'
 
 // This class works with mainBlocks (Effects, commonControls, Distributor) and add eventListebers (click,mouseover etc) to them
 
@@ -22,7 +23,7 @@ class mainBlock{
   createBlockEffects(x,y,item,obj){
     //console.log(obj.distrInst);
     //let objectEffect=JSON.parse(obj);
-    console.log(obj);
+    //console.log(obj);
     let blockEffectName=obj.name;
     let workBlockSet=Snap.set();
     let typeNode="effects";
@@ -155,7 +156,7 @@ console.log(obj.propArray);
           let target=event.target;
         if(target.tagName == 'rect'&&target.className!=='prop-wrapper')
           {
-            if(target.getAttribute('propDataType')==GlobalStorage.currentLine.node.shortControlName ){//highlight of the current property block
+            if(GlobalStorage.currentLine&&target.getAttribute('propDataType')==GlobalStorage.currentLine.node.shortControlName ){//highlight of the current property block
                             target.style.fillOpacity='0.1';
                             target.style.fill='rgb(255,255,255)';
           }
@@ -365,7 +366,7 @@ console.log(obj.propArray);
   }
 
   createBlockCommonControls(x,y,item,distributor,res){
-
+    let dblClickCheck=false;//to check where is double click where is alone click
     let thisItemName=res;
   /*  if(res){
       let index=res.length-1;
@@ -451,8 +452,11 @@ console.log(obj.propArray);
       GlobalStorage.toDelete=undefined;
         GlobalStorage.overMouseSet=null;//Clear interim object if mouse get out
     });
+
     group.dblclick(()=>{
+      dblClickCheck=true;
       let EffectName=workBlockSet.thisCommonContrlName;
+      //console.log('EffectName',EffectName);
       GlobalStorage.input.css({top:GlobalStorage.historyOfObjects[EffectName][0].getBBox().y+28, left: GlobalStorage.historyOfObjects[EffectName][0].getBBox().x, width:"115px", height: "26px", position:'absolute', display:'block'});
       //console.log(GlobalStorage.historyOfObjects);
       //console.log(workBlockSet.setEffectName);
@@ -460,6 +464,31 @@ console.log(obj.propArray);
       //console.log(innerHTML);
       GlobalStorage.renameObj.oldName=innerHTML;
       GlobalStorage.input.val(innerHTML);
+    });
+
+    group.click((e)=>{
+      setTimeout(()=>{
+        let TimeDifferent=(GlobalStorage.clickTime.upTime-GlobalStorage.clickTime.downTime);
+        if(!dblClickCheck&&e.detail!=2&&TimeDifferent<300){
+          GlobalStorage.container.children('#grey-ground').show();
+          switch (item.shortName) {
+            case 'slider':
+            new createControlsWindows().createSliderWindow(workBlockSet.thisCommonContrlName);
+              break;
+              case 'point':
+              new createControlsWindows().createPointsWindow(workBlockSet.thisCommonContrlName);
+                break;
+              case 'angle':
+              new createControlsWindows().createAngleWindow(workBlockSet.thisCommonContrlName)
+                  break;
+            default:
+          }
+        }else if(e.detail==2){
+          dblClickCheck=false;
+        }
+      },300);
+
+      //console.log('ONE CLICK',item.shortName);
     });
 
     return workBlockSet;

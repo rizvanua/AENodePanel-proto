@@ -28,7 +28,8 @@ class checkBackEnd{
         this.AnimationFrameStart=setTimeout(()=> {
 
           csInterface.evalScript(`$._ext. initialProjectTest()`, (res)=>{
-            //console.log('START FUNCTION');
+            console.log('START FUNCTION');
+            console.log(res);
 //console.log(res);
             this.status=res;//get value for status from ExtendScript ('true' or 'false')
            if(this.status!='true'/*&&GlobalStorage.hasVR===false*/){

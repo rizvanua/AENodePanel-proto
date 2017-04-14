@@ -58,7 +58,9 @@ console.log('MOVEEEE');
     thisGroupCoord=thisSet[0].getBBox();//get object with central points of this Effect group
   }
 
-console.log('START');
+  console.log('START');
+  let d = new Date();
+  GlobalStorage.clickTime.downTime=d.getTime();//get time of START event in miliseconds and save it in GlobalStorage.clickTime (this data is used in file "MainBlock", function "createBlockCommonControls"  to filter click from mouse event in draggable function)
 
     if (event.target.nodeName!='circle'&&!event.target.circleName)
     {
@@ -79,7 +81,9 @@ console.log('START');
 
   endFnc = function endFnc() {
 
-
+    console.log('END');
+    let d = new Date();
+    GlobalStorage.clickTime.upTime=d.getTime();//get time of EVENT event in miliseconds and save it in GlobalStorage.clickTime (this data is used in file "MainBlock", function "createBlockCommonControls"  to filter click from mouse event in draggable function)
         if(thisElem){
 
           new drawLineFromTo().endDrawLine(thisElem,thisSet);

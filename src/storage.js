@@ -4,7 +4,12 @@ import R from "./raphaelContainer.js"
 
 let GlobalStorage={
   glassId:{},
+  container:{},//link to the 'div#container' element
   input:{},//link to the HTML input element
+  clickTime:{
+    downTime:0,
+    upTime:0
+  },
   initial:false,
   renameObj:{
     oldName:null,

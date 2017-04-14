@@ -1,5 +1,6 @@
 //import SideBar from "./sideBar/sideBar.js";
 //import secondSideBarBlocks from "./sideBar/secondSideBarBlocks.js";
+import pointCoordsDrag from './controls/pointCoordsDrag.js';
 import arrSecondButton from "./startArrays/arrSecondButton";
 import csInterface from './csInterface';
 import forEachInGroup from './snapCustomFunctions/forEachInGroup';
@@ -14,6 +15,8 @@ import renameBlock from "./helperFunctions/renameBlock";
 import leftMenu from "./menu/leftMenu";
 import topMenu from "./menu/topMenu";
 import rightMouseClick from "./helperFunctions/rightMouseClick";
+import createControlsWindows from './controls/createControlsWindows.js';
+
 
 let myReq;
 let status=false;
@@ -24,8 +27,10 @@ let AnimationFrame;
 let jsonString=`[{"keyCode": 	46},{"keyCode": 46,"ctrlKey": true}]`;
 csInterface.registerKeyEventsInterest(jsonString);//register buttons to use in HTML5 panel
 rightMouseClick();
+GlobalStorage.container=$("#container");
 GlobalStorage.input=$("<input type='text' id='input'/>");
-$("#container").append(GlobalStorage.input);
+GlobalStorage.container.append(GlobalStorage.input);
+new createControlsWindows().createGround();
 GlobalStorage.input.keydown((event)=>{
   console.log(event);
 if(GlobalStorage.renameObj.oldName&&event.keyCode==13){

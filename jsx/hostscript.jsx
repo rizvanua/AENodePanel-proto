@@ -196,12 +196,13 @@ else {
                         //this.currentComp.layers[i].unicID="9:80 PM";
                          //$.writeln(this.currentComp.layers[i].effect);
                        // this.currentComp = app.project.activeItem;
-                        this.itemWidth= app.project.activeItem.width;
+                        
+                        this.itemWidth= app.project.activeItem.width;                       
                         this.itemHight= app.project.activeItem.height;
-                        this.distributorProps={
+                        /*this.distributorProps={
                                         cube:[[0.00*this.itemWidth, 0.5*this.itemHight],[0.25*this.itemWidth, 0.5*this.itemHight],[0.50*this.itemWidth, 0.5*this.itemHight],[0.75*this.itemWidth, 0.5*this.itemHight],[0.50*this.itemWidth, 0.0*this.itemHight],[0.50*this.itemWidth, 1.0*this.itemHight]],
                                         sphere:[[0.00*this.itemWidth, 0.5*this.itemHight],[0.25*this.itemWidth, 0.5*this.itemHight],[0.50*this.itemWidth, 0.5*this.itemHight],[0.75*this.itemWidth, 0.5*this.itemHight],[0.10*this.itemWidth, 0.25*this.itemHight],[0.43*this.itemWidth, 0.25*this.itemHight],[0.77*this.itemWidth, 0.25*this.itemHight],[0.10*this.itemWidth, 0.75*this.itemHight],[0.43*this.itemWidth, 0.75*this.itemHight],[0.77*this.itemWidth, 0.75*this.itemHight]]
-                                        };
+                                        };*/
                        if(!this.currentComp.layers[i+1].effect('Mettle Mantra VR')){// chesk if 'Mantra VR' is on this layer
                            return false;
                            }
@@ -531,7 +532,32 @@ else {
         var Control=this.currentLayer.Effects.addProperty(controlType);        
         return Control.name;
         },
-  
+    getSliderControlValue:function(controlName){      
+         var value=this.currentLayer.effect.property(controlName).property("Slider").value;       
+         return value;
+        },  
+    setSliderControlValue:function(controlName, data){      
+         this.currentLayer.effect.property(controlName).property("Slider").setValue(data);        
+        }, 
+    getPointControlValue:function(controlName){         
+        var value=this.currentLayer.effect.property(controlName).property("Point").value;      
+        value.push(this.itemWidth)
+        value.push(this.itemHight)         
+         return value;
+        },
+    setPointControlValue:function(controlName, data){
+         //$.writeln(controlName);
+          //$.writeln(data);
+          var dataArr=data.split(',');
+         this.currentLayer.effect.property(controlName).property("Point").setValue(dataArr);        
+        },
+    getAngleControlValue:function(controlName){         
+        var value=this.currentLayer.effect.property(controlName).property("Angle").value;            
+         return value;
+        },
+    setAngleControlValue:function(controlName, data){      
+         this.currentLayer.effect.property(controlName).property("Angle").setValue(data);        
+        }, 
     addCommonControls: function(effectName,propName,thisPropName,type,multiplierStr)
    {       
          //$.writeln(type);
@@ -591,8 +617,8 @@ else {
          
       },
   deletePropExpression: function(effectName,propertyName){
-      //$.writeln(effectName);  
-      //$.writeln(propertyName);          
+      $.writeln(effectName);  
+      $.writeln(propertyName);          
       this.currentLayer.effect.property(effectName).property(propertyName).expressionEnabled = false;
       this.currentLayer.effect.property(effectName).property(propertyName).expression = "";
       },
@@ -664,7 +690,7 @@ else {
     resetLayer:function(){
         var arrObj=[];
         //var obj={};
-         $.writeln(this.currentLayer.effect.numProperties);
+         //$.writeln(this.currentLayer.effect.numProperties);
         for(var i=this.currentLayer.effect.numProperties; i--;){
             var obj = {};             
             obj.currentName=this.currentLayer.effect(i+1).name;
@@ -678,7 +704,7 @@ else {
             arrObj.push(obj);
             this.currentLayer.effect(obj.currentName).remove();           
             }
-         $.writeln(JSON.stringify(arrObj));
+         //$.writeln(JSON.stringify(arrObj));
          for(var a=arrObj.length; a--;){
              var effectHasBeenReseted=this.currentLayer.Effects.addProperty(arrObj[a].matchName);
              effectHasBeenReseted.name=arrObj[a].currentName;           
@@ -695,8 +721,8 @@ else {
         var effectArr= toClearArr.split(',');
        // $.writeln(effectArr.length);
          for(var i=0; i<effectArr.length;i++){
-             $.writeln("'"+effectArr[i]+"'");
-              $.writeln(this.currentLayer.effect(effectArr[i]).name);
+             //$.writeln("'"+effectArr[i]+"'");
+              //$.writeln(this.currentLayer.effect(effectArr[i]).name);
            if(this.currentLayer.effect(effectArr[i])){
                  this.currentLayer.effect(effectArr[i]).remove();
                  }
